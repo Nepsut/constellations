@@ -51,7 +51,7 @@ namespace constellations
         public void OnMovement(InputAction.CallbackContext context)
         {
             MoveEvent?.Invoke(obj:context.ReadValue<Vector2>());
-            Debug.Log(message: $"Phase: {context.phase}, Value: {context.ReadValue<Vector2>()}");
+            //Debug.Log(message: $"Phase: {context.phase}, Value: {context.ReadValue<Vector2>()}");
         }
 
         public void OnJump(InputAction.CallbackContext context)
