@@ -8,24 +8,22 @@ namespace constellations
 {
     public class PlayerController : MonoBehaviour
     {
+        //init engine variables
         [SerializeField] private InputReader input;
-
         private Rigidbody2D rb2d;
         private CircleCollider2D circleCollider;
         [SerializeField] private LayerMask ground;
-        private float speed = 100f;
-        [Range(1f, 3f)][SerializeField] private float dashSpeedMult = 1.5f;
-        [Range(0, 1f)][SerializeField] private float crouchSpeedMult = 0.6f;
 
-        private float horizontal = 0f;
-        private float lastJumpY = 0f;
-        private bool facingRight = true;
-        private bool jump = false, longJump = false;
-        private bool dashing = false;
-        private bool crouching = false;
+        //init constant variables
+        private const float speed = 100f;
+        private const float jumpVelo = 4f;
+        private const float dashSpeedMult = 3f;
+        private const float runSpeedMult = 1.8f;
+        private const float crouchSpeedMult = 0.6f;
 
-        [Range(0, 5f)][SerializeField] private float fallLongMultiplier = 0.8f;
-        [Range(0, 5f)][SerializeField] private float fallShortMultiplier = 1.6f;
+        //init other variables
+        private float horizontal = 0f, lastJumpY = 0f, dashTimer = 0f, jumpTimer = 0f;
+        private bool facingRight = true, jump = false, longJump = false, dashing = false, running = false, crouching = false;
 
         // Start is called before the first frame update
         void Start()
@@ -48,33 +46,48 @@ namespace constellations
         {
             float moveFactor = horizontal * Time.fixedDeltaTime;
 
-            if (!dashing && !crouching)       //if not dashing move at speed float
+            if (!dashing && !crouching && !running)       //if not dashing move at speed float
             {
                 rb2d.velocity = new Vector2(moveFactor, rb2d.velocity.y);
                 //Debug.Log(message:$"Horizontal {horizontal}, moveFactor {moveFactor}, time {Time.fixedDeltaTime}");
             }
-            else if (dashing && !crouching)   //if dashing move at dashSpeedMult x speed
-            {
-                rb2d.velocity = new Vector2(moveFactor * dashSpeedMult, rb2d.velocity.y);
-            }
-            else if (!dashing && crouching)   //if crouching move at crouchSpeedMult x speed
+            else if (!dashing && crouching && !running)   //if crouching move at crouchSpeedMult x speed
             {
                 rb2d.velocity = new Vector2(moveFactor * crouchSpeedMult, rb2d.velocity.y);
-            }
-            else                              //if somehow you end up in an unforeseen combo, move at normal speed
-            {
-                rb2d.velocity = new Vector2(moveFactor, rb2d.velocity.y);
             }
 
             //flip sprite according to movement direction
             if (moveFactor > 0f && !facingRight) SpriteFlip();
             else if (moveFactor < 0f && facingRight) SpriteFlip();
 
+            //DASH AND RUN HANDLED HERE
+            if (dashing && !crouching)      //this is dash, the initial burst of speed on pressing shift
+            {
+                StartCoroutine(DashCap());
+                if (facingRight)
+                {
+                    rb2d.velocity = new Vector2(speed * Time.fixedDeltaTime * dashSpeedMult, rb2d.velocity.y);
+                }
+                else if (!facingRight)
+                {
+                    rb2d.velocity = new Vector2(-speed * Time.fixedDeltaTime * dashSpeedMult, rb2d.velocity.y);
+                }
+            }
+            else if (running && !crouching) //this is run, the remaining extra speed after dash ends
+            {
+                if (!dashing && facingRight && Time.fixedTime - dashTimer > 0.2f)
+                {
+                    rb2d.velocity = new Vector2(moveFactor * runSpeedMult, rb2d.velocity.y);
+                }
+                else if (!dashing && !facingRight && Time.fixedTime - dashTimer > 0.2f)
+                {
+                    rb2d.velocity = new Vector2(moveFactor * runSpeedMult, rb2d.velocity.y);
+                }
+            }
 
-            //executing different jump
+            //executing jump
             if (jump)
             {
-                float jumpVelo = 4f;
                 rb2d.velocity = new Vector2(rb2d.velocity.x, jumpVelo);
                 if (longJump) StartCoroutine(JumpCap());
             }
@@ -106,6 +119,12 @@ namespace constellations
             jump = false;
         }
 
+        private IEnumerator DashCap()
+        {
+            yield return new WaitForSeconds(0.2f);
+            dashing = false;
+        }
+
         private void HandleJumpCancel()
         {
             jump = false;
@@ -114,14 +133,19 @@ namespace constellations
 
         private void HandleDash()
         {
-            dashing = true;
-            crouching = false;
+            if (!dashing)
+            {
+                dashing = true;
+                running = true;
+                crouching = false;
+            }
             //PLAY DASH ANIMATION HERE
         }
 
         private void HandleDashCancel()
         {
-            dashing = false;
+            running = false;
+            dashTimer = 0f;
             //GO BACK TO WALK ANIMATION HERE
         }
 
@@ -129,6 +153,7 @@ namespace constellations
         {
             crouching = true;
             dashing = false;
+            running = false;
             //PLAY CROUCH ANIMATION HERE
         }
         private void HandleCrouchCancel()
