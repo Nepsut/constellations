@@ -6,9 +6,11 @@ namespace constellations
 {
     public class CameraFollowObject : MonoBehaviour
     {
+        //init engine variables
         [SerializeField] private GameObject player;
         [SerializeField] private float distance;
 
+        //init other variables
         private bool facingRight;
         private const float flipDuration = 0.5f;
 

@@ -23,7 +23,7 @@ namespace constellations
         private const float crouchSpeedMult = 0.6f;
 
         //init state and timers variables
-        private float horizontal = 0f, lastJumpY = 0f, dashTimer = 0f, jumpTimer = 0f;
+        private float horizontal = 0f, lastJumpY = 0f, dashTimer = 0f, jumpTimer = 0f, fallYDampThreshold;
         public bool facingRight { get; private set; } = true;
         private bool jump = false, longJump = false, dashing = false, running = false, dashHelp = false, dashOnCooldown = false, crouching = false;
 
@@ -41,6 +41,8 @@ namespace constellations
             input.DashCanceledEvent += HandleDashCancel;
             input.CrouchEvent += HandleCrouch;
             input.CrouchCanceledEvent += HandleCrouchCancel;
+
+            fallYDampThreshold = CameraManager.instance.fallSpeedDampThreshold;
         }
 
         //actual movement is handled here
@@ -95,6 +97,22 @@ namespace constellations
             {
                 rb2d.velocity = new Vector2(rb2d.velocity.x, jumpVelo);
                 if (longJump) StartCoroutine(JumpCap());
+            }
+
+            //CAMERA HANDLING BELOW, TAKE HEED
+            //if falling faster than set threshold
+            if (rb2d.velocity.y < fallYDampThreshold && !CameraManager.instance.YDampLerping && !CameraManager.instance.PlayerFallLerped)
+            {
+                StartCoroutine(CameraManager.instance.LerpYAction(true));
+            }
+
+            //if y movement is >= 0
+            if (rb2d.velocity.y >= 0f && !CameraManager.instance.YDampLerping && CameraManager.instance.PlayerFallLerped)
+            {
+                //reset so this can be called again
+                CameraManager.instance.PlayerFallLerped = false;
+
+                StartCoroutine(CameraManager.instance.LerpYAction(false));
             }
         }
 
