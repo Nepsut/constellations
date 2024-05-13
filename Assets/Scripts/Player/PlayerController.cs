@@ -13,6 +13,7 @@ namespace constellations
         private Rigidbody2D rb2d;
         private CircleCollider2D circleCollider;
         [SerializeField] private LayerMask ground;
+        [SerializeField] private GameObject cameraFollowObject;
 
         //init constant variables
         private const float speed = 100f;
@@ -21,9 +22,10 @@ namespace constellations
         private const float runSpeedMult = 1.8f;
         private const float crouchSpeedMult = 0.6f;
 
-        //init other variables
+        //init state and timers variables
         private float horizontal = 0f, lastJumpY = 0f, dashTimer = 0f, jumpTimer = 0f;
-        private bool facingRight = true, jump = false, longJump = false, dashing = false, running = false, crouching = false;
+        public bool facingRight { get; private set; } = true;
+        private bool jump = false, longJump = false, dashing = false, running = false, dashHelp = false, dashOnCooldown = false, crouching = false;
 
         // Start is called before the first frame update
         void Start()
@@ -57,13 +59,16 @@ namespace constellations
             }
 
             //flip sprite according to movement direction
-            if (moveFactor > 0f && !facingRight) SpriteFlip();
-            else if (moveFactor < 0f && facingRight) SpriteFlip();
+            if (moveFactor > 0f && !facingRight) CatFlip();
+            else if (moveFactor < 0f && facingRight) CatFlip();
 
             //DASH AND RUN HANDLED HERE
             if (dashing && !crouching)      //this is dash, the initial burst of speed on pressing shift
             {
-                StartCoroutine(DashCap());
+                if (dashHelp && !dashOnCooldown)
+                {
+                    StartCoroutine(DashCap());
+                }
                 if (facingRight)
                 {
                     rb2d.velocity = new Vector2(speed * Time.fixedDeltaTime * dashSpeedMult, rb2d.velocity.y);
@@ -75,11 +80,11 @@ namespace constellations
             }
             else if (running && !crouching) //this is run, the remaining extra speed after dash ends
             {
-                if (!dashing && facingRight && Time.fixedTime - dashTimer > 0.2f)
+                if (!dashing && facingRight && running)
                 {
                     rb2d.velocity = new Vector2(moveFactor * runSpeedMult, rb2d.velocity.y);
                 }
-                else if (!dashing && !facingRight && Time.fixedTime - dashTimer > 0.2f)
+                else if (!dashing && !facingRight && running)
                 {
                     rb2d.velocity = new Vector2(moveFactor * runSpeedMult, rb2d.velocity.y);
                 }
@@ -121,8 +126,12 @@ namespace constellations
 
         private IEnumerator DashCap()
         {
+            dashHelp = false;
+            dashOnCooldown = true;
             yield return new WaitForSeconds(0.2f);
             dashing = false;
+            yield return new WaitForSeconds(0.1f);
+            dashOnCooldown = false;
         }
 
         private void HandleJumpCancel()
@@ -137,6 +146,7 @@ namespace constellations
             {
                 dashing = true;
                 running = true;
+                dashHelp = true;
                 crouching = false;
             }
             //PLAY DASH ANIMATION HERE
@@ -165,12 +175,26 @@ namespace constellations
         #endregion
 
         //THIS THING FLIPS CAT, LITERALLY INSANE
-        private void SpriteFlip()
+        private void CatFlip()
         {
-            facingRight = !facingRight;
-            Vector3 transformScale = transform.localScale;
-            transformScale.x *= -1;
-            transform.localScale = transformScale;
+            if (facingRight)
+            {
+                Vector3 newRotation = new Vector3(transform.rotation.x, 180f, transform.rotation.z);
+                transform.rotation = Quaternion.Euler(newRotation);
+                facingRight = !facingRight;
+
+                //turn camera to follow object with small delay, handled in different script
+                StartCoroutine(cameraFollowObject.GetComponent<CameraFollowObject>().FlipYLerp());
+            }
+            else
+            {
+                Vector3 newRotation = new Vector3(transform.rotation.x, 0f, transform.rotation.z);
+                transform.rotation = Quaternion.Euler(newRotation);
+                facingRight = !facingRight;
+
+                //turn camera to follow object with small delay, handled in different script
+                StartCoroutine(cameraFollowObject.GetComponent<CameraFollowObject>().FlipYLerp());
+            }
         }
 
         //check if player is currently on the ground using fancy raycasting tech
