@@ -1,5 +1,7 @@
+using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace constellations
@@ -10,9 +12,16 @@ namespace constellations
         [SerializeField] private GameObject player;
         [SerializeField] private float distance;
 
+        //init const variables
+        private const float flipDuration = 0.5f;
+
         //init other variables
         private bool facingRight;
-        private const float flipDuration = 0.5f;
+
+        private void Awake()
+        {
+            
+        }
 
         // Start is called before the first frame update
         void Start()
@@ -21,7 +30,7 @@ namespace constellations
         }
 
         // Update is called once per frame
-        void Update()
+        void FixedUpdate()
         {
             transform.position = player.transform.position;
         }

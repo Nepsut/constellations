@@ -17,7 +17,7 @@ namespace constellations
 
         //init constant variables
         private const float speed = 100f;
-        private const float jumpVelo = 4f;
+        private const float jumpVelo = 5f;
         private const float dashSpeedMult = 3f;
         private const float runSpeedMult = 1.8f;
         private const float crouchSpeedMult = 0.6f;
@@ -43,6 +43,7 @@ namespace constellations
             input.CrouchCanceledEvent += HandleCrouchCancel;
 
             fallYDampThreshold = CameraManager.instance.fallSpeedDampThreshold;
+            Debug.Log(fallYDampThreshold);
         }
 
         //actual movement is handled here
@@ -160,6 +161,11 @@ namespace constellations
 
         private void HandleDash()
         {
+            if (crouching)
+            {
+                crouching = false;
+                StartCoroutine(CameraManager.instance.CrouchOffset(false));
+            }
             if (!dashing)
             {
                 dashing = true;
@@ -182,11 +188,13 @@ namespace constellations
             crouching = true;
             dashing = false;
             running = false;
+            StartCoroutine(CameraManager.instance.CrouchOffset(true));
             //PLAY CROUCH ANIMATION HERE
         }
         private void HandleCrouchCancel()
         {
             crouching = false;
+            StartCoroutine(CameraManager.instance.CrouchOffset(false));
             //EXIT CROUCH ANIMATION HERE
         }
 
