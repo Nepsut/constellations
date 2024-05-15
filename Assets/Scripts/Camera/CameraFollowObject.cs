@@ -1,7 +1,4 @@
-using Cinemachine;
 using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace constellations
@@ -17,11 +14,6 @@ namespace constellations
 
         //init other variables
         private bool facingRight;
-
-        private void Awake()
-        {
-            
-        }
 
         // Start is called before the first frame update
         void Start()
