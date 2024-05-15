@@ -1,18 +1,121 @@
+using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CameraManager : MonoBehaviour
+namespace constellations
 {
-    // Start is called before the first frame update
-    void Start()
+    public class CameraManager : MonoBehaviour
     {
-        
+        //init engine variables
+        public static CameraManager instance;
+        private CinemachineFramingTransposer framingTransposer;
+        private CinemachineVirtualCamera currentCam;
+        [SerializeField] private CinemachineVirtualCamera[] allCameras;
+
+        //init const variables
+        private const float fallPanAmount = 0.25f;
+        private const float fallPanTime = 0.25f;
+        private const float panDownDuration = 0.3f;
+
+        //init other variables
+        private float normYPan;
+        private float defaultPanDown;
+        public float fallSpeedDampThreshold = -10f; //would be a const but playercontroller barked at me
+
+        public bool YDampLerping { get; private set; } = false;
+        public bool crouchPanning { get; private set; } = false;
+
+        public bool PlayerFallLerped = false;
+
+        void Awake()
+        {
+            if (instance == null)
+            {
+                instance = this;
+            }
+
+            for (int i = 0; i < allCameras.Length; i++)
+            {
+                if (allCameras[i].enabled)
+                {
+                    //set current active camera
+                    currentCam = allCameras[i];
+
+                    //set framing transposer
+                    framingTransposer = currentCam.GetCinemachineComponent<CinemachineFramingTransposer>();
+                }
+            }
+
+            //set yDamp based on inspector value
+            normYPan = framingTransposer.m_YDamping;
+            defaultPanDown = framingTransposer.m_ScreenY;
+        }
+
+        public IEnumerator LerpYAction(bool t_falling)
+        {
+            YDampLerping = true;
+
+            //def start damp amount 
+            float startDampAmount = framingTransposer.m_YDamping;
+            float endDampAmount;
+
+            //determine end pan
+            if (t_falling)
+            {
+                endDampAmount = fallPanAmount;
+                PlayerFallLerped = true;
+            }
+            else
+            {
+                endDampAmount = normYPan;
+            }
+
+            float takenTime = 0f;
+            while (takenTime < fallPanTime)
+            {
+                takenTime = Time.deltaTime;
+
+                float lerpedPanAmount = Mathf.Lerp(startDampAmount, endDampAmount, (takenTime / fallPanTime));
+                framingTransposer.m_YDamping = lerpedPanAmount;
+
+                yield return null;
+            }
+
+            YDampLerping = false;
+        }
+
+        //call this on crouch to pan screen down slightly
+        public IEnumerator CrouchOffset(bool t_crouching)
+        {
+            crouchPanning = true;
+            float startOffset = framingTransposer.m_ScreenY;
+            float endOffset;
+            float yOffset;
+
+            if (t_crouching)
+            {
+                endOffset = 0.35f;
+            }
+            else
+            {
+                endOffset = defaultPanDown;
+            }
+
+            float takenTime = 0f;
+            while (takenTime < panDownDuration)
+            {
+                takenTime += Time.deltaTime;
+
+                //panning down with lerp
+                yOffset = Mathf.Lerp(startOffset, endOffset, (takenTime / panDownDuration));
+                framingTransposer.m_ScreenY = yOffset;
+
+                yield return null;
+            }
+
+            crouchPanning = false;
+        }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }

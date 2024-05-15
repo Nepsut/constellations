@@ -1,16 +1,27 @@
+using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace constellations
 {
     public class CameraFollowObject : MonoBehaviour
     {
+        //init engine variables
         [SerializeField] private GameObject player;
         [SerializeField] private float distance;
 
-        private bool facingRight;
+        //init const variables
         private const float flipDuration = 0.5f;
+
+        //init other variables
+        private bool facingRight;
+
+        private void Awake()
+        {
+            
+        }
 
         // Start is called before the first frame update
         void Start()
@@ -19,7 +30,7 @@ namespace constellations
         }
 
         // Update is called once per frame
-        void Update()
+        void FixedUpdate()
         {
             transform.position = player.transform.position;
         }
