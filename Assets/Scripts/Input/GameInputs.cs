@@ -77,9 +77,9 @@ namespace constellations
             ],
             ""bindings"": [
                 {
-                    ""name"": ""AD"",
+                    ""name"": ""WASD"",
                     ""id"": ""f582324d-8588-4776-934c-7b975aca4d69"",
-                    ""path"": ""2DVector"",
+                    ""path"": ""2DVector(mode=1)"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -90,7 +90,7 @@ namespace constellations
                 {
                     ""name"": ""Up"",
                     ""id"": ""1b07f55c-e0df-44fc-bf14-02334fec6997"",
-                    ""path"": """",
+                    ""path"": ""<Keyboard>/w"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -101,7 +101,7 @@ namespace constellations
                 {
                     ""name"": ""Down"",
                     ""id"": ""0980a171-4494-4260-8b14-aa30b3d38573"",
-                    ""path"": """",
+                    ""path"": ""<Keyboard>/s"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -133,23 +133,12 @@ namespace constellations
                 },
                 {
                     ""name"": """",
-                    ""id"": ""006ecdbf-c6b7-4ad7-a0b7-76994571ff8f"",
-                    ""path"": ""<Gamepad>/leftStick/x"",
+                    ""id"": ""3e74536a-e402-409f-a48e-178e43c38a72"",
+                    ""path"": ""<Gamepad>/leftStick"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Movement"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""c6b7b496-e903-4fdd-a08b-5658c35899eb"",
-                    ""path"": ""<Keyboard>/w"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Jump"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -222,7 +211,7 @@ namespace constellations
                 {
                     ""name"": """",
                     ""id"": ""35f0c8c6-aee7-46ce-a79b-ae46b3101284"",
-                    ""path"": ""<Keyboard>/s"",
+                    ""path"": ""<Keyboard>/ctrl"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
