@@ -14,7 +14,7 @@ namespace constellations
 
         //init const variables
         private const float fallPanAmount = 0.25f;
-        private const float fallPanTime = 0.25f;
+        private const float fallPanTime = 0.5f;
         private const float panDownDuration = 0.3f;
 
         //init other variables
@@ -73,11 +73,11 @@ namespace constellations
             float takenTime = 0f;
             while (takenTime < fallPanTime)
             {
-                takenTime = Time.deltaTime;
+                takenTime += Time.deltaTime;
 
                 float lerpedPanAmount = Mathf.Lerp(startDampAmount, endDampAmount, (takenTime / fallPanTime));
                 framingTransposer.m_YDamping = lerpedPanAmount;
-
+                Debug.Log(message: $"looping {takenTime < fallPanTime} takentime {takenTime}");
                 yield return null;
             }
 

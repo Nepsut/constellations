@@ -77,7 +77,7 @@ namespace constellations
             climbAction();
             jumpAction();
 
-
+            //Debug.Log(message: $"lerping ydamp {CameraManager.instance.YDampLerping} falllerped {CameraManager.instance.PlayerFallLerped}");
             //CAMERA HANDLING BELOW, TAKE HEED
             //if falling faster than set threshold, lerp damping slightly
             if (rb2d.velocity.y < fallYDampThreshold && !CameraManager.instance.YDampLerping && !CameraManager.instance.PlayerFallLerped)
@@ -103,7 +103,7 @@ namespace constellations
         {
             horizontal = dir.x * speed;
             vertical = dir.y * speed;
-            Debug.Log(message: $"y {dir.y} x {dir.x} hz {horizontal} vert {vertical} spd {speed}");
+            //Debug.Log(message: $"y {dir.y} x {dir.x} hz {horizontal} vert {vertical} spd {speed}");
         }
 
         private void HandleJump()
