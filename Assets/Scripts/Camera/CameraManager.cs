@@ -21,6 +21,7 @@ namespace constellations
         private float normYPan;
         private float defaultPanDown;
         public float fallSpeedDampThreshold = -10f; //would be a const but playercontroller barked at me
+        private Vector2 startOffset;
 
         public bool YDampLerping { get; private set; } = false;
         public bool crouchPanning { get; private set; } = false;
@@ -49,6 +50,9 @@ namespace constellations
             //set yDamp based on inspector value
             normYPan = framingTransposer.m_YDamping;
             defaultPanDown = framingTransposer.m_ScreenY;
+
+            //set starting offset of tracked object
+            startOffset = framingTransposer.m_TrackedObjectOffset;
         }
 
         public IEnumerator LerpYAction(bool t_falling)
@@ -115,6 +119,55 @@ namespace constellations
 
             crouchPanning = false;
         }
-    }
 
+        public IEnumerator PanCam(float panDistance, float panTime, PanDirection panDirection, bool panToStart)
+        {
+            Vector2 endPos = Vector2.zero;
+            Vector2 startPos = Vector2.zero;
+
+            //handle pan
+            if (!panToStart)
+            {
+                //set direction and distance
+                switch (panDirection)
+                {
+                    case PanDirection.Up:
+                        endPos = Vector2.up;
+                        break;
+                    case PanDirection.Down:
+                        endPos = Vector2.down;
+                        break;
+                    case PanDirection.Left:
+                        endPos = Vector2.left;
+                        break;
+                    case PanDirection.Right:
+                        endPos = Vector2.right;
+                        break;
+                    default:
+                        break;
+                }
+
+                endPos *= panDistance;
+                startPos = startOffset;
+                endPos += startPos;
+            }
+            else
+            {
+                startPos = framingTransposer.m_TrackedObjectOffset;
+                endPos = startOffset;
+            }
+
+            //handle actual camera panning
+            float takenTime = 0f;
+            while (takenTime < panTime)
+            {
+                takenTime += Time.deltaTime;
+
+                Vector3 panLerp = Vector3.Lerp(startPos, endPos, (takenTime /  panTime));
+                framingTransposer.m_TrackedObjectOffset = panLerp;
+
+                yield return null;
+            }
+        }
+    }
 }
