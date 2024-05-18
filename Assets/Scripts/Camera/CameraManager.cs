@@ -81,7 +81,7 @@ namespace constellations
 
                 float lerpedPanAmount = Mathf.Lerp(startDampAmount, endDampAmount, (takenTime / fallPanTime));
                 framingTransposer.m_YDamping = lerpedPanAmount;
-                Debug.Log(message: $"looping {takenTime < fallPanTime} takentime {takenTime}");
+                //Debug.Log(message: $"looping {takenTime < fallPanTime} takentime {takenTime}");
                 yield return null;
             }
 

@@ -246,7 +246,7 @@ MonoBehaviour:
   m_StreamingVersion: 20170927
   m_Priority: 10
   m_StandbyUpdate: 2
-  m_LookAt: {fileID: 0}
+  m_LookAt: {fileID: 814245630}
   m_Follow: {fileID: 1900563480}
   m_Lens:
     FieldOfView: 60
@@ -641,6 +641,9 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   cameraFollowObject: {fileID: 1900563479}
+  acceleration: 7
+  deceleration: 7
+  velPower: 0.9
 --- !u!1 &814245628
 GameObject:
   m_ObjectHideFlags: 0
@@ -1205,6 +1208,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1649749604534482917, guid: 167cdd6a641525e41b191d63a059b14a, type: 3}
+      propertyPath: customInspectorObjects.panDirection
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4718805778931270836, guid: 167cdd6a641525e41b191d63a059b14a, type: 3}
       propertyPath: m_Name
       value: CameraControlTRIGGER
