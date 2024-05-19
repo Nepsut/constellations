@@ -5,36 +5,48 @@ namespace constellations
 {
     public class PlayerController : MonoBehaviour
     {
-        //init engine variables
+        [Header("Engine Variables")]
         [SerializeField] private InputReader input;
         private Rigidbody2D rb2d;
-        private CircleCollider2D circleCollider;
+        private CapsuleCollider2D capsuleCollider;
         [SerializeField] private LayerMask ground;
         [SerializeField] private LayerMask climbable;
         [SerializeField] private GameObject cameraFollowObject;
 
-        //init constant variables
-        private const float speed = 100f;
-        private const float jumpVelo = 5f;
-        private const float dashSpeedMult = 3f;
-        private const float runSpeedMult = 1.8f;
-        private const float crouchSpeedMult = 0.6f;
-        private const float climbSpeedMult = 1.2f;
+        [Header("Constant Movement Variables")]
+        private const float maxSpeed = 3f;
+        private const float acceleration = 6000f;
+        private const float deceleration = 8f;
+        private float trueAcceleration;
+
+        //if horizontal input differs from movement direction, changingDirection = true
+        private bool changingDirection => (rb2d.velocity.x > 0f && horizontal < 0f) || (rb2d.velocity.x < 0f && horizontal > 0f);
+        private const float jumpForce = 50f;
         private const float fallGravMult = 2.1f;
         private const float lowJumpMult = 1.8f;
+        private const float jumpMaxDuration = 0.35f;
+        private const float dashSpeedMult = 3f;
+        private const float runSpeedMult = 1.8f;
+        private const float dashMaxDuration = 0.2f;
+        private const float dashCooldown = 0.1f;
+        private const float crouchSpeedMult = 0.6f;
+        private const float climbSpeedMult = 1.2f;
+        private const float baseColliderHeight = 1.5f;
+        private const float crouchColliderHeight = 1f;
+        private const float groundRaycastLength = 0.87f;
+        private const float crouchRaycastLength = 0.62f;
+        private const float climbRaycastLength = 1.28f;
 
-        //init state and timers variables
+        [Header("Dynamic Movement Variables")]
         private float horizontal = 0f;
         private float vertical = 0f;
-        private float lastJumpY = 0f;
         private float realHorizontal = 0f;
         private float realVertical = 0f;
-        [Range(5f, 15f)][SerializeField] private float acceleration = 7f;
-        [Range(5f, 15f)][SerializeField] private float deceleration = 7f;
-        [Range(0f, 2f)][SerializeField] private float velPower = 0.9f;
-        private float fallYDampThreshold;
         private float targetHorizontal;
         private float targetVertical;
+
+        [Header("Other Variables")]
+        private float fallYDampThreshold;
 
         public bool facingRight { get; private set; } = true;
         private bool jump = false;
@@ -52,7 +64,7 @@ namespace constellations
         void Start()
         {
             rb2d = GetComponent<Rigidbody2D>();
-            circleCollider = GetComponent<CircleCollider2D>();
+            capsuleCollider = GetComponent<CapsuleCollider2D>();
 
             //add methods to events in InputReader
             input.MoveEvent += HandleMove;
@@ -70,10 +82,9 @@ namespace constellations
         //actual movement is handled here
         void FixedUpdate()
         {
-            calcSpeed();
-
+            calcAccel();
             //check if player is currently next to a climbable wall and is moving horizontally
-            if (canClimb() && targetHorizontal != 0f) climbing = true;
+            if (canClimb() && horizontal != 0f) climbing = true;
             else climbing = false;
 
             if (climbing) rb2d.gravityScale = 0;
@@ -81,8 +92,9 @@ namespace constellations
 
             moveAction();
             climbAction();
-            jumpAction();
+            if (jump) jumpAction();
             fallAdjuster();
+            handleDrag();
 
             //CAMERA HANDLING BELOW, TAKE HEED
             //if falling faster than set threshold, lerp damping slightly
@@ -105,18 +117,16 @@ namespace constellations
 
         #region movement calcs
 
-        private void calcSpeed()
+        private void calcAccel()
         {
-            targetHorizontal = horizontal * Time.fixedDeltaTime;
-            float hzDiff = targetHorizontal - rb2d.velocity.x;
-            float hzAccelRate = (Mathf.Abs(targetHorizontal) > 0.01f) ? acceleration : deceleration;
-            realHorizontal = Mathf.Pow(Mathf.Abs(hzDiff) * hzAccelRate, velPower);
-
-            targetVertical = vertical * Time.fixedDeltaTime;
-            float vertDiff = targetVertical - rb2d.velocity.y;
-            float vertAccelRate = (Mathf.Abs(targetVertical) > 0.01f) ? acceleration : deceleration;
-            realVertical = Mathf.Pow(Mathf.Abs(vertDiff) * vertAccelRate, velPower);
-
+            if (!wallJumped)
+            {
+                trueAcceleration = acceleration * horizontal * Time.deltaTime;
+            }
+            else
+            {
+                trueAcceleration = (acceleration * horizontal * Time.deltaTime) / 2;
+            }
         }
 
         private void fallAdjuster()
@@ -137,8 +147,8 @@ namespace constellations
 
         private void HandleMove(Vector2 dir)
         {
-            horizontal = dir.x * speed;
-            vertical = dir.y * speed;
+            horizontal = dir.x;
+            vertical = dir.y;
             //Debug.Log(message: $"y {dir.y} x {dir.x} hz {horizontal} vert {vertical} spd {speed}");
         }
 
@@ -150,21 +160,20 @@ namespace constellations
                 jump = true;
                 longJump = true;
                 crouching = false;
+                capsuleCollider.size = new Vector2(capsuleCollider.size.x, baseColliderHeight);
                 dashing = false;
             }
-            //PLAY JUMP ANIMATION HERE
         }
         private void HandleJumpCancel()
         {
             jump = false;
-            //EXIT JUMP ANIMATION HERE
         }
 
-        //this thing will end jump after 0.35 seconds
+        //this thing will end jump after specified duration
         private IEnumerator JumpCap()
         {
             longJump = false;
-            yield return new WaitForSeconds(0.35f);
+            yield return new WaitForSeconds(jumpMaxDuration);
             jump = false;
             wallJumped = false;
         }
@@ -176,6 +185,7 @@ namespace constellations
                 if (crouching)
                 {
                     crouching = false;
+                    capsuleCollider.size = new Vector2(capsuleCollider.size.x, baseColliderHeight);
                     StartCoroutine(CameraManager.instance.CrouchOffset(false));
                 }
                 if (!dashing)
@@ -188,13 +198,14 @@ namespace constellations
             }
         }
 
+        //this thing will end dash after specified duration
         private IEnumerator DashCap()
         {
             dashHelp = false;
             dashOnCooldown = true;
-            yield return new WaitForSeconds(0.2f);
+            yield return new WaitForSeconds(dashMaxDuration);
             dashing = false;
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSeconds(dashCooldown);
             dashOnCooldown = false;
         }
 
@@ -211,6 +222,7 @@ namespace constellations
                 crouching = true;
                 dashing = false;
                 running = false;
+                capsuleCollider.size = new Vector2(capsuleCollider.size.x, crouchColliderHeight);
                 StartCoroutine(CameraManager.instance.CrouchOffset(true));
                 //PLAY CROUCH ANIMATION HERE
             }
@@ -219,6 +231,7 @@ namespace constellations
         private void HandleCrouchCancel()
         {
             crouching = false;
+            capsuleCollider.size = new Vector2(capsuleCollider.size.x, baseColliderHeight);
             StartCoroutine(CameraManager.instance.CrouchOffset(false));
             //EXIT CROUCH ANIMATION HERE
         }
@@ -231,8 +244,15 @@ namespace constellations
         //to avoid the jitteriness of rigidbodies
         private bool isGrounded()
         {
-            RaycastHit2D hit = Physics2D.CircleCast(circleCollider.bounds.center, circleCollider.radius, Vector2.down, 0.1f, ground);
-            if (hit && !lastJumpY.Equals(0)) lastJumpY = 0;
+            RaycastHit2D hit;
+            if (!crouching)
+            {
+                hit = Physics2D.Raycast(transform.position, Vector2.down, groundRaycastLength, ground);
+            }
+            else
+            {
+                hit = Physics2D.Raycast(transform.position, Vector2.down, crouchRaycastLength, ground);
+            }
             return hit.collider != null;
         }
 
@@ -240,9 +260,9 @@ namespace constellations
         //to avoid the jitteriness of rigidbodies
         private bool canClimb()
         {
-            RaycastHit2D hitRight = Physics2D.CircleCast(circleCollider.bounds.center, circleCollider.radius, Vector2.right, 0.1f, climbable);
-            RaycastHit2D hitLeft = Physics2D.CircleCast(circleCollider.bounds.center, circleCollider.radius, Vector2.right, -0.1f, climbable);
-            if (!wallJumped && (hitRight || hitLeft)) return true;
+            RaycastHit2D hitRight = Physics2D.Raycast(transform.position, Vector2.right, climbRaycastLength, climbable);
+            RaycastHit2D hitLeft = Physics2D.Raycast(transform.position, -Vector2.right, climbRaycastLength, climbable);
+            if ((hitRight || hitLeft)) return true;
             else return false;
         }
 
@@ -276,25 +296,30 @@ namespace constellations
         private void moveAction()
         {
             //STANDARD MOVEMENT
-            if (!dashing && !crouching && !running && !wallJumped)       //if not dashing move at speed float
+            if (!dashing && !crouching && !running && !wallJumped)       //normal movement, accelerate until maxSpeed
             {
-                rb2d.velocity = new Vector2(targetHorizontal, rb2d.velocity.y);
-                //rb2d.AddForce(realHorizontal * Vector2.right);
-                //Debug.Log(message:$"Horizontal {horizontal}, targetHorizontal {targetHorizontal}, time {Time.fixedDeltaTime}");
+                rb2d.AddForce(trueAcceleration * Vector2.right);
+                if (Mathf.Abs(rb2d.velocity.x) > maxSpeed)
+                {
+                    rb2d.velocity = new Vector2(Mathf.Sign(rb2d.velocity.x) * maxSpeed, rb2d.velocity.y);
+                }
             }
-            else if (!dashing && crouching && !running && !wallJumped)   //if crouching move at crouchSpeedMult x speed
+            else if (!dashing && crouching && !running && !wallJumped)   //crouch movement, accelerate slower until maxSpeed*crouchSpeedMult
             {
-                //rb2d.AddForce(realHorizontal * crouchSpeedMult * Vector2.right);
-                rb2d.velocity = new Vector2(targetHorizontal * crouchSpeedMult, rb2d.velocity.y);
+                rb2d.AddForce(trueAcceleration * crouchSpeedMult * Vector2.right);
+                if (Mathf.Abs(rb2d.velocity.x) > maxSpeed * crouchSpeedMult)
+                {
+                    rb2d.velocity = new Vector2(Mathf.Sign(rb2d.velocity.x) * maxSpeed * crouchSpeedMult, rb2d.velocity.y);
+                }
             }
-            else if (wallJumped)
+            if (wallJumped)        //if walljumped, add some sideways force as well based on player direction and slow player acceleration
             {
                 rb2d.velocity = Vector2.Lerp(rb2d.velocity, (new Vector2(targetHorizontal, rb2d.velocity.y)), 0.5f * Time.deltaTime);
             }
 
             //flip sprite according to movement direction
-            if (targetHorizontal > 0f && !facingRight) CatFlip();
-            else if (targetHorizontal < 0f && facingRight) CatFlip();
+            if (horizontal > 0f && !facingRight) CatFlip();
+            else if (horizontal < 0f && facingRight) CatFlip();
 
             //DASH AND RUN HANDLED HERE
             if (dashing && !crouching)      //this is dash, the initial burst of speed on pressing shift
@@ -305,11 +330,11 @@ namespace constellations
                 }
                 if (facingRight)
                 {
-                    rb2d.velocity = new Vector2(speed * Time.fixedDeltaTime * dashSpeedMult, rb2d.velocity.y);
+                    //rb2d.velocity = new Vector2(speed * Time.fixedDeltaTime * dashSpeedMult, rb2d.velocity.y);
                 }
                 else if (!facingRight)
                 {
-                    rb2d.velocity = new Vector2(-speed * Time.fixedDeltaTime * dashSpeedMult, rb2d.velocity.y);
+                    //rb2d.velocity = new Vector2(-speed * Time.fixedDeltaTime * dashSpeedMult, rb2d.velocity.y);
                 }
             }
             else if (running && !crouching) //this is run, the remaining extra speed after dash ends
@@ -325,12 +350,38 @@ namespace constellations
             }
         }
 
+        private void handleDrag()
+        {
+            if (Mathf.Abs(horizontal) < 0.4f || changingDirection)
+            {
+                rb2d.drag = deceleration;
+            }
+            else
+            {
+                rb2d.drag = 0;
+            }
+        }
+
         private void jumpAction()
         {
             //executing jump
-            if (jump)
+            if (!canClimb())
             {
-                rb2d.velocity = new Vector2(rb2d.velocity.x, jumpVelo);
+                rb2d.velocity = new Vector2(rb2d.velocity.x, 0f);
+                rb2d.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+                if (longJump) StartCoroutine(JumpCap());
+            }
+            else if (canClimb())
+            {
+                rb2d.velocity = new Vector2(rb2d.velocity.x, 0f);
+                if (facingRight)
+                {
+                    rb2d.AddForce(new Vector2(-jumpForce, jumpForce), ForceMode2D.Impulse);
+                }
+                else
+                {
+                    rb2d.AddForce(new Vector2(jumpForce, jumpForce), ForceMode2D.Impulse);
+                }
                 if (longJump) StartCoroutine(JumpCap());
             }
         }
@@ -342,6 +393,22 @@ namespace constellations
             {
                 rb2d.velocity = new Vector2(rb2d.velocity.x, targetVertical * climbSpeedMult);
             }
+        }
+
+        #endregion
+
+        #region TEMPORARY
+
+        private void OnDrawGizmos()
+        {
+            Gizmos.color = Color.green;
+            Gizmos.DrawLine(transform.position, transform.position + Vector3.down * groundRaycastLength);
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawLine(transform.position, transform.position + Vector3.down * crouchRaycastLength);
+            Gizmos.color = Color.red;
+            Gizmos.DrawLine(transform.position, transform.position + Vector3.right * climbRaycastLength);
+            Gizmos.color = Color.blue;
+            Gizmos.DrawLine(transform.position, transform.position - Vector3.right * climbRaycastLength);
         }
 
         #endregion
