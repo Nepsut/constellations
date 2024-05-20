@@ -9,26 +9,25 @@ namespace constellations
         [SerializeField] private InputReader input;
         private Rigidbody2D rb2d;
         private CapsuleCollider2D capsuleCollider;
+        private const float colliderOffset = 0.4f;
         [SerializeField] private LayerMask ground;
         [SerializeField] private LayerMask climbable;
         [SerializeField] private GameObject cameraFollowObject;
 
         [Header("Constant Movement Variables")]
         private const float maxSpeed = 3f;
+        private const float maxClimbSpeed = 2.5f;
         private const float acceleration = 6000f;
         private const float deceleration = 8f;
-        private float trueAcceleration;
-
-        //if horizontal input differs from movement direction, changingDirection = true
-        private bool changingDirection => (rb2d.velocity.x > 0f && horizontal < 0f) || (rb2d.velocity.x < 0f && horizontal > 0f);
-        private const float jumpForce = 50f;
+        private const float jumpForce = 65f;
+        private const float dashForce = 75f;
+        private const float movspeedTransitionTime = 0.3f;
+        private const float dashCooldown = 0.3f;
         private const float fallGravMult = 2.1f;
         private const float lowJumpMult = 1.8f;
+        private const float airLinearDrag = 2.5f;
         private const float jumpMaxDuration = 0.35f;
-        private const float dashSpeedMult = 3f;
         private const float runSpeedMult = 1.8f;
-        private const float dashMaxDuration = 0.2f;
-        private const float dashCooldown = 0.1f;
         private const float crouchSpeedMult = 0.6f;
         private const float climbSpeedMult = 1.2f;
         private const float baseColliderHeight = 1.5f;
@@ -40,29 +39,32 @@ namespace constellations
         [Header("Dynamic Movement Variables")]
         private float horizontal = 0f;
         private float vertical = 0f;
-        private float realHorizontal = 0f;
-        private float realVertical = 0f;
-        private float targetHorizontal;
-        private float targetVertical;
-
-        [Header("Other Variables")]
-        private float fallYDampThreshold;
-
+        private float trueAcceleration;
+        private float climbAcceleration;
+        private float trueAllowedSpeed;
         public bool facingRight { get; private set; } = true;
         private bool jump = false;
         private bool longJump = false;
         private bool wallJumped = false;
         private bool dashing = false;
-        private bool running = false;
-        private bool dashHelp = false;
         private bool dashOnCooldown = false;
+        private bool lerpingMaxSpeed = false;
+        private bool running = false;
         private bool crouching = false;
         private bool climbing = false;
 
+        //if horizontal input differs from movement direction, changingDirection = true
+        private bool changingXDirection => (rb2d.velocity.x > 0f && horizontal < 0f) || (rb2d.velocity.x < 0f && horizontal > 0f);
+        private bool changingYDirection => (rb2d.velocity.y > 0f && vertical < 0f) || (rb2d.velocity.y < 0f && vertical > 0f);
+
+        [Header("Other Variables")]
+        private float fallYDampThreshold;
+
         #region standard methods
-        // Start is called before the first frame update
-        void Start()
+
+        private void Awake()
         {
+            //fetch rigidbody and collider
             rb2d = GetComponent<Rigidbody2D>();
             capsuleCollider = GetComponent<CapsuleCollider2D>();
 
@@ -74,27 +76,41 @@ namespace constellations
             input.DashCanceledEvent += HandleDashCancel;
             input.CrouchEvent += HandleCrouch;
             input.CrouchCanceledEvent += HandleCrouchCancel;
-
-            fallYDampThreshold = CameraManager.instance.fallSpeedDampThreshold;
-            Debug.Log(fallYDampThreshold);
         }
 
-        //actual movement is handled here
+        void Start()
+        {
+            //set YDampThreshold to value specified in CameraManager
+            fallYDampThreshold = CameraManager.instance.fallSpeedDampThreshold;
+            trueAllowedSpeed = maxSpeed;
+        }
+
+        //using FixedUpdate so framerate doesn't affect functionality
         void FixedUpdate()
         {
+            //MOVEMENT-RELATED METHODS BELOW
+            //first calculate true acceleration for movement
             calcAccel();
-            //check if player is currently next to a climbable wall and is moving horizontally
-            if (canClimb() && horizontal != 0f) climbing = true;
+
+            //check if player is currently next to a climbable wall and is moving horizontally at wall
+            if ((canClimb() == 1 && horizontal > 0f) || (canClimb() == 0 && horizontal < 0f)) climbing = true;
             else climbing = false;
 
+            //while climbing, set player gravity to 0 so that climbing can be handled easier
             if (climbing) rb2d.gravityScale = 0;
             else rb2d.gravityScale = 1;
 
-            moveAction();
-            climbAction();
+            //if moving, move, if climbing, climb, if dashing, dash, if jumping, jump
+            if (horizontal != 0f) moveAction();
+            if (climbing) climbAction();
+            if (dashing) dashAction();
             if (jump) jumpAction();
-            fallAdjuster();
-            handleDrag();
+
+            //adjust drag (and gravity) for smoother movement
+            if (!climbing) fallAdjuster();
+            if (isGrounded()) handleDrag();
+            else handleAirDrag();
+
 
             //CAMERA HANDLING BELOW, TAKE HEED
             //if falling faster than set threshold, lerp damping slightly
@@ -102,7 +118,6 @@ namespace constellations
             {
                 StartCoroutine(CameraManager.instance.LerpYAction(true));
             }
-
             //if y movement is >= 0, set damp to standard
             if (rb2d.velocity.y >= 0f && !CameraManager.instance.YDampLerping && CameraManager.instance.PlayerFallLerped)
             {
@@ -119,18 +134,40 @@ namespace constellations
 
         private void calcAccel()
         {
+            //make acceleration much lower if player has walljumped recently to limit mobility slightly
             if (!wallJumped)
             {
                 trueAcceleration = acceleration * horizontal * Time.deltaTime;
             }
             else
             {
-                trueAcceleration = (acceleration * horizontal * Time.deltaTime) / 2;
+                trueAcceleration = (acceleration * horizontal * Time.deltaTime) / 4;
             }
+            climbAcceleration = acceleration * climbSpeedMult * vertical * Time.deltaTime;
+        }
+
+        //this thing lerps trueAllowedSpeed to maxSpeef from the player's current speed
+        //called when dash force impulse is added and when run ends to make movement smooth
+        private IEnumerator moveSpeedLerp()
+        {
+            lerpingMaxSpeed = true;
+            float startSpeed = Mathf.Abs(rb2d.velocity.x);
+            float takenTime = 0f;
+            while (takenTime < movspeedTransitionTime)
+            {
+                takenTime += Time.deltaTime;
+
+                float lerpedMaxSpeed = Mathf.Lerp(startSpeed, maxSpeed, (takenTime / movspeedTransitionTime));
+                trueAllowedSpeed = lerpedMaxSpeed;
+                yield return null;
+            }
+            lerpingMaxSpeed = false;
+            trueAllowedSpeed = maxSpeed;
         }
 
         private void fallAdjuster()
         {
+            //add gravity when falling to make jumps more snappy and satisfying
             if (rb2d.velocity.y < 0f)
             {
                 rb2d.velocity += Vector2.up * Physics2D.gravity.y * (fallGravMult - 1) * Time.deltaTime;
@@ -147,23 +184,26 @@ namespace constellations
 
         private void HandleMove(Vector2 dir)
         {
+            //separate the vector2 from movement input to horizontal and vertical for easier usage
             horizontal = dir.x;
             vertical = dir.y;
-            //Debug.Log(message: $"y {dir.y} x {dir.x} hz {horizontal} vert {vertical} spd {speed}");
         }
 
         private void HandleJump()
         {
-            if (isGrounded() || canClimb())
+            if (isGrounded() || canClimb() >= 0)    //if cat on ground or can climb on wall
             {
-                if (canClimb()) wallJumped = true;
+                if (canClimb() >= 0) wallJumped = true;
                 jump = true;
                 longJump = true;
-                crouching = false;
-                capsuleCollider.size = new Vector2(capsuleCollider.size.x, baseColliderHeight);
-                dashing = false;
+                if (crouching)      //if crouching, stop crouching and return collider to normal size
+                {
+                    crouching = false;
+                    capsuleCollider.size = new Vector2(capsuleCollider.size.x, baseColliderHeight);
+                }
             }
         }
+
         private void HandleJumpCancel()
         {
             jump = false;
@@ -178,9 +218,10 @@ namespace constellations
             wallJumped = false;
         }
 
+        //does the dash thing but only if we're not climbing or dash isn't on cooldown
         private void HandleDash()
         {
-            if (!climbing)
+            if (!climbing && !dashOnCooldown)
             {
                 if (crouching)
                 {
@@ -188,23 +229,15 @@ namespace constellations
                     capsuleCollider.size = new Vector2(capsuleCollider.size.x, baseColliderHeight);
                     StartCoroutine(CameraManager.instance.CrouchOffset(false));
                 }
-                if (!dashing)
-                {
-                    dashing = true;
-                    running = true;
-                    dashHelp = true;
-                    //PLAY DASH ANIMATION HERE
-                }
+                dashing = true;
+                running = true;
             }
         }
 
-        //this thing will end dash after specified duration
+        //this thing handles dash cooldown
         private IEnumerator DashCap()
         {
-            dashHelp = false;
             dashOnCooldown = true;
-            yield return new WaitForSeconds(dashMaxDuration);
-            dashing = false;
             yield return new WaitForSeconds(dashCooldown);
             dashOnCooldown = false;
         }
@@ -212,7 +245,7 @@ namespace constellations
         private void HandleDashCancel()
         {
             running = false;
-            //GO BACK TO WALK ANIMATION HERE
+            StartCoroutine(moveSpeedLerp());    //called to smooth movement from run speed to normal speed
         }
 
         private void HandleCrouch()
@@ -220,20 +253,17 @@ namespace constellations
             if (isGrounded())
             {
                 crouching = true;
-                dashing = false;
                 running = false;
-                capsuleCollider.size = new Vector2(capsuleCollider.size.x, crouchColliderHeight);
-                StartCoroutine(CameraManager.instance.CrouchOffset(true));
-                //PLAY CROUCH ANIMATION HERE
+                capsuleCollider.size = new Vector2(capsuleCollider.size.x, crouchColliderHeight);   //make collider smaller
+                StartCoroutine(CameraManager.instance.CrouchOffset(true));                          //pan cam down
             }
         }
 
         private void HandleCrouchCancel()
         {
             crouching = false;
-            capsuleCollider.size = new Vector2(capsuleCollider.size.x, baseColliderHeight);
-            StartCoroutine(CameraManager.instance.CrouchOffset(false));
-            //EXIT CROUCH ANIMATION HERE
+            capsuleCollider.size = new Vector2(capsuleCollider.size.x, baseColliderHeight);         //make collider great again /j
+            StartCoroutine(CameraManager.instance.CrouchOffset(false));                             //pan cam to normal
         }
 
         #endregion
@@ -244,26 +274,35 @@ namespace constellations
         //to avoid the jitteriness of rigidbodies
         private bool isGrounded()
         {
-            RaycastHit2D hit;
+            Vector2 lineDownRight = new Vector2(transform.position.x + colliderOffset, transform.position.y);
+            Vector2 lineDownLeft = new Vector2(transform.position.x - colliderOffset, transform.position.y);
+            RaycastHit2D hit1;
+            RaycastHit2D hit2;
             if (!crouching)
             {
-                hit = Physics2D.Raycast(transform.position, Vector2.down, groundRaycastLength, ground);
+                hit1 = Physics2D.Raycast(lineDownRight, Vector2.down, groundRaycastLength, ground);
+                hit2 = Physics2D.Raycast(lineDownLeft, Vector2.down, groundRaycastLength, ground);
             }
             else
             {
-                hit = Physics2D.Raycast(transform.position, Vector2.down, crouchRaycastLength, ground);
+                hit1 = Physics2D.Raycast(lineDownRight, Vector2.down, crouchRaycastLength, ground);
+                hit2 = Physics2D.Raycast(lineDownLeft, Vector2.down, crouchRaycastLength, ground);
             }
-            return hit.collider != null;
+            if (hit1 || hit2) return true;
+            else return false;
         }
 
         //check if player is on climbable wall using fancy raycasting tech
         //to avoid the jitteriness of rigidbodies
-        private bool canClimb()
+        //THIS IS AN INT SO WE KNOW IF WALL IS ON LEFT OR RIGHT,
+        //1 == RIGHT, 0 == LEFT
+        private int canClimb()
         {
             RaycastHit2D hitRight = Physics2D.Raycast(transform.position, Vector2.right, climbRaycastLength, climbable);
             RaycastHit2D hitLeft = Physics2D.Raycast(transform.position, -Vector2.right, climbRaycastLength, climbable);
-            if ((hitRight || hitLeft)) return true;
-            else return false;
+            if (hitRight) return 1;
+            else if (hitLeft) return 0;
+            else return -1;
         }
 
         #endregion
@@ -296,102 +335,111 @@ namespace constellations
         private void moveAction()
         {
             //STANDARD MOVEMENT
-            if (!dashing && !crouching && !running && !wallJumped)       //normal movement, accelerate until maxSpeed
-            {
-                rb2d.AddForce(trueAcceleration * Vector2.right);
-                if (Mathf.Abs(rb2d.velocity.x) > maxSpeed)
-                {
-                    rb2d.velocity = new Vector2(Mathf.Sign(rb2d.velocity.x) * maxSpeed, rb2d.velocity.y);
-                }
-            }
-            else if (!dashing && crouching && !running && !wallJumped)   //crouch movement, accelerate slower until maxSpeed*crouchSpeedMult
+            if (crouching && !wallJumped)   //crouch movement, accelerate slower until trueAllowedSpeed*crouchSpeedMult
             {
                 rb2d.AddForce(trueAcceleration * crouchSpeedMult * Vector2.right);
-                if (Mathf.Abs(rb2d.velocity.x) > maxSpeed * crouchSpeedMult)
+                if (Mathf.Abs(rb2d.velocity.x) > trueAllowedSpeed * crouchSpeedMult)
                 {
-                    rb2d.velocity = new Vector2(Mathf.Sign(rb2d.velocity.x) * maxSpeed * crouchSpeedMult, rb2d.velocity.y);
+                    rb2d.velocity = new Vector2(Mathf.Sign(rb2d.velocity.x) * trueAllowedSpeed * crouchSpeedMult, rb2d.velocity.y);
                 }
             }
-            if (wallJumped)        //if walljumped, add some sideways force as well based on player direction and slow player acceleration
+            else if (running && !wallJumped)  //run movement, accelerate faster until trueAllowedSpeed*runSpeedMult
             {
-                rb2d.velocity = Vector2.Lerp(rb2d.velocity, (new Vector2(targetHorizontal, rb2d.velocity.y)), 0.5f * Time.deltaTime);
+                rb2d.AddForce(trueAcceleration * runSpeedMult * Vector2.right);
+                if (Mathf.Abs(rb2d.velocity.x) > trueAllowedSpeed * runSpeedMult)
+                {
+                    rb2d.velocity = new Vector2(Mathf.Sign(rb2d.velocity.x) * trueAllowedSpeed * runSpeedMult, rb2d.velocity.y);
+                }
+            }
+            else       //normal movement, accelerate until trueAllowedSpeed
+            {
+                rb2d.AddForce(trueAcceleration * Vector2.right);
+                if (Mathf.Abs(rb2d.velocity.x) > trueAllowedSpeed)
+                {
+                    rb2d.velocity = new Vector2(Mathf.Sign(rb2d.velocity.x) * trueAllowedSpeed, rb2d.velocity.y);
+                }
             }
 
             //flip sprite according to movement direction
             if (horizontal > 0f && !facingRight) CatFlip();
             else if (horizontal < 0f && facingRight) CatFlip();
-
-            //DASH AND RUN HANDLED HERE
-            if (dashing && !crouching)      //this is dash, the initial burst of speed on pressing shift
-            {
-                if (dashHelp && !dashOnCooldown)
-                {
-                    StartCoroutine(DashCap());
-                }
-                if (facingRight)
-                {
-                    //rb2d.velocity = new Vector2(speed * Time.fixedDeltaTime * dashSpeedMult, rb2d.velocity.y);
-                }
-                else if (!facingRight)
-                {
-                    //rb2d.velocity = new Vector2(-speed * Time.fixedDeltaTime * dashSpeedMult, rb2d.velocity.y);
-                }
-            }
-            else if (running && !crouching) //this is run, the remaining extra speed after dash ends
-            {
-                if (!dashing && facingRight && running)
-                {
-                    rb2d.velocity = new Vector2(targetHorizontal * runSpeedMult, rb2d.velocity.y);
-                }
-                else if (!dashing && !facingRight && running)
-                {
-                    rb2d.velocity = new Vector2(targetHorizontal * runSpeedMult, rb2d.velocity.y);
-                }
-            }
         }
 
         private void handleDrag()
         {
-            if (Mathf.Abs(horizontal) < 0.4f || changingDirection)
+            if (Mathf.Abs(horizontal) < 0.4f || changingXDirection)      //if less than 0.4 input or if changing direction
             {
-                rb2d.drag = deceleration;
+                rb2d.drag = deceleration;       //add drag
             }
             else
             {
-                rb2d.drag = 0;
+                rb2d.drag = 0;                  //remove drag
+            }
+        }
+
+        private void handleAirDrag()
+        {
+            if (climbing)       //if climbing, add normal deceleration drag
+            {
+                if (Mathf.Abs(vertical) < 0.4f || changingYDirection)      //if less than 0.4 input or if changing direction
+                {
+                    rb2d.drag = deceleration;       //add drag
+                }
+                else
+                {
+                    rb2d.drag = 0;                  //remove drag
+                }
+            }
+            else                //if not climbing, add air drag instead
+            {
+                rb2d.drag = airLinearDrag;       //add air drag
             }
         }
 
         private void jumpAction()
         {
             //executing jump
-            if (!canClimb())
+            if (canClimb() < 0)         //IF CAN'T CLIMB, EXECUTE NORMAL JUMP
             {
                 rb2d.velocity = new Vector2(rb2d.velocity.x, 0f);
                 rb2d.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
                 if (longJump) StartCoroutine(JumpCap());
             }
-            else if (canClimb())
+            else if (canClimb() == 0)   //IF CAN CLIMB AND WALL ON LEFT, WALLJUMP TO RIGHT
             {
                 rb2d.velocity = new Vector2(rb2d.velocity.x, 0f);
-                if (facingRight)
-                {
-                    rb2d.AddForce(new Vector2(-jumpForce, jumpForce), ForceMode2D.Impulse);
-                }
-                else
-                {
-                    rb2d.AddForce(new Vector2(jumpForce, jumpForce), ForceMode2D.Impulse);
-                }
+                rb2d.AddForce(new Vector2(jumpForce, jumpForce), ForceMode2D.Impulse);
+                if (longJump) StartCoroutine(JumpCap());
+            }
+            else if (canClimb() == 1)   //IF CAN CLIMB AND WALL ON RIGHT, WALLJUMP TO LEFT
+            {
+                rb2d.velocity = new Vector2(rb2d.velocity.x, 0f);
+                rb2d.AddForce(new Vector2(-jumpForce, jumpForce), ForceMode2D.Impulse);
                 if (longJump) StartCoroutine(JumpCap());
             }
         }
 
+        private void dashAction()
+        {
+            if (facingRight)
+            {
+                rb2d.AddForce(Vector2.right * dashForce, ForceMode2D.Impulse);
+            }
+            else
+            {
+                rb2d.AddForce(-Vector2.right * dashForce, ForceMode2D.Impulse);
+            }
+            dashing = false;
+            StartCoroutine(DashCap());
+            if (!lerpingMaxSpeed) StartCoroutine(moveSpeedLerp());
+        }
+
         private void climbAction()
         {
-            //executing climb
-            if (climbing)
+            rb2d.AddForce(climbAcceleration * Vector2.up);
+            if (Mathf.Abs(rb2d.velocity.y) > maxClimbSpeed)
             {
-                rb2d.velocity = new Vector2(rb2d.velocity.x, targetVertical * climbSpeedMult);
+                rb2d.velocity = new Vector2(rb2d.velocity.x, Mathf.Sign(rb2d.velocity.y) * maxClimbSpeed);
             }
         }
 
@@ -401,10 +449,14 @@ namespace constellations
 
         private void OnDrawGizmos()
         {
+            Vector2 lineDownRight = new Vector2(transform.position.x + colliderOffset, transform.position.y);
+            Vector2 lineDownLeft = new Vector2(transform.position.x - colliderOffset, transform.position.y);
             Gizmos.color = Color.green;
-            Gizmos.DrawLine(transform.position, transform.position + Vector3.down * groundRaycastLength);
+            Gizmos.DrawLine(lineDownRight, lineDownRight + Vector2.down * groundRaycastLength);
+            Gizmos.DrawLine(lineDownLeft, lineDownLeft + Vector2.down * groundRaycastLength);
             Gizmos.color = Color.yellow;
-            Gizmos.DrawLine(transform.position, transform.position + Vector3.down * crouchRaycastLength);
+            Gizmos.DrawLine(lineDownRight, lineDownRight + Vector2.down * crouchRaycastLength);
+            Gizmos.DrawLine(lineDownLeft, lineDownLeft + Vector2.down * crouchRaycastLength);
             Gizmos.color = Color.red;
             Gizmos.DrawLine(transform.position, transform.position + Vector3.right * climbRaycastLength);
             Gizmos.color = Color.blue;
