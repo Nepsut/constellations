@@ -20,10 +20,11 @@ namespace constellations
         private const float acceleration = 6000f;
         private const float deceleration = 8f;
         private const float jumpForce = 65f;
-        private const float dashForce = 75f;
-        private const float movspeedTransitionTime = 0.3f;
-        private const float dashCooldown = 0.3f;
-        private const float fallGravMult = 2.1f;
+        private const float dashForce = 150f;
+        private const float moveSpeedTransitionTime = 0.3f;
+        private const float dashCooldown = 1f;
+        private const float dashDecelerationIgnore = 0.2f;
+        private const float fallGravMult = 3.7f;
         private const float lowJumpMult = 1.8f;
         private const float airLinearDrag = 2.5f;
         private const float jumpMaxDuration = 0.35f;
@@ -47,7 +48,9 @@ namespace constellations
         private bool longJump = false;
         private bool wallJumped = false;
         private bool dashing = false;
+        private bool dashHappened = false;
         private bool dashOnCooldown = false;
+        private bool dashDecelerating = true;
         private bool lerpingMaxSpeed = false;
         private bool running = false;
         private bool crouching = false;
@@ -90,10 +93,10 @@ namespace constellations
         {
             //MOVEMENT-RELATED METHODS BELOW
             //first calculate true acceleration for movement
-            calcAccel();
+            CalcAccel();
 
             //check if player is currently next to a climbable wall and is moving horizontally at wall
-            if ((canClimb() == 1 && horizontal > 0f) || (canClimb() == 0 && horizontal < 0f)) climbing = true;
+            if ((CanClimb() == 1 && horizontal > 0f) || (CanClimb() == 0 && horizontal < 0f)) climbing = true;
             else climbing = false;
 
             //while climbing, set player gravity to 0 so that climbing can be handled easier
@@ -101,15 +104,15 @@ namespace constellations
             else rb2d.gravityScale = 1;
 
             //if moving, move, if climbing, climb, if dashing, dash, if jumping, jump
-            if (horizontal != 0f) moveAction();
-            if (climbing) climbAction();
-            if (dashing) dashAction();
-            if (jump) jumpAction();
+            if (horizontal != 0f) MoveAction();
+            if (climbing) ClimbAction();
+            if (dashing) DashAction();
+            if (jump) JumpAction();
 
             //adjust drag (and gravity) for smoother movement
-            if (!climbing) fallAdjuster();
-            if (isGrounded()) handleDrag();
-            else handleAirDrag();
+            if (!climbing) FallAdjuster();
+            if (IsGrounded()) HandleDrag();
+            else HandleAirDrag();
 
 
             //CAMERA HANDLING BELOW, TAKE HEED
@@ -126,13 +129,16 @@ namespace constellations
 
                 StartCoroutine(CameraManager.instance.LerpYAction(false));
             }
+
+            Debug.Log(message: $"player horizontal speed {rb2d.velocity.x} player max speed {trueAllowedSpeed}");
+            Debug.Log(message: $"player vertical speed {rb2d.velocity.y} player gravity {rb2d.gravityScale * Physics2D.gravity.y}");
         }
 
         #endregion
 
         #region movement calcs
 
-        private void calcAccel()
+        private void CalcAccel()
         {
             //make acceleration much lower if player has walljumped recently to limit mobility slightly
             if (!wallJumped)
@@ -148,24 +154,39 @@ namespace constellations
 
         //this thing lerps trueAllowedSpeed to maxSpeef from the player's current speed
         //called when dash force impulse is added and when run ends to make movement smooth
-        private IEnumerator moveSpeedLerp()
+        private IEnumerator MoveSpeedLerp()
         {
             lerpingMaxSpeed = true;
             float startSpeed = Mathf.Abs(rb2d.velocity.x);
             float takenTime = 0f;
-            while (takenTime < movspeedTransitionTime)
-            {
-                takenTime += Time.deltaTime;
 
-                float lerpedMaxSpeed = Mathf.Lerp(startSpeed, maxSpeed, (takenTime / movspeedTransitionTime));
-                trueAllowedSpeed = lerpedMaxSpeed;
-                yield return null;
+            if (running)
+            {
+                running = false;
+                while (takenTime < moveSpeedTransitionTime)
+                {
+                    takenTime += Time.deltaTime;
+
+                    float lerpedMaxSpeed = Mathf.Lerp(startSpeed, maxSpeed * runSpeedMult, (takenTime / moveSpeedTransitionTime));
+                    trueAllowedSpeed = lerpedMaxSpeed;
+                    yield return null;
+                }
+            }
+            else
+            {
+                while (takenTime < moveSpeedTransitionTime)
+                {
+                    takenTime += Time.deltaTime;
+
+                    float lerpedMaxSpeed = Mathf.Lerp(startSpeed, maxSpeed, (takenTime / moveSpeedTransitionTime));
+                    trueAllowedSpeed = lerpedMaxSpeed;
+                    yield return null;
+                }
             }
             lerpingMaxSpeed = false;
-            trueAllowedSpeed = maxSpeed;
         }
 
-        private void fallAdjuster()
+        private void FallAdjuster()
         {
             //add gravity when falling to make jumps more snappy and satisfying
             if (rb2d.velocity.y < 0f)
@@ -175,6 +196,37 @@ namespace constellations
             else if (rb2d.velocity.y < 0f && !jump)
             {
                 rb2d.velocity += Vector2.up * Physics2D.gravity.y * (lowJumpMult - 1) * Time.deltaTime;
+            }
+        }
+
+        private void HandleDrag()
+        {
+            if ((Mathf.Abs(horizontal) < 0.4f || changingXDirection) && dashDecelerating)      //if less than 0.4 input or if changing direction
+            {
+                rb2d.drag = deceleration;       //add drag
+            }
+            else
+            {
+                rb2d.drag = 0;                  //remove drag
+            }
+        }
+
+        private void HandleAirDrag()
+        {
+            if (climbing)       //if climbing, add normal deceleration drag
+            {
+                if (Mathf.Abs(vertical) < 0.4f || changingYDirection)      //if less than 0.4 input or if changing direction
+                {
+                    rb2d.drag = deceleration;       //add drag
+                }
+                else
+                {
+                    rb2d.drag = 0;                  //remove drag
+                }
+            }
+            else                //if not climbing, add air drag instead
+            {
+                rb2d.drag = airLinearDrag;       //add air drag
             }
         }
 
@@ -191,9 +243,9 @@ namespace constellations
 
         private void HandleJump()
         {
-            if (isGrounded() || canClimb() >= 0)    //if cat on ground or can climb on wall
+            if (IsGrounded() || CanClimb() >= 0)    //if cat on ground or can climb on wall
             {
-                if (canClimb() >= 0) wallJumped = true;
+                if (CanClimb() >= 0) wallJumped = true;
                 jump = true;
                 longJump = true;
                 if (crouching)      //if crouching, stop crouching and return collider to normal size
@@ -232,25 +284,32 @@ namespace constellations
                 dashing = true;
                 running = true;
             }
+            else dashHappened = false;
         }
 
         //this thing handles dash cooldown
-        private IEnumerator DashCap()
+        private IEnumerator DashCooldown()
         {
             dashOnCooldown = true;
             yield return new WaitForSeconds(dashCooldown);
             dashOnCooldown = false;
         }
 
+        private IEnumerator DashDecelerationManager()
+        {
+            dashDecelerating = false;
+            yield return new WaitForSeconds(dashDecelerationIgnore);
+            dashDecelerating = true;
+        }
+
         private void HandleDashCancel()
         {
-            running = false;
-            StartCoroutine(moveSpeedLerp());    //called to smooth movement from run speed to normal speed
+            if (dashHappened) StartCoroutine(MoveSpeedLerp());    //called to smooth movement from run speed to normal speed
         }
 
         private void HandleCrouch()
         {
-            if (isGrounded())
+            if (IsGrounded())
             {
                 crouching = true;
                 running = false;
@@ -272,7 +331,7 @@ namespace constellations
 
         //check if player is currently on the ground using fancy raycasting tech
         //to avoid the jitteriness of rigidbodies
-        private bool isGrounded()
+        private bool IsGrounded()
         {
             Vector2 lineDownRight = new Vector2(transform.position.x + colliderOffset, transform.position.y);
             Vector2 lineDownLeft = new Vector2(transform.position.x - colliderOffset, transform.position.y);
@@ -296,7 +355,7 @@ namespace constellations
         //to avoid the jitteriness of rigidbodies
         //THIS IS AN INT SO WE KNOW IF WALL IS ON LEFT OR RIGHT,
         //1 == RIGHT, 0 == LEFT
-        private int canClimb()
+        private int CanClimb()
         {
             RaycastHit2D hitRight = Physics2D.Raycast(transform.position, Vector2.right, climbRaycastLength, climbable);
             RaycastHit2D hitLeft = Physics2D.Raycast(transform.position, -Vector2.right, climbRaycastLength, climbable);
@@ -332,7 +391,7 @@ namespace constellations
             }
         }
 
-        private void moveAction()
+        private void MoveAction()
         {
             //STANDARD MOVEMENT
             if (crouching && !wallJumped)   //crouch movement, accelerate slower until trueAllowedSpeed*crouchSpeedMult
@@ -346,9 +405,9 @@ namespace constellations
             else if (running && !wallJumped)  //run movement, accelerate faster until trueAllowedSpeed*runSpeedMult
             {
                 rb2d.AddForce(trueAcceleration * runSpeedMult * Vector2.right);
-                if (Mathf.Abs(rb2d.velocity.x) > trueAllowedSpeed * runSpeedMult)
+                if (Mathf.Abs(rb2d.velocity.x) > trueAllowedSpeed)
                 {
-                    rb2d.velocity = new Vector2(Mathf.Sign(rb2d.velocity.x) * trueAllowedSpeed * runSpeedMult, rb2d.velocity.y);
+                    rb2d.velocity = new Vector2(Mathf.Sign(rb2d.velocity.x) * trueAllowedSpeed, rb2d.velocity.y);
                 }
             }
             else       //normal movement, accelerate until trueAllowedSpeed
@@ -365,53 +424,22 @@ namespace constellations
             else if (horizontal < 0f && facingRight) CatFlip();
         }
 
-        private void handleDrag()
-        {
-            if (Mathf.Abs(horizontal) < 0.4f || changingXDirection)      //if less than 0.4 input or if changing direction
-            {
-                rb2d.drag = deceleration;       //add drag
-            }
-            else
-            {
-                rb2d.drag = 0;                  //remove drag
-            }
-        }
-
-        private void handleAirDrag()
-        {
-            if (climbing)       //if climbing, add normal deceleration drag
-            {
-                if (Mathf.Abs(vertical) < 0.4f || changingYDirection)      //if less than 0.4 input or if changing direction
-                {
-                    rb2d.drag = deceleration;       //add drag
-                }
-                else
-                {
-                    rb2d.drag = 0;                  //remove drag
-                }
-            }
-            else                //if not climbing, add air drag instead
-            {
-                rb2d.drag = airLinearDrag;       //add air drag
-            }
-        }
-
-        private void jumpAction()
+        private void JumpAction()
         {
             //executing jump
-            if (canClimb() < 0)         //IF CAN'T CLIMB, EXECUTE NORMAL JUMP
+            if (CanClimb() < 0)         //IF CAN'T CLIMB, EXECUTE NORMAL JUMP
             {
                 rb2d.velocity = new Vector2(rb2d.velocity.x, 0f);
                 rb2d.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
                 if (longJump) StartCoroutine(JumpCap());
             }
-            else if (canClimb() == 0)   //IF CAN CLIMB AND WALL ON LEFT, WALLJUMP TO RIGHT
+            else if (CanClimb() == 0)   //IF CAN CLIMB AND WALL ON LEFT, WALLJUMP TO RIGHT
             {
                 rb2d.velocity = new Vector2(rb2d.velocity.x, 0f);
                 rb2d.AddForce(new Vector2(jumpForce, jumpForce), ForceMode2D.Impulse);
                 if (longJump) StartCoroutine(JumpCap());
             }
-            else if (canClimb() == 1)   //IF CAN CLIMB AND WALL ON RIGHT, WALLJUMP TO LEFT
+            else if (CanClimb() == 1)   //IF CAN CLIMB AND WALL ON RIGHT, WALLJUMP TO LEFT
             {
                 rb2d.velocity = new Vector2(rb2d.velocity.x, 0f);
                 rb2d.AddForce(new Vector2(-jumpForce, jumpForce), ForceMode2D.Impulse);
@@ -419,7 +447,7 @@ namespace constellations
             }
         }
 
-        private void dashAction()
+        private void DashAction()
         {
             if (facingRight)
             {
@@ -430,11 +458,13 @@ namespace constellations
                 rb2d.AddForce(-Vector2.right * dashForce, ForceMode2D.Impulse);
             }
             dashing = false;
-            StartCoroutine(DashCap());
-            if (!lerpingMaxSpeed) StartCoroutine(moveSpeedLerp());
+            dashHappened = true;
+            StartCoroutine(DashCooldown());
+            StartCoroutine(DashDecelerationManager());
+            if (!lerpingMaxSpeed) StartCoroutine(MoveSpeedLerp());
         }
 
-        private void climbAction()
+        private void ClimbAction()
         {
             rb2d.AddForce(climbAcceleration * Vector2.up);
             if (Mathf.Abs(rb2d.velocity.y) > maxClimbSpeed)
