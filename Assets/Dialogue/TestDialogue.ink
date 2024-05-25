@@ -1,6 +1,6 @@
-Hi chat!
-This is a second line of dialogue.
-+ Impressive!
-    Right?! I knew you'd get it!
-+ Meh, I'm not sure if this is all that...
-    Ouch, I worked hard on this!
+Hi chat! #Orion
+This is a second line of dialogue. #Orion
++ Impressive! #Player
+    Right?! I knew you'd get it! #Orion
++ Meh, I'm not sure if this is all that... #Player
+    Ouch, I worked hard on this! #Orion

@@ -2,6 +2,7 @@ using constellations;
 using Ink.Runtime;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -15,6 +16,12 @@ public class DialogueManager : MonoBehaviour
     [SerializeField] private InputReader input;
 
     [Header("Dialogue UI")]
+    [SerializeField] private string playerName;
+    [SerializeField] private Sprite playerPortrait;
+    private Sprite NPCPortrait;
+    private string NPCName;
+    [SerializeField] private Image dialogueImage;
+    [SerializeField] private TextMeshProUGUI dialogueSpeaker;
     [SerializeField] private GameObject dialoguePanel;
     [SerializeField] private TextMeshProUGUI dialogueText;
     public Story currentStory { get; private set; }
@@ -23,7 +30,7 @@ public class DialogueManager : MonoBehaviour
     [SerializeField] private GameObject choiceHandler;
     [SerializeField] private GameObject choiceObject;
     private bool makingChoice = false;
-
+    
     public static DialogueManager instance { get; private set; }
 
     #endregion
@@ -32,10 +39,8 @@ public class DialogueManager : MonoBehaviour
 
     private void Awake()
     {
-        if (instance == null)
-        {
-            instance = this;
-        }
+        if (instance == null) instance = this;
+        if (playerName == null || playerName == "") playerName = "Car";
         input.SubmitEvent += HandleSubmit;
         input.ClickEvent += HandleClick;
     }
@@ -50,10 +55,12 @@ public class DialogueManager : MonoBehaviour
     #region dialogue methods
 
     //this enters dialogue with the inkJSON file assigned to the npc
-    public void EnterDialogue(TextAsset inkJSON)
+    public void EnterDialogue(TextAsset inkJSON, Sprite t_portrait, string t_name)
     {
         //first this sets the ink story as the active dialogue and activates dialogue panel
         currentStory = new Story(inkJSON.text);
+        NPCPortrait = t_portrait;
+        NPCName = t_name;
         dialoguePanel.SetActive(true);
 
         //continuestory prints dialogue so it's called here
@@ -67,6 +74,22 @@ public class DialogueManager : MonoBehaviour
         {
             //shown text = next line from current story
             dialogueText.text = currentStory.Continue();
+
+            //grab tags from current line and show either player portrait or NPC portrait based on last tag in list
+            if (currentStory.currentTags != null)
+            {
+                if (currentStory.currentTags.Last() == "Player")
+                {
+                    dialogueSpeaker.text = playerName;
+                    dialogueImage.sprite = playerPortrait;
+                }
+                else
+                {
+                    dialogueSpeaker.text = NPCName;
+                    dialogueImage.sprite = NPCPortrait;
+                }
+            }
+
             //this is called on advance in case there are choices, does nothing if there are none
             DisplayChoices();
         }

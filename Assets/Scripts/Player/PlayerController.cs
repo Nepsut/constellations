@@ -37,7 +37,7 @@ namespace constellations
         private const float crouchColliderHeight = 1f;
         private const float groundRaycastLength = 0.87f;
         private const float crouchRaycastLength = 0.62f;
-        private const float climbRaycastLength = 1.28f;
+        private const float climbRaycastLength = 0.83f;
 
         [Header("Dynamic Movement Variables")]
         private float horizontal = 0f;

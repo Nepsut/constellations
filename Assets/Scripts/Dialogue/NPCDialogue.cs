@@ -1,10 +1,20 @@
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace constellations
 {
     public class NPCDialogue : MonoBehaviour, IInteractable, ITalkable
     {
+        [SerializeField] private TextMeshPro hoverName;
         [SerializeField] private TextAsset inkJSON;
+        [SerializeField] private Sprite portrait;
+        [SerializeField] private string speakerName;
+
+        private void Start()
+        {
+            hoverName.text = speakerName;
+        }
 
         public void Interact()
         {
@@ -16,7 +26,7 @@ namespace constellations
         //this then enters dialogue mode with specific ink story, handling dialogue and disabling other inputs
         public void Talk()
         {
-            DialogueManager.instance.EnterDialogue(inkJSON);
+            DialogueManager.instance.EnterDialogue(inkJSON, portrait, speakerName);
         }
     }
 }
