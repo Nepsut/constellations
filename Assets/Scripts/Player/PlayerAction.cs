@@ -40,24 +40,28 @@ namespace constellations
             input.InteractCanceledEvent += HandleInteractCancel;
         }
 
+        //when entering a 2d trigger, check if it's from an NPC or an interactable object
+        //this then lets player interact with said entity with the HandleInteract method
         private void OnTriggerEnter2D(Collider2D collision)
         {
             if (collision == null) return;
             if (collision.gameObject.CompareTag("NPC"))
             {
                 canInteractNPC = true;
+                //save interactable NPC so we can easily call the Talk() method from it
                 interactingNPC = collision.gameObject;
+                //activate indicator to show this NPC can be interacted with
                 interactingNPC.transform.GetChild(0).gameObject.SetActive(true);
-                Debug.Log(message: $"can interact with npc");
             }
             else if (collision.gameObject.CompareTag("Interactable"))
             {
                 canInteractObject = true;
+                //save interactable object so we can easily call the Interact() method from it (TODO)
                 interactingObject = collision.gameObject;
-                Debug.Log(message: $"can interact with object");
             }
         }
 
+        //when leaving a 2d trigger, clear appropriate saved entity and disable indicators
         private void OnTriggerExit2D(Collider2D collision)
         {
             if (collision == null) return;
@@ -67,13 +71,11 @@ namespace constellations
                 if (interactingNPC == null) return;
                 interactingNPC.transform.GetChild(0).gameObject.SetActive(false);
                 interactingNPC = null;
-                Debug.Log(message: $"can't interact with npc");
             }
             else if (collision.gameObject.CompareTag("Interactable"))
             {
                 canInteractObject = false;
                 interactingObject = null;
-                Debug.Log(message: $"can't interact with object");
             }
         }
 
@@ -101,11 +103,14 @@ namespace constellations
 
         }
 
+        //handles interaction based on data retrieved when entering trigger
         private void HandleInteract()
         {
             if (canInteractNPC && interactingNPC != null)
             {
+                //change input mode so player movement is disabled during dialogue
                 input.SetDialogue();
+                //this calls the NPC's dialogue based in its INK story
                 interactingNPC.GetComponent<NPCDialogue>().Talk();
             }
         }

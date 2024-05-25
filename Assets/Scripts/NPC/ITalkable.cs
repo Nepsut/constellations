@@ -1,4 +1,7 @@
-public interface ITalkable
+namespace constellations
 {
-    public void Talk();
+    public interface ITalkable
+    {
+        public void Talk();
+    }
 }

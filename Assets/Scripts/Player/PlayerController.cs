@@ -156,7 +156,7 @@ namespace constellations
             climbAcceleration = acceleration * climbSpeedMult * vertical * Time.deltaTime;
         }
 
-        //this thing lerps trueAllowedSpeed to maxSpeef from the player's current speed
+        //this thing lerps trueAllowedSpeed to maxSpeed from the player's current speed
         //called when dash force impulse is added and when run ends to make movement smooth
         private IEnumerator MoveSpeedLerp()
         {
