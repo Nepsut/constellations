@@ -6,18 +6,18 @@ namespace constellations
 {
     public class CameraManager : MonoBehaviour
     {
-        //init engine variables
-        public static CameraManager instance;
+        [Header("Engine Variables")]
         private CinemachineFramingTransposer framingTransposer;
         private CinemachineVirtualCamera currentCam;
         [SerializeField] private CinemachineVirtualCamera[] allCameras;
+        public static CameraManager instance { get; private set; }
 
-        //init const variables
+        [Header("Const Variables")]
         private const float fallPanAmount = 0.25f;
         private const float fallPanTime = 0.5f;
         private const float panDownDuration = 0.3f;
 
-        //init other variables
+        [Header("Dynamic Variables")]
         private float normYPan;
         private float defaultPanDown;
         public float fallSpeedDampThreshold = -10f; //would be a const but playercontroller barked at me
