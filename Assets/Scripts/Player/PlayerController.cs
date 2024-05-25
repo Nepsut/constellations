@@ -5,6 +5,8 @@ namespace constellations
 {
     public class PlayerController : MonoBehaviour
     {
+        #region variables
+
         [Header("Engine Variables")]
         [SerializeField] private InputReader input;
         private Rigidbody2D rb2d;
@@ -56,12 +58,14 @@ namespace constellations
         private bool crouching = false;
         private bool climbing = false;
 
-        //if horizontal input differs from movement direction, changingDirection = true
+        //if input differs from movement direction, changingDirection = true
         private bool changingXDirection => (rb2d.velocity.x > 0f && horizontal < 0f) || (rb2d.velocity.x < 0f && horizontal > 0f);
         private bool changingYDirection => (rb2d.velocity.y > 0f && vertical < 0f) || (rb2d.velocity.y < 0f && vertical > 0f);
 
         [Header("Other Variables")]
         private float fallYDampThreshold;
+
+        #endregion
 
         #region standard methods
 
@@ -130,8 +134,8 @@ namespace constellations
                 StartCoroutine(CameraManager.instance.LerpYAction(false));
             }
 
-            Debug.Log(message: $"player horizontal speed {rb2d.velocity.x} player max speed {trueAllowedSpeed}");
-            Debug.Log(message: $"player vertical speed {rb2d.velocity.y} player gravity {rb2d.gravityScale * Physics2D.gravity.y}");
+            //Debug.Log(message: $"player horizontal speed {rb2d.velocity.x} player max speed {trueAllowedSpeed}");
+            //Debug.Log(message: $"player vertical speed {rb2d.velocity.y} player gravity {rb2d.gravityScale * Physics2D.gravity.y}");
         }
 
         #endregion
@@ -152,7 +156,7 @@ namespace constellations
             climbAcceleration = acceleration * climbSpeedMult * vertical * Time.deltaTime;
         }
 
-        //this thing lerps trueAllowedSpeed to maxSpeef from the player's current speed
+        //this thing lerps trueAllowedSpeed to maxSpeed from the player's current speed
         //called when dash force impulse is added and when run ends to make movement smooth
         private IEnumerator MoveSpeedLerp()
         {
@@ -191,11 +195,11 @@ namespace constellations
             //add gravity when falling to make jumps more snappy and satisfying
             if (rb2d.velocity.y < 0f)
             {
-                rb2d.velocity += Vector2.up * Physics2D.gravity.y * (fallGravMult - 1) * Time.deltaTime;
+                rb2d.velocity += (fallGravMult - 1) * Physics2D.gravity.y * Time.deltaTime * Vector2.up;
             }
             else if (rb2d.velocity.y < 0f && !jump)
             {
-                rb2d.velocity += Vector2.up * Physics2D.gravity.y * (lowJumpMult - 1) * Time.deltaTime;
+                rb2d.velocity += (lowJumpMult - 1) * Physics2D.gravity.y * Time.deltaTime * Vector2.up;
             }
         }
 
@@ -494,5 +498,6 @@ namespace constellations
         }
 
         #endregion
+        //gizmos basically
     }
 }
