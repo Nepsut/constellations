@@ -25,12 +25,20 @@ public class DialogueManager : MonoBehaviour
     [SerializeField] private GameObject dialoguePanel;
     [SerializeField] private TextMeshProUGUI dialogueText;
     public Story currentStory { get; private set; }
+    private bool isTyping = false;
 
     [Header("Choices UI")]
     [SerializeField] private GameObject choiceHandler;
     [SerializeField] private GameObject choiceObject;
+    private const float timeBeforeChoices = 0.2f;
     private bool makingChoice = false;
-    
+
+    [Header("Other Variables")]
+    private const string alphaCode = "<color=#00000000>";
+    private const float typeSpeed = 5f;
+    private const float maxTypeTime = 0.1f;
+    private bool stopTyping = false;
+    private bool disableInput = false;
     public static DialogueManager instance { get; private set; }
 
     #endregion
@@ -72,26 +80,7 @@ public class DialogueManager : MonoBehaviour
     {
         if (currentStory.canContinue)
         {
-            //shown text = next line from current story
-            dialogueText.text = currentStory.Continue();
-
-            //grab tags from current line and show either player portrait or NPC portrait based on last tag in list
-            if (currentStory.currentTags != null)
-            {
-                if (currentStory.currentTags.Last() == "Player")
-                {
-                    dialogueSpeaker.text = playerName;
-                    dialogueImage.sprite = playerPortrait;
-                }
-                else
-                {
-                    dialogueSpeaker.text = NPCName;
-                    dialogueImage.sprite = NPCPortrait;
-                }
-            }
-
-            //this is called on advance in case there are choices, does nothing if there are none
-            DisplayChoices();
+            StartCoroutine(TypeDialogue());
         }
         else
         { 
@@ -125,6 +114,7 @@ public class DialogueManager : MonoBehaviour
             t_choiceObject.GetComponent<Button>().onClick.AddListener(() => MakeChoice(capturedIndex));
             index++;
         }
+        disableInput = false;
         //if there were choices, highlight choice and set makingChoice to true to disable inputs so story doesn't try to advance
         if (index != 0)
         {
@@ -157,18 +147,71 @@ public class DialogueManager : MonoBehaviour
         ContinueStory();
     }
 
+    //this coroutine types the dialogue one letter at a time
+    private IEnumerator TypeDialogue()
+    {
+        isTyping = true;
+        dialogueText.text = "";
+        string originalText = currentStory.Continue();
+        string displayedText = "";
+        int alphaIndex = 0;
+
+        //grab tags from current line and show either player portrait or NPC portrait based on last tag in list
+        if (currentStory.currentTags != null)
+        {
+            if (currentStory.currentTags.Last() == "Player")
+            {
+                dialogueSpeaker.text = playerName;
+                dialogueImage.sprite = playerPortrait;
+            }
+            else
+            {
+                dialogueSpeaker.text = NPCName;
+                dialogueImage.sprite = NPCPortrait;
+            }
+        }
+
+        foreach (char c in originalText.ToCharArray())
+        {
+            if (stopTyping) break;
+            alphaIndex++;
+            dialogueText.text = originalText;
+            displayedText = dialogueText.text.Insert(alphaIndex, alphaCode);
+            dialogueText.text = displayedText;
+            yield return new WaitForSeconds(maxTypeTime / typeSpeed);
+        }
+
+        if (stopTyping) dialogueText.text = originalText;
+        stopTyping = false;
+        isTyping = false;
+        //this is called on advance in case there are choices, does nothing if there are none
+        disableInput = true;
+        yield return new WaitForSeconds(timeBeforeChoices);
+        DisplayChoices();
+    }
+
     #endregion
 
     #region input handlers
 
     private void HandleSubmit()
     {
-        if (!makingChoice) ContinueStory();
+        if (isTyping)
+        {
+            stopTyping = true;
+            return;
+        }
+        if (!makingChoice && !disableInput) ContinueStory();
     }
 
     private void HandleClick()
     {
-        if (!makingChoice) ContinueStory();
+        if (isTyping)
+        {
+            stopTyping = true;
+            return;
+        }
+        if (!makingChoice && !disableInput) ContinueStory();
     }
 
     #endregion

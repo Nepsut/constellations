@@ -6,7 +6,7 @@ namespace constellations
     {
         #region variables
 
-        [Header ("Engine Variables")]
+        [Header("Engine Variables")]
         [SerializeField] private InputReader input;
         [SerializeField] private PolygonCollider2D polygonCollider;
 
@@ -21,6 +21,7 @@ namespace constellations
         [Header("Interaction Variables")]
         private bool canInteractNPC = false;
         private bool canInteractObject = false;
+        public bool didInteractObject = false;
         private GameObject interactingNPC;
         private GameObject interactingObject;
 
@@ -58,6 +59,7 @@ namespace constellations
                 canInteractObject = true;
                 //save interactable object so we can easily call the Interact() method from it (TODO)
                 interactingObject = collision.gameObject;
+                interactingObject.transform.GetChild(0).gameObject.SetActive(true);
             }
         }
 
@@ -69,12 +71,20 @@ namespace constellations
             {
                 canInteractNPC = false;
                 if (interactingNPC == null) return;
-                interactingNPC.transform.GetChild(0).gameObject.SetActive(false);
+                if (interactingNPC.transform.GetChild(0).gameObject != null)
+                {
+                    interactingNPC.transform.GetChild(0).gameObject.SetActive(false);
+                }
                 interactingNPC = null;
             }
             else if (collision.gameObject.CompareTag("Interactable"))
             {
                 canInteractObject = false;
+                if (interactingObject == null) return;
+                if (interactingObject.transform.GetChild(0).gameObject != null)
+                {
+                    interactingObject.transform.GetChild(0).gameObject.SetActive(false);
+                }
                 interactingObject = null;
             }
         }
@@ -113,11 +123,15 @@ namespace constellations
                 //this calls the NPC's dialogue based in its INK story
                 interactingNPC.GetComponent<NPCDialogue>().Talk();
             }
+            else if (canInteractObject && interactingObject != null)
+            {
+                didInteractObject = true;
+            }
         }
 
         private void HandleInteractCancel()
         {
-
+            didInteractObject = false;
         }
 
         #endregion

@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 namespace constellations
 {
-    public class NPCDialogue : MonoBehaviour, IInteractable, ITalkable
+    public class NPCDialogue : MonoBehaviour, ITalkable
     {
         [SerializeField] private TextMeshPro hoverName;
         [SerializeField] private TextAsset inkJSON;
@@ -14,12 +14,6 @@ namespace constellations
         private void Start()
         {
             hoverName.text = speakerName;
-        }
-
-        public void Interact()
-        {
-            //this is here because we inherit from IInteractable interface, which has the Interact() abstract method
-            //...honestly forgot why this inheritance even exists here
         }
 
         //this is called by PlayerAction when player is in range of specific NPC
