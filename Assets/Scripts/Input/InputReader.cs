@@ -10,6 +10,9 @@ namespace constellations
     public class InputReader : ScriptableObject, GameInputs.IGameplayActions, GameInputs.IUIActions, GameInputs.IDialogueActions
     {
         private GameInputs gameInputs;
+        public bool gameplayActive {get; private set;} = true;
+        public bool dialogueActive {get; private set;} = false;
+        public bool UIActive {get; private set;} = false;
 
         private void OnEnable()
         {
@@ -30,18 +33,29 @@ namespace constellations
             gameInputs.Gameplay.Enable();
             gameInputs.Dialogue.Disable();
             gameInputs.UI.Disable();
+            gameplayActive = true;
+            dialogueActive = false;
+            UIActive = false;
         }
 
         public void SetUI()
         {
             gameInputs.Gameplay.Disable();
+            gameInputs.Dialogue.Disable();
             gameInputs.UI.Enable();
+            gameplayActive = false;
+            dialogueActive = false;
+            UIActive = true;
         }
 
         public void SetDialogue()
         {
             gameInputs.Dialogue.Enable();
             gameInputs.Gameplay.Disable();
+            gameInputs.UI.Disable();
+            gameplayActive = false;
+            dialogueActive = true;
+            UIActive = false;
         }
 
         //various actions that will be performed depending on received inputs
@@ -57,6 +71,8 @@ namespace constellations
         public event Action AttackCanceledEvent;
         public event Action ScreamEvent;
         public event Action ScreamCanceledEvent;
+        public event Action MeowEvent;
+        public event Action MeowCanceledEvent;
         public event Action InteractEvent;
         public event Action InteractCanceledEvent;
         public event Action SubmitEvent;
@@ -149,6 +165,18 @@ namespace constellations
             if (context.phase == InputActionPhase.Canceled)
             {
                 ScreamCanceledEvent?.Invoke();
+            }
+        }
+
+        public void OnMeow(InputAction.CallbackContext context)
+        {
+            if (context.phase == InputActionPhase.Performed)
+            {
+                MeowEvent?.Invoke();
+            }
+            if (context.phase == InputActionPhase.Canceled)
+            {
+                MeowCanceledEvent?.Invoke();
             }
         }
 
