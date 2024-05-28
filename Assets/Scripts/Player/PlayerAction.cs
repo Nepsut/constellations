@@ -1,4 +1,5 @@
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace constellations
@@ -11,21 +12,28 @@ namespace constellations
         [SerializeField] private InputReader input;
         [SerializeField] private HitBoxController hitbox;
 
-        [Header("Constant Attack Variables")]
+        [Header("Constant Action Variables")]
         private const int attackDamage = 20;
         private const int attackBuffAmount = 5;
         private const float attackSpeed = 10f;      //real attackspeed ends up being 10/attackSpeed
-        private const float attackChargeTime = 0.5f;
+        private const float attackChargeTime = 1f;
+        private const float screamMinDuration = 1.5f;
+        private const float screamBufferTime = 0.1f;
+        private const float meowTime = 0.2f;
 
-        [Header("Dynamic Attack Variables")]
+        [Header("Dynamic Action Variables")]
         private int attackBuffs = 0;                //add 1 every time player's attack gets buffed
         private int realDamage = 20;
         private float heavyAttackMult = 1.5f;
         private bool attackCooldown = false;
         private bool didAttack = false;
         private bool canHeavyAttack = false;
-
+        private bool screaming = false;
+        private bool screamKeyHeld = false;
+        private bool screamMinDurationActive = false;
+        private bool meow = false;
         private Coroutine attackTypeCheck;
+        private Coroutine scream;
 
         [Header("Interaction Variables")]
         private bool canInteractNPC = false;
@@ -45,6 +53,7 @@ namespace constellations
             input.AttackCanceledEvent += HandleAttackCancel;
             input.ScreamEvent += HandleScream;
             input.ScreamCanceledEvent += HandleScreamCancel;
+            input.MeowEvent += HandleMeow;
             input.InteractEvent += HandleInteract;
             input.InteractCanceledEvent += HandleInteractCancel;
         }
@@ -108,7 +117,7 @@ namespace constellations
 
         private void HandleAttack()
         {
-            if (!attackCooldown)
+            if (!attackCooldown && !screaming)
             {
                 Debug.Log("attack pressed");
                 didAttack = true;
@@ -128,12 +137,18 @@ namespace constellations
 
         private void HandleScream()
         {
-
+            scream = StartCoroutine(Scream());
+            screamKeyHeld = true;
         }
 
         private void HandleScreamCancel()
         {
+            screamKeyHeld = false;
+        }
 
+        private void HandleMeow()
+        {
+            if (!meow) StartCoroutine(Meow());
         }
 
         //handles interaction based on data retrieved when entering trigger
@@ -203,6 +218,33 @@ namespace constellations
         {
             hitbox.targetEnemy.GetComponent<EnemyBase>().TakeDamage(t_damage);
             Debug.Log(message: $"did hit enemy for {t_damage} damage");
+        }
+
+        private IEnumerator Scream()
+        {
+            screaming = true;
+            screamMinDurationActive = true;
+            Debug.Log("screaming");
+            //set screaming animation and sound here
+            yield return new WaitForSeconds(screamMinDuration);
+            screamMinDurationActive = false;
+            while (screamKeyHeld)
+            {
+                yield return new WaitForSeconds(screamBufferTime);
+            }
+            Debug.Log("stopped screaming");
+            //end screaming animation and sound here
+            screaming = false;
+        }
+
+        private IEnumerator Meow()
+        {
+            meow = true;
+            //meow animation & sound go here
+            yield return new WaitForSeconds(meowTime);
+            Debug.Log("meow");
+            //and they end here
+            meow = false;
         }
 
         #endregion

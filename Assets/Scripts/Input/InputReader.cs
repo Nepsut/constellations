@@ -71,6 +71,8 @@ namespace constellations
         public event Action AttackCanceledEvent;
         public event Action ScreamEvent;
         public event Action ScreamCanceledEvent;
+        public event Action MeowEvent;
+        public event Action MeowCanceledEvent;
         public event Action InteractEvent;
         public event Action InteractCanceledEvent;
         public event Action SubmitEvent;
@@ -163,6 +165,18 @@ namespace constellations
             if (context.phase == InputActionPhase.Canceled)
             {
                 ScreamCanceledEvent?.Invoke();
+            }
+        }
+
+        public void OnMeow(InputAction.CallbackContext context)
+        {
+            if (context.phase == InputActionPhase.Performed)
+            {
+                MeowEvent?.Invoke();
+            }
+            if (context.phase == InputActionPhase.Canceled)
+            {
+                MeowCanceledEvent?.Invoke();
             }
         }
 
