@@ -196,6 +196,7 @@ public class DialogueManager : MonoBehaviour
 
     private void HandleSubmit()
     {
+        if (!input.dialogueActive) return;
         if (isTyping)
         {
             stopTyping = true;
@@ -206,6 +207,7 @@ public class DialogueManager : MonoBehaviour
 
     private void HandleClick()
     {
+        if (!input.dialogueActive) return;
         if (isTyping)
         {
             stopTyping = true;
