@@ -4,9 +4,13 @@ using UnityEngine;
 
 namespace constellations
 {
-    public class PlayerAction : MonoBehaviour
+    public class PlayerAction : MonoBehaviour, IDataPersistence
     {
         #region variables
+
+        [Header("Management Variables")]
+        private bool attackEnabled = true;
+        private bool screamEnabled = true;
 
         [Header("Engine Variables")]
         [SerializeField] private InputReader input;
@@ -38,9 +42,11 @@ namespace constellations
         [Header("Interaction Variables")]
         private bool canInteractNPC = false;
         private bool canInteractObject = false;
+        private bool canInteractSave = false;
         [HideInInspector] public bool didInteractObject = false;
         private GameObject interactingNPC;
         private GameObject interactingObject;
+        private GameObject saveObject;
 
 
         #endregion
@@ -68,20 +74,30 @@ namespace constellations
         private void OnTriggerEnter2D(Collider2D collision)
         {
             if (collision == null) return;
-            if (collision.gameObject.CompareTag("NPC"))
+            if (collision.gameObject.CompareTag("NPC") || collision.gameObject.CompareTag("SavePoint"))
             {
                 canInteractNPC = true;
                 //save interactable NPC so we can easily call the Talk() method from it
                 interactingNPC = collision.gameObject;
                 //activate indicator to show this NPC can be interacted with
-                interactingNPC.transform.GetChild(0).gameObject.SetActive(true);
+                if (interactingNPC.transform.GetChild(0).gameObject != null)
+                {
+                    interactingNPC.transform.GetChild(0).gameObject.SetActive(true);
+                }
             }
             else if (collision.gameObject.CompareTag("Interactable"))
             {
                 canInteractObject = true;
-                //save interactable object so we can easily call the Interact() method from it (TODO)
+                //save interactable object so we can easily call the Interact() method from it
                 interactingObject = collision.gameObject;
-                interactingObject.transform.GetChild(0).gameObject.SetActive(true);
+                if (interactingObject.transform.GetChild(0).gameObject != null)
+                {
+                    interactingObject.transform.GetChild(0).gameObject.SetActive(true);
+                }
+            }
+            if (collision.gameObject.CompareTag("SavePoint"))
+            {
+                collision.gameObject.GetComponent<SavePoint>().usedSavepoint = true;
             }
         }
 
@@ -89,7 +105,7 @@ namespace constellations
         private void OnTriggerExit2D(Collider2D collision)
         {
             if (collision == null) return;
-            if (collision.gameObject.CompareTag("NPC"))
+            if (collision.gameObject.CompareTag("NPC") || collision.gameObject.CompareTag("SavePoint"))
             {
                 canInteractNPC = false;
                 if (interactingNPC == null) return;
@@ -109,6 +125,10 @@ namespace constellations
                 }
                 interactingObject = null;
             }
+            if (collision.gameObject.CompareTag("SavePoint"))
+            {
+                collision.gameObject.GetComponent<SavePoint>().usedSavepoint = false;
+            }
         }
 
         #endregion
@@ -117,6 +137,7 @@ namespace constellations
 
         private void HandleAttack()
         {
+            if (!attackEnabled) return;
             if (!attackCooldown && !screaming)
             {
                 Debug.Log("attack pressed");
@@ -127,6 +148,7 @@ namespace constellations
 
         private void HandleAttackCancel()
         {
+            if (!attackEnabled) return;
             if (didAttack)
             {
                 Debug.Log("attack released");
@@ -137,12 +159,14 @@ namespace constellations
 
         private void HandleScream()
         {
+            if (!screamEnabled) return;
             scream = StartCoroutine(Scream());
             screamKeyHeld = true;
         }
 
         private void HandleScreamCancel()
         {
+            if (!screamEnabled) return;
             screamKeyHeld = false;
         }
 
@@ -245,6 +269,22 @@ namespace constellations
             Debug.Log("meow");
             //and they end here
             meow = false;
+        }
+
+        #endregion
+
+        #region data handling
+
+        public void LoadData(GameData data)
+        {
+            this.attackEnabled = data.attackEnabled;
+            this.screamEnabled = data.screamEnabled;
+        }
+
+        public void SaveData(ref GameData data)
+        {
+            data.attackEnabled = this.attackEnabled;
+            data.screamEnabled = this.screamEnabled;
         }
 
         #endregion

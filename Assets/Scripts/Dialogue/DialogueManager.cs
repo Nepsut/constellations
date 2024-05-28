@@ -33,6 +33,9 @@ public class DialogueManager : MonoBehaviour
     private const float timeBeforeChoices = 0.2f;
     private bool makingChoice = false;
 
+    [Header("Save Variables")]
+    private Vector3 saveSpot = Vector3.zero;
+
     [Header("Other Variables")]
     private const string alphaCode = "<color=#00000000>";
     private const float typeSpeed = 5f;
@@ -63,12 +66,14 @@ public class DialogueManager : MonoBehaviour
     #region dialogue methods
 
     //this enters dialogue with the inkJSON file assigned to the npc
-    public void EnterDialogue(TextAsset inkJSON, Sprite t_portrait, string t_name)
+    public void EnterDialogue(TextAsset inkJSON, Sprite t_portrait, string t_name, Vector3? position = null)
     {
+        if (position == null) position = Vector3.zero;
         //first this sets the ink story as the active dialogue and activates dialogue panel
         currentStory = new Story(inkJSON.text);
         NPCPortrait = t_portrait;
         NPCName = t_name;
+        saveSpot = (Vector3)position;
         dialoguePanel.SetActive(true);
 
         //continuestory prints dialogue so it's called here
@@ -168,6 +173,10 @@ public class DialogueManager : MonoBehaviour
             {
                 dialogueSpeaker.text = NPCName;
                 dialogueImage.sprite = NPCPortrait;
+            }
+            if (currentStory.currentTags[0] == "save")
+            {
+                DataPersistenceManager.instance.SaveGame();
             }
         }
 
