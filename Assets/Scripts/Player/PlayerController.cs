@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -65,6 +66,8 @@ namespace constellations
         [Header("Other Variables")]
         private float fallYDampThreshold;
 
+        Animator animator; //for animations...
+
         #endregion
 
         #region standard methods
@@ -90,6 +93,7 @@ namespace constellations
             //set YDampThreshold to value specified in CameraManager
             fallYDampThreshold = CameraManager.instance.fallSpeedDampThreshold;
             trueAllowedSpeed = maxSpeed;
+            animator = GetComponent<Animator>();
         }
 
         //using FixedUpdate so framerate doesn't affect functionality
@@ -243,6 +247,8 @@ namespace constellations
             //separate the vector2 from movement input to horizontal and vertical for easier usage
             horizontal = dir.x;
             vertical = dir.y;
+
+            animator.SetFloat("xVelocity", Mathf.Abs(dir.x)); //used by animation blend tree
         }
 
         private void HandleJump()
