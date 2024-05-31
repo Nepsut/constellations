@@ -16,6 +16,7 @@ namespace constellations
         [SerializeField] private LayerMask ground;
         [SerializeField] private LayerMask climbable;
         [SerializeField] private GameObject cameraFollowObject;
+        private Animator animator; //for animations...
 
         [Header("Constant Movement Variables")]
         private const float maxSpeed = 3f;
@@ -65,8 +66,6 @@ namespace constellations
 
         [Header("Other Variables")]
         private float fallYDampThreshold;
-
-        Animator animator; //for animations...
 
         #endregion
 
