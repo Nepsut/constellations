@@ -21,12 +21,14 @@ namespace constellations
         private const int attackBuffAmount = 5;
         private const float attackSpeed = 10f;      //real attackspeed ends up being 10/attackSpeed
         private const float attackChargeTime = 1f;
+        public const int knockbackbBuffAmount = 5;
         private const float screamMinDuration = 1.5f;
         private const float screamBufferTime = 0.1f;
         private const float meowTime = 0.2f;
 
         [Header("Dynamic Action Variables")]
         private int attackBuffs = 0;                //add 1 every time player's attack gets buffed
+        [HideInInspector] public int knockbackBuffs { get; private set; } = 0;      //add 1 on knockback buff
         private int realDamage = 20;
         private float heavyAttackMult = 1.5f;
         private bool attackCooldown = false;
@@ -34,7 +36,6 @@ namespace constellations
         private bool canHeavyAttack = false;
         private bool screaming = false;
         private bool screamKeyHeld = false;
-        private bool screamMinDurationActive = false;
         private bool meow = false;
         private Coroutine attackTypeCheck;
         private Coroutine scream;
@@ -42,7 +43,6 @@ namespace constellations
         [Header("Interaction Variables")]
         private bool canInteractNPC = false;
         private bool canInteractObject = false;
-        private bool canInteractSave = false;
         [HideInInspector] public bool didInteractObject = false;
         private GameObject interactingNPC;
         private GameObject interactingObject;
@@ -222,7 +222,7 @@ namespace constellations
             Debug.Log("normal attack done");
             if (hitbox.canAttackEnemy && hitbox.targetEnemy != null)
             {
-                DealDamage(realDamage);
+                DealDamage(realDamage, false);
                 Debug.Log(message: $"did normal attack on enemy for {realDamage} damage");
             }
         }
@@ -233,25 +233,33 @@ namespace constellations
             Debug.Log("heavy attack done");
             if (hitbox.canAttackEnemy && hitbox.targetEnemy != null)
             {
-                DealDamage(realDamage * heavyAttackMult);
+                DealDamage(realDamage * heavyAttackMult, true);
                 Debug.Log(message: $"did heavy attack on enemy for {realDamage * heavyAttackMult} damage");
             }
         }
 
-        private void DealDamage(float t_damage)
+        private void DealDamage(float t_damage, bool wasHeavy)
         {
-            hitbox.targetEnemy.GetComponent<EnemyBase>().TakeDamage(t_damage);
+            if (hitbox.targetEnemy.CompareTag("Ghost"))
+            {
+                hitbox.targetEnemy.GetComponentInParent<GhostBehavior>().TakeDamage(t_damage);
+                hitbox.targetEnemy.GetComponentInParent<GhostBehavior>().wasHeavyHit = wasHeavy;
+
+            }
+            else if (hitbox.targetEnemy.CompareTag("Skeleton"))
+            {
+                hitbox.targetEnemy.GetComponentInParent<SkeletonBehavior>().TakeDamage(t_damage);
+                hitbox.targetEnemy.GetComponentInParent<SkeletonBehavior>().wasHeavyHit = wasHeavy;
+            }
             Debug.Log(message: $"did hit enemy for {t_damage} damage");
         }
 
         private IEnumerator Scream()
         {
             screaming = true;
-            screamMinDurationActive = true;
             Debug.Log("screaming");
             //set screaming animation and sound here
             yield return new WaitForSeconds(screamMinDuration);
-            screamMinDurationActive = false;
             while (screamKeyHeld)
             {
                 yield return new WaitForSeconds(screamBufferTime);
@@ -279,12 +287,16 @@ namespace constellations
         {
             this.attackEnabled = data.attackEnabled;
             this.screamEnabled = data.screamEnabled;
+            this.attackBuffs = data.attackBuffs;
+            this.knockbackBuffs = data.knockbackBuffs;
         }
 
         public void SaveData(ref GameData data)
         {
             data.attackEnabled = this.attackEnabled;
             data.screamEnabled = this.screamEnabled;
+            data.attackBuffs = this.attackBuffs;
+            data.knockbackBuffs = this.knockbackBuffs;
         }
 
         #endregion

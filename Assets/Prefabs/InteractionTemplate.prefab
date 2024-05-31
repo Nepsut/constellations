@@ -110,7 +110,7 @@ GameObject:
   - component: {fileID: 5402902435196756989}
   - component: {fileID: 262912833015330646}
   m_Layer: 0
-  m_Name: TestInteraction
+  m_Name: InteractionTemplate
   m_TagString: Interactable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

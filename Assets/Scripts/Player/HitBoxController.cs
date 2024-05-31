@@ -1,13 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using constellations;
 using UnityEngine;
 
 public class HitBoxController : MonoBehaviour
 {
     [SerializeField] GameObject player;
-    public GameObject targetEnemy { get; private set; }
-    public bool canAttackEnemy { get; private set; } = false;
+    [HideInInspector] public GameObject targetEnemy { get; private set; }
+    [HideInInspector] public bool canAttackEnemy { get; private set; } = false;
+    private string[] enemyTags =  new string[]{"Enemy", "Ghost", "Skeleton"};
 
     // Update is called once per frame
     void Update()
@@ -26,7 +28,7 @@ public class HitBoxController : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collider)
     {
         if (collider == null) return;
-        if (collider.gameObject.CompareTag("Enemy"))
+        if (enemyTags.Contains(collider.gameObject.tag))
         {
             canAttackEnemy = true;
             targetEnemy = collider.gameObject;
@@ -36,7 +38,7 @@ public class HitBoxController : MonoBehaviour
     private void OnTriggerExit2D(Collider2D collider)
     {
         if (collider == null) return;
-        if (collider.gameObject.CompareTag("Enemy"))
+        if (enemyTags.Contains(collider.gameObject.tag))
         {
             canAttackEnemy = false;
             targetEnemy = null;
