@@ -18,7 +18,6 @@ namespace constellations
         private const float seeDistance = 10f;
         private const float loseSightDistance = 15f;
         private const float stopMovingDistance = 0.3f;
-        private const float checkFrequency = 0.2f;
         private const float acceleration = 1000f;
         private const float deceleration = 3f;
         private const float fastDeceleration = 10f;
@@ -85,14 +84,14 @@ namespace constellations
 
         #endregion
 
-        private void Movement()
+        protected override void Movement()
         {
             //addforce toward direction of player
             rb.AddForce(direction * acceleration * Time.deltaTime);
             //if speed over allowedSpeed, set speed to allowedSpeed
             if (Mathf.Abs(rb.velocity.x) > allowedSpeed || Mathf.Abs(rb.velocity.y) > allowedSpeed)
             {
-                rb.velocity = new Vector2(direction.x, direction.y) * maxSpeed;
+                rb.velocity = new Vector2(direction.x, direction.y) * allowedSpeed;
             }
         }
 
