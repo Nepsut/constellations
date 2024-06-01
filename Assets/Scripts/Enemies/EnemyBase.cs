@@ -24,6 +24,8 @@ namespace constellations
             }
         }
 
+        protected abstract void Movement();
+
         protected abstract IEnumerator Death();
     }
 }

@@ -23,7 +23,7 @@ namespace constellations
         private const float maxClimbSpeed = 2.5f;
         private const float acceleration = 6000f;
         private const float deceleration = 8f;
-        private const float jumpForce = 65f;
+        private const float jumpForce = 50f;
         private const float dashForce = 150f;
         private const float moveSpeedTransitionTime = 0.3f;
         private const float dashCooldown = 1f;
@@ -37,9 +37,6 @@ namespace constellations
         private const float climbSpeedMult = 1.2f;
         private const float baseColliderHeight = 1.5f;
         private const float crouchColliderHeight = 1f;
-        private const float groundRaycastLength = 0.87f;
-        private const float crouchRaycastLength = 0.62f;
-        private const float climbRaycastLength = 0.83f;
 
         [Header("Dynamic Movement Variables")]
         private float horizontal = 0f;
@@ -63,6 +60,10 @@ namespace constellations
         //if input differs from movement direction, changingDirection = true
         private bool changingXDirection => (rb2d.velocity.x > 0f && horizontal < 0f) || (rb2d.velocity.x < 0f && horizontal > 0f);
         private bool changingYDirection => (rb2d.velocity.y > 0f && vertical < 0f) || (rb2d.velocity.y < 0f && vertical > 0f);
+        private Vector2 groundRaycastBox;
+        private Vector2 crouchRaycastBox;
+        private Vector2 climbRaycastBox;
+
 
         [Header("Other Variables")]
         private float fallYDampThreshold;
@@ -76,6 +77,10 @@ namespace constellations
             //fetch rigidbody and collider
             rb2d = GetComponent<Rigidbody2D>();
             capsuleCollider = GetComponent<CapsuleCollider2D>();
+
+            groundRaycastBox = new Vector2(1.6f, 1.65f);
+            crouchRaycastBox = new Vector2(1.6f, 1.15f);
+            climbRaycastBox = new Vector2(0.9f, 1.45f);
 
             //add methods to events in InputReader
             input.MoveEvent += HandleMove;
@@ -342,22 +347,15 @@ namespace constellations
         //to avoid the jitteriness of rigidbodies
         private bool IsGrounded()
         {
-            Vector2 lineDownRight = new Vector2(transform.position.x + colliderOffset, transform.position.y);
-            Vector2 lineDownLeft = new Vector2(transform.position.x - colliderOffset, transform.position.y);
-            RaycastHit2D hit1;
-            RaycastHit2D hit2;
+            //check for ground using appropriate raycast box
             if (!crouching)
             {
-                hit1 = Physics2D.Raycast(lineDownRight, Vector2.down, groundRaycastLength, ground);
-                hit2 = Physics2D.Raycast(lineDownLeft, Vector2.down, groundRaycastLength, ground);
+                return Physics2D.BoxCast(transform.position, groundRaycastBox, 0f, Vector2.down, 0.1f, ground);
             }
             else
             {
-                hit1 = Physics2D.Raycast(lineDownRight, Vector2.down, crouchRaycastLength, ground);
-                hit2 = Physics2D.Raycast(lineDownLeft, Vector2.down, crouchRaycastLength, ground);
+                return Physics2D.BoxCast(transform.position, crouchRaycastBox, 0f, Vector2.down, 0.1f, ground);
             }
-            if (hit1 || hit2) return true;
-            else return false;
         }
 
         //check if player is on climbable wall using fancy raycasting tech
@@ -366,8 +364,11 @@ namespace constellations
         //1 == RIGHT, 0 == LEFT
         private int CanClimb()
         {
-            RaycastHit2D hitRight = Physics2D.Raycast(transform.position, Vector2.right, climbRaycastLength, climbable);
-            RaycastHit2D hitLeft = Physics2D.Raycast(transform.position, -Vector2.right, climbRaycastLength, climbable);
+            if (crouching) return -1;
+            Collider2D hitRight = Physics2D.OverlapBox(new Vector2(transform.position.x + climbRaycastBox.x / 2, transform.position.y),
+            climbRaycastBox, 0f, climbable);
+            Collider2D hitLeft = Physics2D.OverlapBox(new Vector2(transform.position.x - climbRaycastBox.x / 2, transform.position.y),
+            climbRaycastBox, 0f, climbable);
             if (hitRight) return 1;
             else if (hitLeft) return 0;
             else return -1;
@@ -483,26 +484,5 @@ namespace constellations
         }
 
         #endregion
-
-        #region TEMPORARY
-
-        private void OnDrawGizmos()
-        {
-            Vector2 lineDownRight = new Vector2(transform.position.x + colliderOffset, transform.position.y);
-            Vector2 lineDownLeft = new Vector2(transform.position.x - colliderOffset, transform.position.y);
-            Gizmos.color = Color.green;
-            Gizmos.DrawLine(lineDownRight, lineDownRight + Vector2.down * groundRaycastLength);
-            Gizmos.DrawLine(lineDownLeft, lineDownLeft + Vector2.down * groundRaycastLength);
-            Gizmos.color = Color.yellow;
-            Gizmos.DrawLine(lineDownRight, lineDownRight + Vector2.down * crouchRaycastLength);
-            Gizmos.DrawLine(lineDownLeft, lineDownLeft + Vector2.down * crouchRaycastLength);
-            Gizmos.color = Color.red;
-            Gizmos.DrawLine(transform.position, transform.position + Vector3.right * climbRaycastLength);
-            Gizmos.color = Color.blue;
-            Gizmos.DrawLine(transform.position, transform.position - Vector3.right * climbRaycastLength);
-        }
-
-        #endregion
-        //gizmos basically
     }
 }
