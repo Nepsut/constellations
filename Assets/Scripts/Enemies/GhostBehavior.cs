@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 namespace constellations
@@ -15,6 +16,7 @@ namespace constellations
         private PlayerAction playerAction;
 
         [Header("Constant Variables")]
+        private const float awakeCheckFrequency = 0.5f;
         private const float seeDistance = 10f;
         private const float loseSightDistance = 15f;
         private const float stopMovingDistance = 0.3f;
@@ -29,6 +31,7 @@ namespace constellations
         public const float deathDuration = 1f;         //adjust depending on animation length
 
         [Header("Dynamic Variables")]
+        private bool awake = false;
         private float allowedSpeed = 0;
         private float distance = 0;
         private Vector2 direction = Vector2.zero;
@@ -51,10 +54,12 @@ namespace constellations
         {
             //set allowespeed to max speed for now
             allowedSpeed = maxSpeed;
+            StartCoroutine(AwakeCheck());
         }
 
         void FixedUpdate()
         {
+            if (!awake) return;
             //if dead, return early
             if (isDead)
             {
@@ -83,6 +88,15 @@ namespace constellations
         }
 
         #endregion
+
+        private IEnumerator AwakeCheck()
+        {
+            while (Vector2.Distance(transform.position, player.transform.position) > seeDistance)
+            {
+                yield return new WaitForSeconds(awakeCheckFrequency);
+            }
+            awake = true;
+        }
 
         protected override void Movement()
         {

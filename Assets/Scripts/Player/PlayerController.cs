@@ -45,6 +45,7 @@ namespace constellations
         private float climbAcceleration;
         private float trueAllowedSpeed;
         public bool facingRight { get; private set; } = true;
+        private bool grounded = false;
         private bool jump = false;
         private bool longJump = false;
         private bool wallJumped = false;
@@ -55,6 +56,7 @@ namespace constellations
         private bool lerpingMaxSpeed = false;
         private bool running = false;
         private bool crouching = false;
+        private int canClimb = -1;
         private bool climbing = false;
 
         //if input differs from movement direction, changingDirection = true
@@ -106,9 +108,11 @@ namespace constellations
             //MOVEMENT-RELATED METHODS BELOW
             //first calculate true acceleration for movement
             CalcAccel();
+            canClimb = CanClimb();
+            grounded = IsGrounded();
 
             //check if player is currently next to a climbable wall and is moving horizontally at wall
-            if ((CanClimb() == 1 && horizontal > 0f) || (CanClimb() == 0 && horizontal < 0f)) climbing = true;
+            if ((canClimb == 1 && horizontal > 0f) || (canClimb == 0 && horizontal < 0f)) climbing = true;
             else climbing = false;
 
             //while climbing, set player gravity to 0 so that climbing can be handled easier
@@ -123,7 +127,7 @@ namespace constellations
 
             //adjust drag (and gravity) for smoother movement
             if (!climbing) FallAdjuster();
-            if (IsGrounded()) HandleDrag();
+            if (grounded) HandleDrag();
             else HandleAirDrag();
 
 
@@ -257,9 +261,9 @@ namespace constellations
 
         private void HandleJump()
         {
-            if (IsGrounded() || CanClimb() >= 0)    //if cat on ground or can climb on wall
+            if (grounded || canClimb >= 0)    //if cat on ground or can climb on wall
             {
-                if (CanClimb() >= 0) wallJumped = true;
+                if (canClimb >= 0) wallJumped = true;
                 jump = true;
                 longJump = true;
                 if (crouching)      //if crouching, stop crouching and return collider to normal size
@@ -323,7 +327,7 @@ namespace constellations
 
         private void HandleCrouch()
         {
-            if (IsGrounded())
+            if (grounded)
             {
                 crouching = true;
                 running = false;
@@ -437,19 +441,19 @@ namespace constellations
         private void JumpAction()
         {
             //executing jump
-            if (CanClimb() < 0)         //IF CAN'T CLIMB, EXECUTE NORMAL JUMP
+            if (canClimb < 0)         //IF CAN'T CLIMB, EXECUTE NORMAL JUMP
             {
                 rb2d.velocity = new Vector2(rb2d.velocity.x, 0f);
                 rb2d.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
                 if (longJump) StartCoroutine(JumpCap());
             }
-            else if (CanClimb() == 0)   //IF CAN CLIMB AND WALL ON LEFT, WALLJUMP TO RIGHT
+            else if (canClimb == 0)   //IF CAN CLIMB AND WALL ON LEFT, WALLJUMP TO RIGHT
             {
                 rb2d.velocity = new Vector2(rb2d.velocity.x, 0f);
                 rb2d.AddForce(new Vector2(jumpForce, jumpForce), ForceMode2D.Impulse);
                 if (longJump) StartCoroutine(JumpCap());
             }
-            else if (CanClimb() == 1)   //IF CAN CLIMB AND WALL ON RIGHT, WALLJUMP TO LEFT
+            else if (canClimb == 1)   //IF CAN CLIMB AND WALL ON RIGHT, WALLJUMP TO LEFT
             {
                 rb2d.velocity = new Vector2(rb2d.velocity.x, 0f);
                 rb2d.AddForce(new Vector2(-jumpForce, jumpForce), ForceMode2D.Impulse);

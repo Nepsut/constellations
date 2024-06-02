@@ -18,13 +18,14 @@ namespace constellations
         [SerializeField] private LayerMask ground;
 
         [Header("Constant Variables")]
+        private const float awakeCheckFrequency = 0.5f;
         private const float seeDistance = 10f;
         private const float loseSightDistance = 15f;
         private const float stopMovingDistance = 0.3f;
         private const float acceleration = 5000f;
         private const float deceleration = 8f;
         private const float moveSpeedTransitionTime = 3f;
-        private const float knockbackStrength = 10f;
+        private const float knockbackStrength = 25f;
         private const float heavyHitMultiplier = 1.4f;
         private const float maxSpeed = 2f;
         private const float climbMult = 0.4f;
@@ -38,12 +39,14 @@ namespace constellations
         public const float deathDuration = 1f;         //adjust depending on animation length
 
         [Header("Dynamic Variables")]
+        private bool awake = false;
         private bool seesPlayer = false;
         private bool touchingPlayer = false;
         private float allowedSpeed = 0;
         private float distance = 0;
         private Vector2 direction = Vector2.zero;
         private bool jumpOnCD = false;
+        private bool canClimb = false;
         private bool climbing = false;
         private Coroutine lerpSpeed;
 
@@ -62,7 +65,7 @@ namespace constellations
 
             //set raycast sizes based on collider sizes to ensure enemy is scaleable
             jumpRaycastBox = new Vector2(box.size.x, box.size.y + 0.1f);
-            climbRaycastBox = new Vector2(box.size.x + 0.04f, box.size.y);
+            climbRaycastBox = new Vector2(box.size.x + 0.04f, box.size.y - 0.04f);
         }
 
         // Start is called before the first frame update
@@ -70,16 +73,20 @@ namespace constellations
         {
             //set allowespeed to max speed for now
             allowedSpeed = maxSpeed;
+            StartCoroutine(AwakeCheck());
         }
 
         void FixedUpdate()
         {
+            if (!awake) return;
             //if dead, return early
             if (isDead)
             {
                 if (!isDying) StartCoroutine(Death());
                 return;
             }
+
+            canClimb = CanClimb();
 
             //grab distance between player and this skeleton, then also grab normalized direction for movement
             distance = Vector2.Distance(transform.position, player.transform.position);
@@ -100,17 +107,17 @@ namespace constellations
             else if (distance < stopMovingDistance) rb.drag = deceleration;
 
             //various checks ran to see if jumping is a good option
-            if (!jumpOnCD && rb.velocity.x == 0 && seesPlayer && CanJump() && !CanClimb() && !touchingPlayer)
+            if (!jumpOnCD && rb.velocity.x == 0 && seesPlayer && CanJump() && !canClimb && !touchingPlayer)
             StartCoroutine(Jump());
 
             //more checks to see if climbing is possible and a good option
-            else if (seesPlayer && CanClimb())
+            else if (seesPlayer && canClimb)
             {
                 climbing = true;
                 Climb();
             }
 
-            else if (seesPlayer && !CanClimb())
+            else if (seesPlayer && !canClimb)
             {
                 climbing = false;
             }
@@ -137,6 +144,15 @@ namespace constellations
 
         #endregion
 
+        private IEnumerator AwakeCheck()
+        {
+            while (Vector2.Distance(transform.position, player.transform.position) > seeDistance)
+            {
+                yield return new WaitForSeconds(awakeCheckFrequency);
+            }
+            awake = true;
+        }
+
         protected override void Movement()
         {
             if (!climbing)
@@ -157,7 +173,6 @@ namespace constellations
 
         private void Climb()
         {
-            Debug.Log("climbing");
             //addforce upwards
             rb.AddForce(Vector2.up * acceleration * climbMult * Time.deltaTime);
             //if speed over allowedSpeed, set speed to allowedSpeed
@@ -225,9 +240,8 @@ namespace constellations
         //same simple climb raycast tech as player exceot on a boolean as walljumps are not necessary
         private bool CanClimb()
         {
-            RaycastHit2D hitRight = Physics2D.BoxCast(transform.position, climbRaycastBox, 0f, Vector2.right, 0.1f, climbable);
-            RaycastHit2D hitLeft = Physics2D.BoxCast(transform.position, climbRaycastBox, 0f, Vector2.left, 0.1f, climbable);
-            if (hitRight || hitLeft)
+            Collider2D hit = Physics2D.OverlapBox(transform.position, climbRaycastBox, 0f, climbable);
+            if (hit)
             {
                 rb.gravityScale = 0;
                 return true;
