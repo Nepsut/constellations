@@ -18,46 +18,51 @@ namespace constellations
         [SerializeField] private GameObject cameraFollowObject;
         private Animator animator; //for animations...
 
+        //reminder that constant variables can only be referenced via the class
+        //and not via an object made from the class, so PlayerController.maxSpeed
+        //instead of object.maxSpeed
         [Header("Constant Movement Variables")]
-        private const float maxSpeed = 3f;
-        private const float maxClimbSpeed = 2.5f;
+        public const float maxSpeed = 3f;
+        public const float maxClimbSpeed = 2.5f;
         private const float acceleration = 6000f;
         private const float deceleration = 8f;
         private const float jumpForce = 50f;
         private const float dashForce = 150f;
         private const float moveSpeedTransitionTime = 0.3f;
         private const float dashCooldown = 1f;
-        private const float dashDecelerationIgnore = 0.2f;
+        public const float dashDecelerationIgnore = 0.2f;
         private const float fallGravMult = 3.7f;
         private const float lowJumpMult = 1.8f;
         private const float airLinearDrag = 2.5f;
-        private const float jumpMaxDuration = 0.35f;
-        private const float runSpeedMult = 1.8f;
-        private const float crouchSpeedMult = 0.6f;
-        private const float climbSpeedMult = 1.2f;
+        public const float jumpMaxDuration = 0.35f;
+        public const float runSpeedMult = 1.8f;
+        public const float crouchSpeedMult = 0.6f;
         private const float baseColliderHeight = 1.5f;
         private const float crouchColliderHeight = 1f;
 
         [Header("Dynamic Movement Variables")]
-        private float horizontal = 0f;
-        private float vertical = 0f;
+        private bool jump = false;
+        private bool longJump = false;
+        public bool grounded { get; private set; } = false;
+        public float horizontal { get; private set; } = 0f;
+        public float vertical { get; private set; } = 0f;
         private float trueAcceleration;
         private float climbAcceleration;
         private float trueAllowedSpeed;
         public bool facingRight { get; private set; } = true;
-        private bool grounded = false;
-        private bool jump = false;
-        private bool longJump = false;
-        private bool wallJumped = false;
-        private bool dashing = false;
+        public bool wallJumped { get; private set; } = false;
+        public bool dashing { get; private set; } = false;
+        public bool swimming { get; private set; } = false;
+        public bool sliding { get; private set; } = false;
         private bool dashHappened = false;
         private bool dashOnCooldown = false;
         private bool dashDecelerating = true;
         private bool lerpingMaxSpeed = false;
-        private bool running = false;
-        private bool crouching = false;
+        public bool running { get; private set; } = false;
+        public bool crouching { get; private set; } = false;
         private int canClimb = -1;
-        private bool climbing = false;
+        public bool climbing { get; private set; } = false;
+        private float fallYDampThreshold;
 
         //if input differs from movement direction, changingDirection = true
         private bool changingXDirection => (rb2d.velocity.x > 0f && horizontal < 0f) || (rb2d.velocity.x < 0f && horizontal > 0f);
@@ -66,9 +71,20 @@ namespace constellations
         private Vector2 crouchRaycastBox;
         private Vector2 climbRaycastBox;
 
-
-        [Header("Other Variables")]
-        private float fallYDampThreshold;
+        [Header("States")]
+        [SerializeField] private State idleState;
+        [SerializeField] private State walkState;
+        [SerializeField] private State runState;
+        [SerializeField] private State dashState;
+        [SerializeField] private State crouchState;
+        [SerializeField] private State crouchIdleState;
+        [SerializeField] private State slideState;
+        [SerializeField] private State climbState;
+        [SerializeField] private State swimState;
+        [SerializeField] private State swimIdleState;
+        [SerializeField] private State airState;
+        [SerializeField] private State wallJumpState;
+        private State playerState;
 
         #endregion
 
@@ -79,6 +95,7 @@ namespace constellations
             //fetch rigidbody and collider
             rb2d = GetComponent<Rigidbody2D>();
             capsuleCollider = GetComponent<CapsuleCollider2D>();
+            animator = GetComponent<Animator>();
 
             groundRaycastBox = new Vector2(1.6f, 1.65f);
             crouchRaycastBox = new Vector2(1.6f, 1.15f);
@@ -99,7 +116,19 @@ namespace constellations
             //set YDampThreshold to value specified in CameraManager
             fallYDampThreshold = CameraManager.instance.fallSpeedDampThreshold;
             trueAllowedSpeed = maxSpeed;
-            animator = GetComponent<Animator>();
+
+            airState.Setup(rb2d, animator, this);
+            climbState.Setup(rb2d, animator, this);
+            crouchState.Setup(rb2d, animator, this);
+            crouchIdleState.Setup(rb2d, animator, this);
+            dashState.Setup(rb2d, animator, this);
+            idleState.Setup(rb2d, animator, this);
+            runState.Setup(rb2d, animator, this);
+            slideState.Setup(rb2d, animator, this);
+            swimState.Setup(rb2d, animator, this);
+            walkState.Setup(rb2d, animator, this);
+            wallJumpState.Setup(rb2d, animator, this);
+            playerState = idleState;
         }
 
         //using FixedUpdate so framerate doesn't affect functionality
@@ -145,9 +174,14 @@ namespace constellations
 
                 StartCoroutine(CameraManager.instance.LerpYAction(false));
             }
+            
+            if (playerState.isComplete)
+            {
+                playerState.Exit();
+                SelectState();
+            }
 
-            //Debug.Log(message: $"player horizontal speed {rb2d.velocity.x} player max speed {trueAllowedSpeed}");
-            //Debug.Log(message: $"player vertical speed {rb2d.velocity.y} player gravity {rb2d.gravityScale * Physics2D.gravity.y}");
+            playerState.Do();
         }
 
         #endregion
@@ -165,7 +199,7 @@ namespace constellations
             {
                 trueAcceleration = (acceleration * horizontal * Time.deltaTime) / 4;
             }
-            climbAcceleration = acceleration * climbSpeedMult * vertical * Time.deltaTime;
+            climbAcceleration = acceleration * vertical * Time.deltaTime;
         }
 
         //this thing lerps trueAllowedSpeed to maxSpeed from the player's current speed
@@ -255,8 +289,6 @@ namespace constellations
             //separate the vector2 from movement input to horizontal and vertical for easier usage
             horizontal = dir.x;
             vertical = dir.y;
-
-            animator.SetFloat("xVelocity", Mathf.Abs(dir.x)); //used by animation blend tree
         }
 
         private void HandleJump()
@@ -346,6 +378,59 @@ namespace constellations
         #endregion
 
         #region checks
+
+        private void SelectState()
+        {
+            if (sliding)
+            {
+                playerState = slideState;
+            }
+            else if (swimming && horizontal == 0)
+            {
+                playerState = swimIdleState;
+            }
+            else if (swimming && horizontal != 0)
+            {
+                playerState = swimState;
+            }
+            else if (climbing)
+            {
+                playerState = climbState;
+            }
+            else if (!grounded && wallJumped)
+            {
+                playerState = wallJumpState;
+            }
+            else if (!grounded && !wallJumped)
+            {
+                playerState = airState;
+            }
+            else if (crouching && horizontal == 0)
+            {
+                playerState = crouchIdleState;
+            }
+            else if (crouching && horizontal != 0)
+            {
+                playerState = crouchState;
+            }
+            else if (!dashDecelerating)
+            {
+                playerState = dashState;
+            }
+            else if (running && horizontal != 0)
+            {
+                playerState = runState;
+            }
+            else if (!running && horizontal != 0)
+            {
+                playerState = walkState;
+            }
+            else
+            {
+                playerState = idleState;
+            }
+            playerState.Enter();
+        }
 
         //check if player is currently on the ground using fancy raycasting tech
         //to avoid the jitteriness of rigidbodies
