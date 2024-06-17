@@ -144,6 +144,8 @@ namespace constellations
 
         #endregion
 
+        #region behavior and checks
+
         private IEnumerator AwakeCheck()
         {
             while (Vector2.Distance(transform.position, player.transform.position) > seeDistance)
@@ -273,5 +275,7 @@ namespace constellations
             yield return new WaitForSeconds(deathDuration);
             Destroy(this.gameObject);
         }
+
+        #endregion
     }
 }

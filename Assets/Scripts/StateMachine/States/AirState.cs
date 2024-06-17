@@ -21,7 +21,7 @@ namespace constellations
             // animator.Play(anim.name, 0, time);
             // animator.speed = 0;
 
-            if (core.input.grounded)
+            if (core.groundSensor.grounded)
             {
                 isComplete = true;
             }

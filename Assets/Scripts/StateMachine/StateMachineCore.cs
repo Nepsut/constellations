@@ -11,6 +11,7 @@ namespace constellations
         public Animator animator;
         public StateMachine machine;
         public PlayerController input;
+        public GroundSensor groundSensor;
 
         public void SetupInstances()
         {

@@ -41,7 +41,6 @@ namespace constellations
         [Header("Dynamic Movement Variables")]
         private bool jump = false;
         private bool longJump = false;
-        public bool grounded { get; private set; } = false;
         public float horizontal { get; private set; } = 0f;
         public float vertical { get; private set; } = 0f;
         private float trueAcceleration;
@@ -65,8 +64,6 @@ namespace constellations
         //if input differs from movement direction, changingDirection = true
         private bool changingXDirection => (rb2d.velocity.x > 0f && horizontal < 0f) || (rb2d.velocity.x < 0f && horizontal > 0f);
         private bool changingYDirection => (rb2d.velocity.y > 0f && vertical < 0f) || (rb2d.velocity.y < 0f && vertical > 0f);
-        private Vector2 groundRaycastBox;
-        private Vector2 crouchRaycastBox;
         private Vector2 climbRaycastBox;
 
         [Header("States")]
@@ -94,8 +91,6 @@ namespace constellations
             capsuleCollider = GetComponent<CapsuleCollider2D>();
             animator = GetComponent<Animator>();
 
-            groundRaycastBox = new Vector2(1.6f, 1.65f);
-            crouchRaycastBox = new Vector2(1.6f, 1.15f);
             climbRaycastBox = new Vector2(0.9f, 1.45f);
 
             SetupInstances();
@@ -126,7 +121,6 @@ namespace constellations
             //first calculate true acceleration for movement
             CalcAccel();
             canClimb = CanClimb();
-            grounded = IsGrounded();
 
             //check if player is currently next to a climbable wall and is moving horizontally at wall
             if ((canClimb == 1 && horizontal > 0f) || (canClimb == 0 && horizontal < 0f)) climbing = true;
@@ -144,7 +138,7 @@ namespace constellations
 
             //adjust drag (and gravity) for smoother movement
             if (!climbing) FallAdjuster();
-            if (grounded) HandleDrag();
+            if (groundSensor.grounded) HandleDrag();
             else HandleAirDrag();
 
 
@@ -165,8 +159,6 @@ namespace constellations
             
             SelectState();
             machine.state.Do();
-
-            Debug.Log(message: $"player height is {gameObject.GetComponent<SpriteRenderer>().bounds.size.y}");
         }
 
         #endregion
@@ -278,7 +270,7 @@ namespace constellations
 
         private void HandleJump()
         {
-            if (grounded || canClimb >= 0)    //if cat on ground or can climb on wall
+            if (groundSensor.grounded || canClimb >= 0)    //if cat on ground or can climb on wall
             {
                 if (canClimb >= 0) wallJumped = true;
                 jump = true;
@@ -344,7 +336,7 @@ namespace constellations
 
         private void HandleCrouch()
         {
-            if (grounded)
+            if (groundSensor.grounded)
             {
                 crouching = true;
                 running = false;
@@ -382,11 +374,11 @@ namespace constellations
             {
                 machine.Set(climbState);
             }
-            else if (!grounded && wallJumped)
+            else if (!groundSensor.grounded && wallJumped)
             {
                 machine.Set(wallJumpState);
             }
-            else if (!grounded && !wallJumped)
+            else if (!groundSensor.grounded && !wallJumped)
             {
                 machine.Set(airState);
             }
@@ -413,21 +405,6 @@ namespace constellations
             else
             {
                 machine.Set(idleState);
-            }
-        }
-
-        //check if player is currently on the ground using fancy raycasting tech
-        //to avoid the jitteriness of rigidbodies
-        private bool IsGrounded()
-        {
-            //check for ground using appropriate raycast box
-            if (!crouching)
-            {
-                return Physics2D.BoxCast(transform.position, groundRaycastBox, 0f, Vector2.down, 0.1f, ground);
-            }
-            else
-            {
-                return Physics2D.BoxCast(transform.position, crouchRaycastBox, 0f, Vector2.down, 0.1f, ground);
             }
         }
 

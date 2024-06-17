@@ -17,7 +17,7 @@ namespace constellations
         {
             core.animator.speed = Helpers.Map(PlayerController.maxSpeed, 0, 1, 0, 1, true);
 
-            if (!core.input.grounded)
+            if (!core.groundSensor.grounded)
             isComplete = true;
         }
 
