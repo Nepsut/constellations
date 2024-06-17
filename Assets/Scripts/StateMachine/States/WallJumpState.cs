@@ -5,11 +5,8 @@ using UnityEngine;
 
 namespace constellations
 {
-    [CreateAssetMenu(menuName = "WallJumpState")]
     public class WallJumpState : State
     {
-        float time;
-
         public override void Enter()
         {
             // animator.Play("WallJump");
@@ -17,8 +14,6 @@ namespace constellations
 
         public override void Do()
         {
-            time += Time.deltaTime;
-
             if (time >= PlayerController.jumpMaxDuration)
             {
                 isComplete = true;

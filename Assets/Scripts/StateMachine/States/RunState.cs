@@ -4,7 +4,6 @@ using UnityEngine;
 
 namespace constellations
 {
-    [CreateAssetMenu(menuName = "RunState")]
     public class RunState : State
     {
         public override void Enter()
@@ -14,15 +13,15 @@ namespace constellations
 
         public override void Do()
         {
-            animator.speed = Helpers.Map(PlayerController.maxSpeed, 0, 1, 0, 1, true);
+            core.animator.speed = Helpers.Map(PlayerController.maxSpeed, 0, 1, 0, 1, true);
 
-            if (!input.running || !input.grounded || Mathf.Abs(rb2d.velocity.x) <= PlayerController.maxSpeed)
+            if (!core.input.running)
             isComplete = true;
         }
 
         public override void Exit()
         {
-            animator.speed = 1;
+            core.animator.speed = 1;
         }
     }
 }

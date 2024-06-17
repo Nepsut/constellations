@@ -4,7 +4,6 @@ using UnityEngine;
 
 namespace constellations
 {
-    [CreateAssetMenu(menuName = "CrouchIdleState")]
     public class CrouchIdleState : State
     {
         public override void Enter()
@@ -14,7 +13,7 @@ namespace constellations
 
         public override void Do()
         {
-            if (!input.crouching || !input.grounded || input.horizontal != 0) isComplete = true;
+            if (!core.input.crouching) isComplete = true;
         }
     }
 }

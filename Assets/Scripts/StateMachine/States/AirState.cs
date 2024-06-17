@@ -5,23 +5,23 @@ using UnityEngine;
 
 namespace constellations
 {
-    [CreateAssetMenu(menuName = "AirState")]
     public class AirState : State
     {
         public float jumpSpeed;
+        [SerializeField] private AnimationClip anim;
 
         public override void Enter()
         {
-            // animator.Play("Jump");
+            // animator.Play(anim.name);
         }
 
         public override void Do()
         {
-            float time = Helpers.Map(rb2d.velocity.y, jumpSpeed, -jumpSpeed, 0, 1, true);
-            // animator.Play("Jump", 0, time);
+            float time = Helpers.Map(core.rb2d.velocity.y, jumpSpeed, -jumpSpeed, 0, 1, true);
+            // animator.Play(anim.name, 0, time);
             // animator.speed = 0;
 
-            if (input.grounded)
+            if (core.input.grounded)
             {
                 isComplete = true;
             }

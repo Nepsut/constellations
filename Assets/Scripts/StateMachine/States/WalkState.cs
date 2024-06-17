@@ -4,25 +4,26 @@ using UnityEngine;
 
 namespace constellations
 {
-    [CreateAssetMenu(menuName = "ClimbState")]
-    public class ClimbState : State
+    public class WalkState : State
     {
+        [SerializeField] private AnimationClip anim;
+
         public override void Enter()
         {
-            // animator.Play("Climb");
+            core.animator.Play(anim.name);
         }
 
         public override void Do()
         {
-            animator.speed = Helpers.Map(PlayerController.maxClimbSpeed, 0, 1, 0, 1, true);
+            core.animator.speed = Helpers.Map(PlayerController.maxSpeed, 0, 1, 0, 1, true);
 
-            if (!input.climbing || Mathf.Abs(rb2d.velocity.x) < 0.1f)
+            if (!core.input.grounded)
             isComplete = true;
         }
 
         public override void Exit()
         {
-            animator.speed = 1;
+            core.animator.speed = 1;
         }
     }
 }

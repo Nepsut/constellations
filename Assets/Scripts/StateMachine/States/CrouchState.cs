@@ -4,25 +4,25 @@ using UnityEngine;
 
 namespace constellations
 {
-    [CreateAssetMenu(menuName = "WalkState")]
-    public class WalkState : State
+    public class CrouchState : State
     {
         public override void Enter()
         {
-            animator.Play("Walk");
+            // animator.Play("Crouch");
         }
 
         public override void Do()
         {
-            animator.speed = Helpers.Map(PlayerController.maxSpeed, 0, 1, 0, 1, true);
+            core.animator.speed = Helpers.Map(PlayerController.maxSpeed * PlayerController.crouchSpeedMult,
+            0, 1, 0, 1, true);
 
-            if (!input.grounded || Mathf.Abs(rb2d.velocity.x) < 0.1f)
+            if (!core.input.crouching)
             isComplete = true;
         }
 
         public override void Exit()
         {
-            animator.speed = 1;
+            core.animator.speed = 1;
         }
     }
 }

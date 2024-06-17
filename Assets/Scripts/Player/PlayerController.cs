@@ -4,19 +4,17 @@ using UnityEngine;
 
 namespace constellations
 {
-    public class PlayerController : MonoBehaviour
+    public class PlayerController : StateMachineCore
     {
         #region variables
 
         [Header("Engine Variables")]
-        [SerializeField] private InputReader input;
-        private Rigidbody2D rb2d;
+        [SerializeField] private InputReader playerInput;
         private CapsuleCollider2D capsuleCollider;
         private const float colliderOffset = 0.4f;
         [SerializeField] private LayerMask ground;
         [SerializeField] private LayerMask climbable;
         [SerializeField] private GameObject cameraFollowObject;
-        private Animator animator; //for animations...
 
         //reminder that constant variables can only be referenced via the class
         //and not via an object made from the class, so PlayerController.maxSpeed
@@ -84,7 +82,6 @@ namespace constellations
         [SerializeField] private State swimIdleState;
         [SerializeField] private State airState;
         [SerializeField] private State wallJumpState;
-        private State playerState;
 
         #endregion
 
@@ -101,14 +98,16 @@ namespace constellations
             crouchRaycastBox = new Vector2(1.6f, 1.15f);
             climbRaycastBox = new Vector2(0.9f, 1.45f);
 
+            SetupInstances();
+
             //add methods to events in InputReader
-            input.MoveEvent += HandleMove;
-            input.JumpEvent += HandleJump;
-            input.JumpCanceledEvent += HandleJumpCancel;
-            input.DashEvent += HandleDash;
-            input.DashCanceledEvent += HandleDashCancel;
-            input.CrouchEvent += HandleCrouch;
-            input.CrouchCanceledEvent += HandleCrouchCancel;
+            playerInput.MoveEvent += HandleMove;
+            playerInput.JumpEvent += HandleJump;
+            playerInput.JumpCanceledEvent += HandleJumpCancel;
+            playerInput.DashEvent += HandleDash;
+            playerInput.DashCanceledEvent += HandleDashCancel;
+            playerInput.CrouchEvent += HandleCrouch;
+            playerInput.CrouchCanceledEvent += HandleCrouchCancel;
         }
 
         void Start()
@@ -117,18 +116,7 @@ namespace constellations
             fallYDampThreshold = CameraManager.instance.fallSpeedDampThreshold;
             trueAllowedSpeed = maxSpeed;
 
-            airState.Setup(rb2d, animator, this);
-            climbState.Setup(rb2d, animator, this);
-            crouchState.Setup(rb2d, animator, this);
-            crouchIdleState.Setup(rb2d, animator, this);
-            dashState.Setup(rb2d, animator, this);
-            idleState.Setup(rb2d, animator, this);
-            runState.Setup(rb2d, animator, this);
-            slideState.Setup(rb2d, animator, this);
-            swimState.Setup(rb2d, animator, this);
-            walkState.Setup(rb2d, animator, this);
-            wallJumpState.Setup(rb2d, animator, this);
-            playerState = idleState;
+            machine.Set(idleState);
         }
 
         //using FixedUpdate so framerate doesn't affect functionality
@@ -175,13 +163,10 @@ namespace constellations
                 StartCoroutine(CameraManager.instance.LerpYAction(false));
             }
             
-            if (playerState.isComplete)
-            {
-                playerState.Exit();
-                SelectState();
-            }
+            SelectState();
+            machine.state.Do();
 
-            playerState.Do();
+            Debug.Log(message: $"player height is {gameObject.GetComponent<SpriteRenderer>().bounds.size.y}");
         }
 
         #endregion
@@ -383,53 +368,52 @@ namespace constellations
         {
             if (sliding)
             {
-                playerState = slideState;
+                machine.Set(slideState);
             }
             else if (swimming && horizontal == 0)
             {
-                playerState = swimIdleState;
+                machine.Set(swimIdleState);
             }
             else if (swimming && horizontal != 0)
             {
-                playerState = swimState;
+                machine.Set(swimState);
             }
             else if (climbing)
             {
-                playerState = climbState;
+                machine.Set(climbState);
             }
             else if (!grounded && wallJumped)
             {
-                playerState = wallJumpState;
+                machine.Set(wallJumpState);
             }
             else if (!grounded && !wallJumped)
             {
-                playerState = airState;
+                machine.Set(airState);
             }
             else if (crouching && horizontal == 0)
             {
-                playerState = crouchIdleState;
+                machine.Set(crouchIdleState);
             }
             else if (crouching && horizontal != 0)
             {
-                playerState = crouchState;
+                machine.Set(crouchState);
             }
             else if (!dashDecelerating)
             {
-                playerState = dashState;
+                machine.Set(dashState);
             }
             else if (running && horizontal != 0)
             {
-                playerState = runState;
+                machine.Set(runState);
             }
             else if (!running && horizontal != 0)
             {
-                playerState = walkState;
+                machine.Set(walkState);
             }
             else
             {
-                playerState = idleState;
+                machine.Set(idleState);
             }
-            playerState.Enter();
         }
 
         //check if player is currently on the ground using fancy raycasting tech

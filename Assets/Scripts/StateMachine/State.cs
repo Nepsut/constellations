@@ -4,29 +4,34 @@ using UnityEngine;
 
 namespace constellations
 {
-    public abstract class State : ScriptableObject
+    public abstract class State : MonoBehaviour
     {
         //state handlers
         public bool isComplete { get; protected set; } = false;
+        protected float startTime;
+        public float time => Time.time - startTime;
 
         //define these in inheriting classes
-        protected Rigidbody2D rb2d;
-        protected Animator animator;
         protected bool grounded;
         protected float horizontal;
         protected float vertical;
-        protected PlayerController input;
+
+        protected StateMachineCore core;
 
         public virtual void Enter() { }
         public virtual void Do() { }
         public virtual void FixedDo() { }
         public virtual void Exit() { }
 
-        public void Setup(Rigidbody2D _rb2d, Animator _animator, PlayerController _input)
+        public void SetCore(StateMachineCore _core)
         {
-            rb2d = _rb2d;
-            animator = _animator;
-            input = _input;
+            core = _core;
+        }
+
+        public void Initialize()
+        {
+            isComplete = false;
+            startTime = Time.time;
         }
     }
 }

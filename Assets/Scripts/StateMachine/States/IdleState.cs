@@ -4,17 +4,18 @@ using UnityEngine;
 
 namespace constellations
 {
-    [CreateAssetMenu(menuName = "SwimIdleState")]
-    public class SwimIdleState : State
+    public class IdleState : State
     {
+        [SerializeField] private AnimationClip anim;
+
         public override void Enter()
         {
-            // animator.Play("SwimIdle");
+            core.animator.Play(anim.name);
         }
 
         public override void Do()
         {
-            if (!input.swimming || input.horizontal != 0) isComplete = true;
+            if (!core.input.grounded) isComplete = true;
         }
     }
 }
