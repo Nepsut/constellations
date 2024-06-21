@@ -13,7 +13,6 @@ namespace constellations
         private CapsuleCollider2D capsuleCollider;
         private const float colliderOffset = 0.4f;
         [SerializeField] private LayerMask ground;
-        [SerializeField] private LayerMask climbable;
         [SerializeField] private GameObject cameraFollowObject;
 
         //reminder that constant variables can only be referenced via the class
@@ -57,8 +56,6 @@ namespace constellations
         private bool lerpingMaxSpeed = false;
         public bool running { get; private set; } = false;
         public bool crouching { get; private set; } = false;
-        private int canClimb = -1;
-        public bool climbing { get; private set; } = false;
         private float fallYDampThreshold;
 
         //if input differs from movement direction, changingDirection = true
@@ -120,11 +117,17 @@ namespace constellations
             //MOVEMENT-RELATED METHODS BELOW
             //first calculate true acceleration for movement
             CalcAccel();
-            canClimb = CanClimb();
 
-            //check if player is currently next to a climbable wall and is moving horizontally at wall
-            if ((canClimb == 1 && horizontal > 0f) || (canClimb == 0 && horizontal < 0f)) climbing = true;
-            else climbing = false;
+            if (facingRight)
+            {
+                CheckWall(transform.position + new Vector3(offset.x, offset.y, 0), size);
+            }
+            else
+            {
+                CheckWall(transform.position + new Vector3(-offset.x, offset.y, 0), size);
+            }
+            
+            IsClimbing(horizontal);
 
             //while climbing, set player gravity to 0 so that climbing can be handled easier
             if (climbing) rb2d.gravityScale = 0;
@@ -406,22 +409,6 @@ namespace constellations
             {
                 machine.Set(idleState);
             }
-        }
-
-        //check if player is on climbable wall using fancy raycasting tech
-        //to avoid the jitteriness of rigidbodies
-        //THIS IS AN INT SO WE KNOW IF WALL IS ON LEFT OR RIGHT,
-        //1 == RIGHT, 0 == LEFT
-        private int CanClimb()
-        {
-            if (crouching) return -1;
-            Collider2D hitRight = Physics2D.OverlapBox(new Vector2(transform.position.x + climbRaycastBox.x / 2, transform.position.y),
-            climbRaycastBox, 0f, climbable);
-            Collider2D hitLeft = Physics2D.OverlapBox(new Vector2(transform.position.x - climbRaycastBox.x / 2, transform.position.y),
-            climbRaycastBox, 0f, climbable);
-            if (hitRight) return 1;
-            else if (hitLeft) return 0;
-            else return -1;
         }
 
         #endregion

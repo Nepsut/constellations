@@ -5,14 +5,14 @@ using UnityEngine;
 
 namespace constellations
 {
-    public abstract class EnemyBase : MonoBehaviour, IDamageable
+    public abstract class EnemyBase : StateMachineCore, IDamageable
     {
         [Header("Enemy Base Variables")]
         [SerializeField] private float health = 100f;
         public bool isDead { get; private set; } = false;
         protected bool isDying = false;
         protected bool doKnockback = false;
-        public bool wasHeavyHit = false;
+        [HideInInspector] public bool wasHeavyHit = false;
 
         public void TakeDamage(float damage)
         {

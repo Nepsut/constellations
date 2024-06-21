@@ -6,9 +6,11 @@ namespace constellations
 {
     public class RunState : State
     {
+        [SerializeField] private AnimationClip anim;
+        
         public override void Enter()
         {
-            // animator.Play("Run");
+            // core.animator.Play(anim.name);
         }
 
         public override void Do()

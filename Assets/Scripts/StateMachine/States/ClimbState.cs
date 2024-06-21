@@ -15,7 +15,7 @@ namespace constellations
         {
             core.animator.speed = Helpers.Map(PlayerController.maxClimbSpeed, 0, 1, 0, 1, true);
 
-            if (!core.input.climbing || Mathf.Abs(core.rb2d.velocity.x) < 0.1f)
+            if (!core.climbing || Mathf.Abs(core.rb2d.velocity.x) < 0.1f)
             isComplete = true;
         }
 
