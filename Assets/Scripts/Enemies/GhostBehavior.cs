@@ -12,7 +12,7 @@ namespace constellations
 
         [Header("Engine Variables")]
         private Rigidbody2D rb;
-        private GameObject player;
+        [SerializeField] private GameObject player;
         private PlayerAction playerAction;
 
         [Header("Constant Variables")]
@@ -44,7 +44,6 @@ namespace constellations
         void Awake()
         {
             //grab some references necessary later
-            player = GameObject.FindGameObjectWithTag("Player");
             playerAction = player.GetComponent<PlayerAction>();
             rb = GetComponent<Rigidbody2D>();
         }

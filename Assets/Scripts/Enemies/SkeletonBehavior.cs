@@ -11,10 +11,8 @@ namespace constellations
         #region variables
 
         [Header("Engine Variables")]
-        private Rigidbody2D rb;
-        private GameObject player;
+        [SerializeField] private GameObject player;
         private PlayerAction playerAction;
-        [SerializeField] private LayerMask climbable;
         [SerializeField] private LayerMask ground;
 
         [Header("Constant Variables")]
@@ -46,8 +44,6 @@ namespace constellations
         private float distance = 0;
         private Vector2 direction = Vector2.zero;
         private bool jumpOnCD = false;
-        private bool canClimb = false;
-        private bool climbing = false;
         private Coroutine lerpSpeed;
 
         #endregion
@@ -57,9 +53,8 @@ namespace constellations
         void Awake()
         {
             //grab some references necessary later
-            player = GameObject.FindGameObjectWithTag("Player");
             playerAction = player.GetComponent<PlayerAction>();
-            rb = GetComponent<Rigidbody2D>();
+            rb2d = GetComponent<Rigidbody2D>();
 
             BoxCollider2D box = gameObject.GetComponentInChildren<BoxCollider2D>();
 
@@ -86,7 +81,8 @@ namespace constellations
                 return;
             }
 
-            canClimb = CanClimb();
+            //change this to proper midpoint calculation when sprite added
+            CheckWall(transform.position + new Vector3(offset.x, offset.y, 0), size);
 
             //grab distance between player and this skeleton, then also grab normalized direction for movement
             distance = Vector2.Distance(transform.position, player.transform.position);
@@ -96,31 +92,30 @@ namespace constellations
             if (stopMovingDistance < distance && distance < seeDistance)
             {
                 seesPlayer = true;
-                rb.drag = 0;
+                rb2d.drag = 0;
                 Movement();
             }
             else if (distance > loseSightDistance)
             {
                 seesPlayer = false;
-                rb.drag = deceleration;
+                rb2d.drag = deceleration;
             }
-            else if (distance < stopMovingDistance) rb.drag = deceleration;
+            else if (distance < stopMovingDistance) rb2d.drag = deceleration;
+
+            IsClimbing(direction.x);
 
             //various checks ran to see if jumping is a good option
-            if (!jumpOnCD && rb.velocity.x == 0 && seesPlayer && CanJump() && !canClimb && !touchingPlayer)
+            if (!jumpOnCD && rb2d.velocity.x == 0 && seesPlayer && CanJump() && canClimb < 0 && !touchingPlayer)
             StartCoroutine(Jump());
 
             //more checks to see if climbing is possible and a good option
-            else if (seesPlayer && canClimb)
+            else if (seesPlayer && climbing)
             {
-                climbing = true;
                 Climb();
             }
 
-            else if (seesPlayer && !canClimb)
-            {
-                climbing = false;
-            }
+            if (climbing) rb2d.gravityScale = 0;
+            else rb2d.gravityScale = 1;
 
             //self-explanatory
             if (doKnockback) Knockback();
@@ -144,6 +139,8 @@ namespace constellations
 
         #endregion
 
+        #region behavior and checks
+
         private IEnumerator AwakeCheck()
         {
             while (Vector2.Distance(transform.position, player.transform.position) > seeDistance)
@@ -158,27 +155,27 @@ namespace constellations
             if (!climbing)
             {
                 //addforce toward direction of player
-                rb.AddForce(Vector2.right * direction.x * acceleration * Time.deltaTime);
+                rb2d.AddForce(Vector2.right * direction.x * acceleration * Time.deltaTime);
                 //if speed over allowedSpeed, set speed to allowedSpeed
-                if (Mathf.Abs(rb.velocity.x) > allowedSpeed)
+                if (Mathf.Abs(rb2d.velocity.x) > allowedSpeed)
                 {
-                    rb.velocity = new Vector2(direction.x * allowedSpeed, rb.velocity.y);
+                    rb2d.velocity = new Vector2(direction.x * allowedSpeed, rb2d.velocity.y);
                 }
             }
             else
             {
-                rb.velocity = new Vector2(direction.x * 0.1f, rb.velocity.y);
+                rb2d.velocity = new Vector2(direction.x * 0.1f, rb2d.velocity.y);
             }
         }
 
         private void Climb()
         {
             //addforce upwards
-            rb.AddForce(Vector2.up * acceleration * climbMult * Time.deltaTime);
+            rb2d.AddForce(Vector2.up * acceleration * climbMult * Time.deltaTime);
             //if speed over allowedSpeed, set speed to allowedSpeed
-            if (Mathf.Abs(rb.velocity.y) > allowedSpeed * climbMult)
+            if (Mathf.Abs(rb2d.velocity.y) > allowedSpeed * climbMult)
             {
-                rb.velocity = new Vector2(rb.velocity.x, allowedSpeed * climbMult);
+                rb2d.velocity = new Vector2(rb2d.velocity.x, allowedSpeed * climbMult);
             }
         }
 
@@ -186,7 +183,7 @@ namespace constellations
         {
             jumpOnCD = true;
             yield return new WaitForSeconds(jumpDelay);
-            rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+            rb2d.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
             yield return new WaitForSeconds(jumpCooldown);
             jumpOnCD = false;
         }
@@ -207,7 +204,7 @@ namespace constellations
                 trueKnockback = (knockbackStrength + (playerAction.knockbackBuffs * PlayerAction.knockbackbBuffAmount));
             }
             //add force toward direction opposite of player as impulse
-            rb.AddForce(-direction * trueKnockback, ForceMode2D.Impulse);
+            rb2d.AddForce(-direction * trueKnockback, ForceMode2D.Impulse);
 
             //stop and restart allowedSpeed calculation
             if (lerpSpeed != null ) StopCoroutine(lerpSpeed);
@@ -219,11 +216,11 @@ namespace constellations
         private IEnumerator MaxSpeedLerp()
         {
             float takenTime = 0f;
-            float startSpeed = Mathf.Abs(rb.velocity.x);
+            float startSpeed = Mathf.Abs(rb2d.velocity.x);
 
             while (takenTime < moveSpeedTransitionTime)
             {
-                if (Mathf.Abs(rb.velocity.x) < maxSpeed)
+                if (Mathf.Abs(rb2d.velocity.x) < maxSpeed)
                 {
                     allowedSpeed = maxSpeed;
                     break;
@@ -234,22 +231,6 @@ namespace constellations
                 float lerpedMaxSpeed = Mathf.Lerp(startSpeed, maxSpeed, (takenTime / moveSpeedTransitionTime));
                 allowedSpeed = lerpedMaxSpeed;
                 yield return null;
-            }
-        }
-
-        //same simple climb raycast tech as player exceot on a boolean as walljumps are not necessary
-        private bool CanClimb()
-        {
-            Collider2D hit = Physics2D.OverlapBox(transform.position, climbRaycastBox, 0f, climbable);
-            if (hit)
-            {
-                rb.gravityScale = 0;
-                return true;
-            }
-            else
-            {
-                rb.gravityScale = 1;
-                return false;
             }
         }
 
@@ -265,7 +246,7 @@ namespace constellations
         protected override IEnumerator Death()
         {
             isDying = true;
-            rb.drag = deceleration;
+            rb2d.drag = deceleration;
             //play death animation
             //below is a placeholder
             this.gameObject.GetComponentInChildren<SpriteRenderer>().color = Color.red;
@@ -273,5 +254,7 @@ namespace constellations
             yield return new WaitForSeconds(deathDuration);
             Destroy(this.gameObject);
         }
+
+        #endregion
     }
 }

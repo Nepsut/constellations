@@ -11,6 +11,7 @@ namespace constellations
 
         //init const variables
         private const float flipDuration = 0.5f;
+        private const float heightOffset = 0.5f;
 
         //init other variables
         private bool facingRight;
@@ -24,7 +25,7 @@ namespace constellations
         // Update is called once per frame
         void Update()
         {
-            transform.position = player.transform.position;
+            transform.position = new Vector2(player.transform.position.x, player.transform.position.y + heightOffset);
         }
 
         public IEnumerator FlipYLerp()

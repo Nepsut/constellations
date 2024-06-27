@@ -4,19 +4,16 @@ using UnityEngine;
 
 namespace constellations
 {
-    public class PlayerController : MonoBehaviour
+    public class PlayerController : StateMachineCore
     {
         #region variables
 
         [Header("Engine Variables")]
-        [SerializeField] private InputReader input;
-        private Rigidbody2D rb2d;
+        [SerializeField] private InputReader playerInput;
         private CapsuleCollider2D capsuleCollider;
         private const float colliderOffset = 0.4f;
         [SerializeField] private LayerMask ground;
-        [SerializeField] private LayerMask climbable;
         [SerializeField] private GameObject cameraFollowObject;
-        private Animator animator; //for animations...
 
         //reminder that constant variables can only be referenced via the class
         //and not via an object made from the class, so PlayerController.maxSpeed
@@ -43,13 +40,11 @@ namespace constellations
         [Header("Dynamic Movement Variables")]
         private bool jump = false;
         private bool longJump = false;
-        public bool grounded { get; private set; } = false;
         public float horizontal { get; private set; } = 0f;
         public float vertical { get; private set; } = 0f;
         private float trueAcceleration;
         private float climbAcceleration;
         private float trueAllowedSpeed;
-        public bool facingRight { get; private set; } = true;
         public bool wallJumped { get; private set; } = false;
         public bool dashing { get; private set; } = false;
         public bool swimming { get; private set; } = false;
@@ -60,16 +55,11 @@ namespace constellations
         private bool lerpingMaxSpeed = false;
         public bool running { get; private set; } = false;
         public bool crouching { get; private set; } = false;
-        private int canClimb = -1;
-        public bool climbing { get; private set; } = false;
         private float fallYDampThreshold;
 
         //if input differs from movement direction, changingDirection = true
         private bool changingXDirection => (rb2d.velocity.x > 0f && horizontal < 0f) || (rb2d.velocity.x < 0f && horizontal > 0f);
         private bool changingYDirection => (rb2d.velocity.y > 0f && vertical < 0f) || (rb2d.velocity.y < 0f && vertical > 0f);
-        private Vector2 groundRaycastBox;
-        private Vector2 crouchRaycastBox;
-        private Vector2 climbRaycastBox;
 
         [Header("States")]
         [SerializeField] private State idleState;
@@ -84,7 +74,6 @@ namespace constellations
         [SerializeField] private State swimIdleState;
         [SerializeField] private State airState;
         [SerializeField] private State wallJumpState;
-        private State playerState;
 
         #endregion
 
@@ -97,18 +86,16 @@ namespace constellations
             capsuleCollider = GetComponent<CapsuleCollider2D>();
             animator = GetComponent<Animator>();
 
-            groundRaycastBox = new Vector2(1.6f, 1.65f);
-            crouchRaycastBox = new Vector2(1.6f, 1.15f);
-            climbRaycastBox = new Vector2(0.9f, 1.45f);
+            SetupInstances();
 
             //add methods to events in InputReader
-            input.MoveEvent += HandleMove;
-            input.JumpEvent += HandleJump;
-            input.JumpCanceledEvent += HandleJumpCancel;
-            input.DashEvent += HandleDash;
-            input.DashCanceledEvent += HandleDashCancel;
-            input.CrouchEvent += HandleCrouch;
-            input.CrouchCanceledEvent += HandleCrouchCancel;
+            playerInput.MoveEvent += HandleMove;
+            playerInput.JumpEvent += HandleJump;
+            playerInput.JumpCanceledEvent += HandleJumpCancel;
+            playerInput.DashEvent += HandleDash;
+            playerInput.DashCanceledEvent += HandleDashCancel;
+            playerInput.CrouchEvent += HandleCrouch;
+            playerInput.CrouchCanceledEvent += HandleCrouchCancel;
         }
 
         void Start()
@@ -117,18 +104,7 @@ namespace constellations
             fallYDampThreshold = CameraManager.instance.fallSpeedDampThreshold;
             trueAllowedSpeed = maxSpeed;
 
-            airState.Setup(rb2d, animator, this);
-            climbState.Setup(rb2d, animator, this);
-            crouchState.Setup(rb2d, animator, this);
-            crouchIdleState.Setup(rb2d, animator, this);
-            dashState.Setup(rb2d, animator, this);
-            idleState.Setup(rb2d, animator, this);
-            runState.Setup(rb2d, animator, this);
-            slideState.Setup(rb2d, animator, this);
-            swimState.Setup(rb2d, animator, this);
-            walkState.Setup(rb2d, animator, this);
-            wallJumpState.Setup(rb2d, animator, this);
-            playerState = idleState;
+            machine.Set(idleState);
         }
 
         //using FixedUpdate so framerate doesn't affect functionality
@@ -137,12 +113,17 @@ namespace constellations
             //MOVEMENT-RELATED METHODS BELOW
             //first calculate true acceleration for movement
             CalcAccel();
-            canClimb = CanClimb();
-            grounded = IsGrounded();
 
-            //check if player is currently next to a climbable wall and is moving horizontally at wall
-            if ((canClimb == 1 && horizontal > 0f) || (canClimb == 0 && horizontal < 0f)) climbing = true;
-            else climbing = false;
+            if (facingRight)
+            {
+                CheckWall(transform.position + new Vector3(offset.x, offset.y, 0), size);
+            }
+            else
+            {
+                CheckWall(transform.position + new Vector3(-offset.x, offset.y, 0), size);
+            }
+            
+            IsClimbing(horizontal);
 
             //while climbing, set player gravity to 0 so that climbing can be handled easier
             if (climbing) rb2d.gravityScale = 0;
@@ -156,7 +137,7 @@ namespace constellations
 
             //adjust drag (and gravity) for smoother movement
             if (!climbing) FallAdjuster();
-            if (grounded) HandleDrag();
+            if (groundSensor.grounded) HandleDrag();
             else HandleAirDrag();
 
 
@@ -175,13 +156,8 @@ namespace constellations
                 StartCoroutine(CameraManager.instance.LerpYAction(false));
             }
             
-            if (playerState.isComplete)
-            {
-                playerState.Exit();
-                SelectState();
-            }
-
-            playerState.Do();
+            SelectState();
+            machine.state.Do();
         }
 
         #endregion
@@ -293,7 +269,7 @@ namespace constellations
 
         private void HandleJump()
         {
-            if (grounded || canClimb >= 0)    //if cat on ground or can climb on wall
+            if (groundSensor.grounded || canClimb >= 0)    //if cat on ground or can climb on wall
             {
                 if (canClimb >= 0) wallJumped = true;
                 jump = true;
@@ -359,7 +335,7 @@ namespace constellations
 
         private void HandleCrouch()
         {
-            if (grounded)
+            if (groundSensor.grounded)
             {
                 crouching = true;
                 running = false;
@@ -383,84 +359,52 @@ namespace constellations
         {
             if (sliding)
             {
-                playerState = slideState;
+                machine.Set(slideState);
             }
             else if (swimming && horizontal == 0)
             {
-                playerState = swimIdleState;
+                machine.Set(swimIdleState);
             }
             else if (swimming && horizontal != 0)
             {
-                playerState = swimState;
+                machine.Set(swimState);
             }
             else if (climbing)
             {
-                playerState = climbState;
+                machine.Set(climbState);
             }
-            else if (!grounded && wallJumped)
+            else if (!groundSensor.grounded && wallJumped)
             {
-                playerState = wallJumpState;
+                machine.Set(wallJumpState);
             }
-            else if (!grounded && !wallJumped)
+            else if (!groundSensor.grounded && !wallJumped)
             {
-                playerState = airState;
+                machine.Set(airState);
             }
             else if (crouching && horizontal == 0)
             {
-                playerState = crouchIdleState;
+                machine.Set(crouchIdleState);
             }
             else if (crouching && horizontal != 0)
             {
-                playerState = crouchState;
+                machine.Set(crouchState);
             }
             else if (!dashDecelerating)
             {
-                playerState = dashState;
+                machine.Set(dashState);
             }
             else if (running && horizontal != 0)
             {
-                playerState = runState;
+                machine.Set(runState);
             }
             else if (!running && horizontal != 0)
             {
-                playerState = walkState;
+                machine.Set(walkState);
             }
             else
             {
-                playerState = idleState;
+                machine.Set(idleState);
             }
-            playerState.Enter();
-        }
-
-        //check if player is currently on the ground using fancy raycasting tech
-        //to avoid the jitteriness of rigidbodies
-        private bool IsGrounded()
-        {
-            //check for ground using appropriate raycast box
-            if (!crouching)
-            {
-                return Physics2D.BoxCast(transform.position, groundRaycastBox, 0f, Vector2.down, 0.1f, ground);
-            }
-            else
-            {
-                return Physics2D.BoxCast(transform.position, crouchRaycastBox, 0f, Vector2.down, 0.1f, ground);
-            }
-        }
-
-        //check if player is on climbable wall using fancy raycasting tech
-        //to avoid the jitteriness of rigidbodies
-        //THIS IS AN INT SO WE KNOW IF WALL IS ON LEFT OR RIGHT,
-        //1 == RIGHT, 0 == LEFT
-        private int CanClimb()
-        {
-            if (crouching) return -1;
-            Collider2D hitRight = Physics2D.OverlapBox(new Vector2(transform.position.x + climbRaycastBox.x / 2, transform.position.y),
-            climbRaycastBox, 0f, climbable);
-            Collider2D hitLeft = Physics2D.OverlapBox(new Vector2(transform.position.x - climbRaycastBox.x / 2, transform.position.y),
-            climbRaycastBox, 0f, climbable);
-            if (hitRight) return 1;
-            else if (hitLeft) return 0;
-            else return -1;
         }
 
         #endregion
