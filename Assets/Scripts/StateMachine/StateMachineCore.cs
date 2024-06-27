@@ -11,10 +11,10 @@ namespace constellations
         public Rigidbody2D rb2d;
         public Animator animator;
         public StateMachine machine;
-        public PlayerController input;
         public GroundSensor groundSensor;
+        public bool facingRight { get; protected set; } = true;
         [SerializeField] protected Vector2 size = Vector2.one;
-        [SerializeField] protected Vector2 offset = Vector2.zero;
+        public Vector2 offset = Vector2.zero;
 
         public void SetupInstances()
         {
@@ -29,7 +29,14 @@ namespace constellations
         private void OnDrawGizmos()
         {
             Gizmos.color = Color.cyan;
-            Gizmos.DrawWireCube(transform.position + new Vector3(offset.x, offset.y, 0), size);
+            if (facingRight)
+            {
+                Gizmos.DrawWireCube(transform.position + new Vector3(offset.x, offset.y, 0), size);
+            }
+            else
+            {
+                Gizmos.DrawWireCube(transform.position + new Vector3(-offset.x, offset.y, 0), size);
+            }
         }
     }
 }

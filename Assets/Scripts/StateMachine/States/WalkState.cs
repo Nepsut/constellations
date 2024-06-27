@@ -7,6 +7,17 @@ namespace constellations
     public class WalkState : State
     {
         [SerializeField] private AnimationClip anim;
+        [SerializeField] private float maxSpeed;
+
+        private void Start()
+        {
+            //needs smarter way to fetch a more appropriate value like allowedSpeed or just rb.velocity,
+            //which one? why? should be moved to update when this changes as well
+            if (gameObject.CompareTag("Player"))
+            {
+                maxSpeed = PlayerController.maxSpeed;
+            }
+        }
 
         public override void Enter()
         {
@@ -15,7 +26,7 @@ namespace constellations
 
         public override void Do()
         {
-            core.animator.speed = Helpers.Map(PlayerController.maxSpeed, 0, 1, 0, 1, true);
+            core.animator.speed = Helpers.Map(maxSpeed, 0, 1, 0, 1, true);
 
             if (!core.groundSensor.grounded)
             isComplete = true;

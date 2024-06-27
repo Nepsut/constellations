@@ -6,14 +6,17 @@ namespace constellations
 {
     public class CrouchIdleState : State
     {
+        [SerializeField] private PlayerController controller;
+        [SerializeField] private AnimationClip anim;
+        
         public override void Enter()
         {
-            // animator.Play("CrouchIdle");
+            // animator.Play(anim.name);
         }
 
         public override void Do()
         {
-            if (!core.input.crouching) isComplete = true;
+            if (!controller.crouching) isComplete = true;
         }
     }
 }

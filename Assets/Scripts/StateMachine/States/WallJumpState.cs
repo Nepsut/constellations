@@ -7,9 +7,10 @@ namespace constellations
 {
     public class WallJumpState : State
     {
+        [SerializeField] private AnimationClip anim;
         public override void Enter()
         {
-            // animator.Play("WallJump");
+            // animator.Play(anim.name);
         }
 
         public override void Do()

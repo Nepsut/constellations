@@ -6,14 +6,17 @@ namespace constellations
 {
     public class SwimIdleState : State
     {
+        [SerializeField] private PlayerController controller;
+        [SerializeField] private AnimationClip anim;
+
         public override void Enter()
         {
-            // animator.Play("SwimIdle");
+            // animator.Play(anim.name);
         }
 
         public override void Do()
         {
-            if (!core.input.swimming) isComplete = true;
+            if (!controller.swimming) isComplete = true;
         }
     }
 }

@@ -45,7 +45,6 @@ namespace constellations
         private float trueAcceleration;
         private float climbAcceleration;
         private float trueAllowedSpeed;
-        public bool facingRight { get; private set; } = true;
         public bool wallJumped { get; private set; } = false;
         public bool dashing { get; private set; } = false;
         public bool swimming { get; private set; } = false;
@@ -61,7 +60,6 @@ namespace constellations
         //if input differs from movement direction, changingDirection = true
         private bool changingXDirection => (rb2d.velocity.x > 0f && horizontal < 0f) || (rb2d.velocity.x < 0f && horizontal > 0f);
         private bool changingYDirection => (rb2d.velocity.y > 0f && vertical < 0f) || (rb2d.velocity.y < 0f && vertical > 0f);
-        private Vector2 climbRaycastBox;
 
         [Header("States")]
         [SerializeField] private State idleState;
@@ -87,8 +85,6 @@ namespace constellations
             rb2d = GetComponent<Rigidbody2D>();
             capsuleCollider = GetComponent<CapsuleCollider2D>();
             animator = GetComponent<Animator>();
-
-            climbRaycastBox = new Vector2(0.9f, 1.45f);
 
             SetupInstances();
 

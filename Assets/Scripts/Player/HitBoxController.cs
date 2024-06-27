@@ -6,22 +6,30 @@ using UnityEngine;
 
 public class HitBoxController : MonoBehaviour
 {
-    [SerializeField] GameObject player;
+    [SerializeField] private GameObject player;
+    private PlayerController controller;
     [HideInInspector] public GameObject targetEnemy { get; private set; }
     [HideInInspector] public bool canAttackEnemy { get; private set; } = false;
     private string[] enemyTags =  new string[]{"Enemy", "Ghost", "Skeleton"};
 
+    void Start()
+    {
+        controller = player.GetComponent<PlayerController>();
+    }
+
     // Update is called once per frame
     void Update()
     {
-        transform.position = player.transform.position;
-        if (player.GetComponent<PlayerController>().facingRight)
+        transform.position = player.transform.position + new Vector3(controller.offset.x, controller.offset.y, 0);
+        if (controller.facingRight)
         {
             transform.rotation = Quaternion.Euler(0f, 0f, 0f);
+            transform.position = player.transform.position + new Vector3(controller.offset.x, controller.offset.y, 0);
         }
         else
         {
             transform.rotation = Quaternion.Euler(0f, 180f, 0f);
+            transform.position = player.transform.position + new Vector3(-controller.offset.x, controller.offset.y, 0);
         }
     }
 

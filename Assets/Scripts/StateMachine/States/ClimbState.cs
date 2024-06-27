@@ -6,9 +6,11 @@ namespace constellations
 {
     public class ClimbState : State
     {
+        [SerializeField] private AnimationClip anim;
+        
         public override void Enter()
         {
-            // animator.Play("Climb");
+            // animator.Play(anim.name);
         }
 
         public override void Do()

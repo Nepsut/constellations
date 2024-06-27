@@ -11,7 +11,7 @@ namespace constellations
         #region variables
 
         [Header("Engine Variables")]
-        private GameObject player;
+        [SerializeField] private GameObject player;
         private PlayerAction playerAction;
         [SerializeField] private LayerMask ground;
 
@@ -53,7 +53,6 @@ namespace constellations
         void Awake()
         {
             //grab some references necessary later
-            player = GameObject.FindGameObjectWithTag("Player");
             playerAction = player.GetComponent<PlayerAction>();
             rb2d = GetComponent<Rigidbody2D>();
 
