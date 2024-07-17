@@ -11,7 +11,7 @@ namespace constellations
 
         public override void Enter()
         {
-            // core.animator.Play(anim.name);
+            core.animator.Play(anim.name);
         }
 
         public override void Do()

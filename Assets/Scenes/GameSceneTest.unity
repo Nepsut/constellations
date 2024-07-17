@@ -302,6 +302,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   controller: {fileID: 0}
+  anim: {fileID: 0}
 --- !u!1 &74080420
 GameObject:
   m_ObjectHideFlags: 0
@@ -806,7 +807,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df945554e7e24794c97f2485d8e7f176, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  anim: {fileID: 0}
+  anim: {fileID: 7400000, guid: 64b2b5ab622451645be8bfb0bb330ed2, type: 2}
   controller: {fileID: 0}
 --- !u!1 &198633155
 GameObject:
@@ -1371,6 +1372,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 663ac7dd8b729e1448ebbd3265145825, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  anim: {fileID: 0}
 --- !u!1 &368932819
 GameObject:
   m_ObjectHideFlags: 0
@@ -2022,6 +2024,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   controller: {fileID: 0}
+  anim: {fileID: 0}
 --- !u!1 &603777687
 GameObject:
   m_ObjectHideFlags: 0
@@ -2143,6 +2146,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   controller: {fileID: 0}
+  anim: {fileID: 7400000, guid: f93adb6e24694bd41924699aa9c928c7, type: 2}
 --- !u!1 &666078816
 GameObject:
   m_ObjectHideFlags: 0
@@ -2433,7 +2437,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   jumpSpeed: 0
-  anim: {fileID: 0}
+  anim: {fileID: 7400000, guid: 00b1263cdb49132419ccc36df357e5ad, type: 2}
 --- !u!1 &738579613
 GameObject:
   m_ObjectHideFlags: 0
@@ -3957,6 +3961,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a89c7571db4b54e46a78e8ea6793543c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  anim: {fileID: 0}
 --- !u!1 &1049537295
 GameObject:
   m_ObjectHideFlags: 0
@@ -5182,6 +5187,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   controller: {fileID: 0}
+  anim: {fileID: 7400000, guid: 3af6ff44bd19bce4db243da4be906c2f, type: 2}
 --- !u!1 &1549998792
 GameObject:
   m_ObjectHideFlags: 0
@@ -5633,6 +5639,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7dabf73af2ee34e499ca44d7b8dc9086, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  anim: {fileID: 7400000, guid: 1092d413937a236438b103495b333be3, type: 2}
 --- !u!1 &1771381186
 GameObject:
   m_ObjectHideFlags: 0
@@ -5887,6 +5894,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   controller: {fileID: 0}
+  anim: {fileID: 0}
 --- !u!1 &1845612100
 GameObject:
   m_ObjectHideFlags: 0
