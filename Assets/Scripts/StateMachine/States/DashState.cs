@@ -9,7 +9,7 @@ namespace constellations
         [SerializeField] private AnimationClip anim;
         public override void Enter()
         {
-            // animator.Play(anim.name);
+            core.animator.Play(anim.name); 
         }
 
         public override void Do()
