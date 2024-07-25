@@ -808,7 +808,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   anim: {fileID: 7400000, guid: 64b2b5ab622451645be8bfb0bb330ed2, type: 2}
-  controller: {fileID: 0}
+  controller: {fileID: 803418725}
 --- !u!1 &198633155
 GameObject:
   m_ObjectHideFlags: 0
@@ -2145,7 +2145,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc2366e785ea75e46b55551d902f15f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  controller: {fileID: 0}
+  controller: {fileID: 803418725}
   anim: {fileID: 7400000, guid: f93adb6e24694bd41924699aa9c928c7, type: 2}
 --- !u!1 &666078816
 GameObject:
@@ -5264,7 +5264,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d96b7d14f25c9445bab8b8416ac20cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  controller: {fileID: 0}
+  controller: {fileID: 803418725}
   anim: {fileID: 7400000, guid: 3af6ff44bd19bce4db243da4be906c2f, type: 2}
 --- !u!1 &1549998792
 GameObject:

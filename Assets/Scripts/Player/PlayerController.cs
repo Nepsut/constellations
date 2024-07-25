@@ -54,6 +54,7 @@ namespace constellations
         private bool dashDecelerating = true;
         private bool lerpingMaxSpeed = false;
         public bool running { get; private set; } = false;
+        public bool runningHelper { get; private set; } = false;
         public bool crouching { get; private set; } = false;
         private float fallYDampThreshold;
 
@@ -110,6 +111,7 @@ namespace constellations
         //using FixedUpdate so framerate doesn't affect functionality
         void FixedUpdate()
         {
+            Debug.Log(message: $"running {running}");
             //MOVEMENT-RELATED METHODS BELOW
             //first calculate true acceleration for movement
             CalcAccel();
@@ -186,9 +188,9 @@ namespace constellations
             float startSpeed = Mathf.Abs(rb2d.velocity.x);
             float takenTime = 0f;
 
-            if (running)
+            if (runningHelper)
             {
-                running = false;
+                runningHelper = false;
                 while (takenTime < moveSpeedTransitionTime)
                 {
                     takenTime += Time.deltaTime;
@@ -208,6 +210,7 @@ namespace constellations
                     trueAllowedSpeed = lerpedMaxSpeed;
                     yield return null;
                 }
+                if (running) running = false;
             }
             lerpingMaxSpeed = false;
         }
@@ -309,6 +312,7 @@ namespace constellations
                 }
                 dashing = true;
                 running = true;
+                runningHelper = true;
             }
             else dashHappened = false;
         }
@@ -339,6 +343,7 @@ namespace constellations
             {
                 crouching = true;
                 running = false;
+                runningHelper = false;
                 capsuleCollider.size = new Vector2(capsuleCollider.size.x, crouchColliderHeight);   //make collider smaller
                 StartCoroutine(CameraManager.instance.CrouchOffset(true));                          //pan cam down
             }
@@ -393,13 +398,14 @@ namespace constellations
             {
                 machine.Set(dashState);
             }
-            else if (running && horizontal != 0)
-            {
-                machine.Set(runState);
-            }
             else if (!running && horizontal != 0)
             {
                 machine.Set(walkState);
+            }
+            else if (running && horizontal != 0)
+            {
+                Debug.Log("running");
+                machine.Set(runState);
             }
             else
             {
