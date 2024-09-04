@@ -2436,7 +2436,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 94c4d41ada55b804a811bebd31073e66, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  jumpSpeed: 0
+  jumpSpeed: 3
   anim: {fileID: 7400000, guid: 00b1263cdb49132419ccc36df357e5ad, type: 2}
 --- !u!1 &738579613
 GameObject:

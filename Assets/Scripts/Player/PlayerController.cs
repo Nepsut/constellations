@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace constellations
 {
-    public class PlayerController : StateMachineCore
+    public class PlayerController : StateMachineCore, IDataPersistence
     {
         #region variables
 
@@ -28,6 +28,7 @@ namespace constellations
         private const float moveSpeedTransitionTime = 0.3f;
         private const float dashCooldown = 1f;
         public const float dashDecelerationIgnore = 0.2f;
+        public const float dashAnimDuration = 0.5f;
         private const float fallGravMult = 3.7f;
         private const float lowJumpMult = 1.8f;
         private const float airLinearDrag = 2.5f;
@@ -111,7 +112,6 @@ namespace constellations
         //using FixedUpdate so framerate doesn't affect functionality
         void FixedUpdate()
         {
-            Debug.Log(message: $"running {running}");
             //MOVEMENT-RELATED METHODS BELOW
             //first calculate true acceleration for movement
             CalcAccel();
@@ -404,7 +404,6 @@ namespace constellations
             }
             else if (running && horizontal != 0)
             {
-                Debug.Log("running");
                 machine.Set(runState);
             }
             else
@@ -520,6 +519,20 @@ namespace constellations
             {
                 rb2d.velocity = new Vector2(rb2d.velocity.x, Mathf.Sign(rb2d.velocity.y) * maxClimbSpeed);
             }
+        }
+
+        #endregion
+
+        #region data persistence
+        
+        public void LoadData(GameData data)
+        {
+            gameObject.transform.position = data.savedPosition;
+        }
+
+        public void SaveData(ref GameData data)
+        {
+            data.savedPosition = gameObject.transform.position;
         }
 
         #endregion

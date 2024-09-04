@@ -25,6 +25,7 @@ namespace constellations
         {
             //using path.combine to account for differing file systems on some operating systems
             string fullPath = Path.Combine(dataDirPath, "saves", dataFileName);
+            Debug.Log(message: $"loading data from {fullPath}");
             GameData loadedData = null;
             if (File.Exists(fullPath))
             {
