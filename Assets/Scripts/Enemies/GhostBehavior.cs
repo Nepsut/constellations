@@ -26,7 +26,7 @@ namespace constellations
         private const float moveSpeedTransitionTime = 3f;
         private const float knockbackStrength = 10f;
         private const float heavyHitMultiplier = 1.4f;
-        private const float maxSpeed = 2f;
+        public new const float maxSpeed = 2f;
         private const float accelerationTime = 2f;
         public const float deathDuration = 1f;         //adjust depending on animation length
 

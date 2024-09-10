@@ -6,7 +6,6 @@ namespace constellations
 {
     public class SlideState : State
     {
-        [SerializeField] private PlayerController controller;
         [SerializeField] private AnimationClip anim;
 
         public override void Enter()
@@ -16,7 +15,7 @@ namespace constellations
 
         public override void Do()
         {
-            if (!controller.sliding) isComplete = true;
+            if (!core.sliding) isComplete = true;
         }
     }
 }

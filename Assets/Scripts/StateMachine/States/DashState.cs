@@ -16,7 +16,7 @@ namespace constellations
         {
             core.animator.speed = 1;
 
-            if (time >= PlayerController.dashAnimDuration)
+            if (time >= StateMachineCore.dashAnimDuration)
             {
                 isComplete = true;
             }

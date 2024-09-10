@@ -17,6 +17,8 @@ namespace constellations
         protected float vertical;
 
         protected StateMachineCore core;
+        protected Rigidbody2D rb2d => core.rb2d;
+        protected Animator animator => core.animator;
 
         public virtual void Enter() { }
         public virtual void Do() { }

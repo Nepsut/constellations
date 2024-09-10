@@ -15,7 +15,7 @@ namespace constellations
 
         public override void Do()
         {
-            if (time >= PlayerController.jumpMaxDuration)
+            if (time >= StateMachineCore.jumpMaxDuration)
             {
                 isComplete = true;
             }

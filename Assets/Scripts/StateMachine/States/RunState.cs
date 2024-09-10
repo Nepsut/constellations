@@ -7,7 +7,6 @@ namespace constellations
     public class RunState : State
     {
         [SerializeField] private AnimationClip anim;
-        [SerializeField] private PlayerController controller;
 
         public override void Enter()
         {
@@ -16,9 +15,9 @@ namespace constellations
 
         public override void Do()
         {
-            core.animator.speed = Helpers.Map(PlayerController.maxSpeed, 0, 1, 0, 1, true);
+            core.animator.speed = Helpers.Map(StateMachineCore.maxSpeed, 0, 1, 0, 1, true);
 
-            if (!controller.running)
+            if (!core.running)
             isComplete = true;
         }
 

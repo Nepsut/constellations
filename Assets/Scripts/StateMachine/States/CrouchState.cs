@@ -6,7 +6,6 @@ namespace constellations
 {
     public class CrouchState : State
     {
-        [SerializeField] private PlayerController controller;
         [SerializeField] private AnimationClip anim;
 
         public override void Enter()
@@ -16,10 +15,10 @@ namespace constellations
 
         public override void Do()
         {
-            core.animator.speed = Helpers.Map(PlayerController.maxSpeed * PlayerController.crouchSpeedMult,
+            core.animator.speed = Helpers.Map(StateMachineCore.maxSpeed * StateMachineCore.crouchSpeedMult,
             0, 1, 0, 1, true);
 
-            if (!controller.crouching)
+            if (!core.crouching)
             isComplete = true;
         }
 

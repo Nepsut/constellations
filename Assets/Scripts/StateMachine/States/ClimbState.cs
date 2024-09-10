@@ -15,7 +15,7 @@ namespace constellations
 
         public override void Do()
         {
-            core.animator.speed = Helpers.Map(PlayerController.maxClimbSpeed, 0, 1, 0, 1, true);
+            core.animator.speed = Helpers.Map(StateMachineCore.maxClimbSpeed, 0, 1, 0, 1, true);
 
             if (!core.climbing || Mathf.Abs(core.rb2d.velocity.x) < 0.1f)
             isComplete = true;

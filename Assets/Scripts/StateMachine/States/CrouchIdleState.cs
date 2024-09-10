@@ -6,7 +6,6 @@ namespace constellations
 {
     public class CrouchIdleState : State
     {
-        [SerializeField] private PlayerController controller;
         [SerializeField] private AnimationClip anim;
         
         public override void Enter()
@@ -16,7 +15,7 @@ namespace constellations
 
         public override void Do()
         {
-            if (!controller.crouching) isComplete = true;
+            if (!core.crouching) isComplete = true;
         }
     }
 }

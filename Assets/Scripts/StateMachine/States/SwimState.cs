@@ -6,7 +6,6 @@ namespace constellations
 {
     public class SwimState : State
     {
-        [SerializeField] private PlayerController controller;
         [SerializeField] private AnimationClip anim;
 
         public override void Enter()
@@ -16,7 +15,7 @@ namespace constellations
 
         public override void Do()
         {
-            if (!controller.swimming) isComplete = true;
+            if (!core.swimming) isComplete = true;
         }
     }
 }
