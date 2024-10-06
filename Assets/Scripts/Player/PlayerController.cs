@@ -77,6 +77,7 @@ namespace constellations
             capsuleCollider = GetComponent<CapsuleCollider2D>();
             animator = GetComponent<Animator>();
 
+            //this populates all states' "core" variable as this object
             SetupInstances();
 
             //add methods to events in InputReader
@@ -348,6 +349,11 @@ namespace constellations
         #endregion
 
         #region checks
+
+        private void StatePicker()
+        {
+            
+        }
 
         private void SelectState()
         {

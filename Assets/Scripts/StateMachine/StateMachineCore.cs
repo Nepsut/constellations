@@ -24,6 +24,10 @@ namespace constellations
         public bool sliding { get; protected set; } = false;
         public bool running { get; protected set; } = false;
         public bool crouching { get; protected set; } = false;
+
+        //CONSTANT VALUES RELATED TO PLAYER MOVEMENT
+        //SHOULD PROBABLY BE MOVED BACK TO PLAYERCONTROLLER
+        //BUT FIRST FIGURE OUT THE STUPID HIERARCHY SHIT
         public const float dashAnimDuration = 0.5f;
         public const float maxSpeed = 3f;
         public const float crouchSpeedMult = 0.6f;
@@ -39,6 +43,8 @@ namespace constellations
                 state.SetCore(this);
             }
         }
+
+        
 
         private void OnDrawGizmos()
         {
