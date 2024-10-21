@@ -15,6 +15,10 @@ namespace constellations
         {
             this.dataDirPath = dataDirPath;
             this.dataFileName = dataFileName;
+            if (this.dataFileName == "")
+            {
+                this.dataFileName = "default";
+            }
         }
 
         public GameData Load()

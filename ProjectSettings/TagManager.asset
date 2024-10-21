@@ -8,6 +8,8 @@ TagManager:
   - Interactable
   - Enemy
   - SavePoint
+  - Ghost
+  - Skeleton
   layers:
   - Default
   - TransparentFX

@@ -5,32 +5,27 @@ using UnityEngine;
 
 namespace constellations
 {
-    public class EnemyBase : MonoBehaviour, IDamageable
+    public abstract class EnemyBase : StateMachineCore, IDamageable
     {
+        [Header("Enemy Base Variables")]
         [SerializeField] private float health = 100f;
-        private bool isDead = false;
-        public bool readyForDelete { get; private set; } = false;
-        [SerializeField] private float deathDuration = 1f;
+        public bool isDead { get; private set; } = false;
+        protected bool isDying = false;
+        protected bool doKnockback = false;
+        [HideInInspector] public bool wasHeavyHit = false;
 
         public void TakeDamage(float damage)
         {
             health -= damage;
+            doKnockback = true;
             if (health <= 0)
             {
                 isDead = true;
-                StartCoroutine(Death());
             }
         }
 
-        private IEnumerator Death()
-        {
-            //play death animation here
-            yield return new WaitForSeconds(deathDuration);
-            readyForDelete = true;      //check this in main enemy script if planning to do stuff on death
+        protected abstract void Movement();
 
-            //TEMP DEATH EFFECTS FOR VISUALIZATION
-            this.gameObject.GetComponent<SpriteRenderer>().color = Color.red;
-            Debug.Log(message: $"enemy is super dead");
-        }
+        protected abstract IEnumerator Death();
     }
 }

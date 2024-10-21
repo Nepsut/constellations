@@ -26,6 +26,12 @@ public class DialogueManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI dialogueText;
     public Story currentStory { get; private set; }
     private bool isTyping = false;
+    private const string alphaCode = "<color=#00000000>";
+    private const float typeSpeed = 5f;
+    private const float maxTypeTime = 0.1f;
+    private bool stopTyping = false;
+    private bool disableInput = false;
+    public static DialogueManager instance { get; private set; }
 
     [Header("Choices UI")]
     [SerializeField] private GameObject choiceHandler;
@@ -37,12 +43,7 @@ public class DialogueManager : MonoBehaviour
     private Vector3 saveSpot = Vector3.zero;
 
     [Header("Other Variables")]
-    private const string alphaCode = "<color=#00000000>";
-    private const float typeSpeed = 5f;
-    private const float maxTypeTime = 0.1f;
-    private bool stopTyping = false;
-    private bool disableInput = false;
-    public static DialogueManager instance { get; private set; }
+    [SerializeField] private DialogueVariables variables;
 
     #endregion
 
