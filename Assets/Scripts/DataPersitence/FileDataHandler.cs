@@ -44,7 +44,7 @@ namespace constellations
                 }
                 catch (Exception e)
                 {
-                Debug.LogError(message: $"Error occured while trying to load data from file: {fullPath}'\n{e}");
+                    Debug.LogError(message: $"Error occured while trying to load data from file: {fullPath}'\n{e}");
                 }
             }
             return loadedData;
