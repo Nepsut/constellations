@@ -1,0 +1,3766 @@
+fileFormatVersion: 2
+guid: 540f615cf362afd41b6b0abcd992c9c8
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 12
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: confusion_tilemap_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1960
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dfedd0dff59a7444083dcd2cf93cc673
+      internalID: 329001449
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_1
+      rect:
+        serializedVersion: 2
+        x: 200
+        y: 1960
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0b9698331e8936443b29d96f98ffbb93
+      internalID: -1825889889
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_2
+      rect:
+        serializedVersion: 2
+        x: 400
+        y: 1960
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d81e2fbc6964dad42bf7a518a02f718d
+      internalID: 1476242567
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_3
+      rect:
+        serializedVersion: 2
+        x: 600
+        y: 1960
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 25ce0e2c2a02b59489ebe4deb8d0a22a
+      internalID: 740375867
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_4
+      rect:
+        serializedVersion: 2
+        x: 800
+        y: 1960
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 713f90066a6a8ab48b4e02adc840f892
+      internalID: -594235311
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_5
+      rect:
+        serializedVersion: 2
+        x: 1000
+        y: 1960
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 19acef12c4fb4774e93bfa0cdabda4e5
+      internalID: -136539574
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_6
+      rect:
+        serializedVersion: 2
+        x: 1200
+        y: 1960
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 587768ee04994824b905081d3601de77
+      internalID: 320728957
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_7
+      rect:
+        serializedVersion: 2
+        x: 1400
+        y: 1960
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 977d66cef11746a4391e25593a032843
+      internalID: 2052329038
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_8
+      rect:
+        serializedVersion: 2
+        x: 1600
+        y: 1960
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b6989846b6b5da64591e20355f1da8a2
+      internalID: -411133224
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_9
+      rect:
+        serializedVersion: 2
+        x: 1800
+        y: 1960
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: df52bd9a7a1436c4da9d3ed19bb2a1b6
+      internalID: -762333194
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_10
+      rect:
+        serializedVersion: 2
+        x: 2000
+        y: 1960
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5d920f41b6d658148b13be52a5cfc60b
+      internalID: -1124507496
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_11
+      rect:
+        serializedVersion: 2
+        x: 2200
+        y: 1960
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5b9555ee8a12fb643ac1f06d48cebfb9
+      internalID: -1546839894
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_12
+      rect:
+        serializedVersion: 2
+        x: 2400
+        y: 1960
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e74373b5585a7264c9515dab63ffbcd8
+      internalID: -1507185559
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_13
+      rect:
+        serializedVersion: 2
+        x: 2600
+        y: 1960
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 11a57160e714644438cf7dd4e7c479ff
+      internalID: 688282250
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_14
+      rect:
+        serializedVersion: 2
+        x: 1600
+        y: 1760
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 63c5af4f0e9c95b47a89b889e8e4cd45
+      internalID: -1251717149
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_15
+      rect:
+        serializedVersion: 2
+        x: 1800
+        y: 1760
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: aad3774f4a0b40c4ea95100c30ddd6ee
+      internalID: -121174429
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_16
+      rect:
+        serializedVersion: 2
+        x: 2000
+        y: 1760
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4a955fb6774735040b40dd925d987d6d
+      internalID: 1544980958
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_17
+      rect:
+        serializedVersion: 2
+        x: 2200
+        y: 1760
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7a24a7a8e6a5102418f3dabe364be5b5
+      internalID: 1416484147
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_18
+      rect:
+        serializedVersion: 2
+        x: 2400
+        y: 1760
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 976cc9f2f6c2b3b4ca5d3ca8043d58e8
+      internalID: -795089066
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_19
+      rect:
+        serializedVersion: 2
+        x: 2600
+        y: 1760
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 869c53f7286736b4d8a76585a39948da
+      internalID: -1828941511
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_20
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1560
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8e8a33bc853edb7448b65a7970919579
+      internalID: -572390973
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_21
+      rect:
+        serializedVersion: 2
+        x: 200
+        y: 1560
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4321024be7e926247b978583b142dc73
+      internalID: 228521722
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_22
+      rect:
+        serializedVersion: 2
+        x: 400
+        y: 1560
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0b81211c7fac8034d8c29f8be3fd851f
+      internalID: 1077129824
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_23
+      rect:
+        serializedVersion: 2
+        x: 600
+        y: 1560
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 25a95d7b6781c9f4d8dc5dfd3faa4b57
+      internalID: -989248546
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_24
+      rect:
+        serializedVersion: 2
+        x: 800
+        y: 1560
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7ff90e7e1ff95ec4787c9d8e06a044fc
+      internalID: 1324141393
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_25
+      rect:
+        serializedVersion: 2
+        x: 1000
+        y: 1560
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b4d17b20390a6dc42827f29eefed33e4
+      internalID: 450574120
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_26
+      rect:
+        serializedVersion: 2
+        x: 1200
+        y: 1560
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 375d87b092c510c49b0a20c502be7a99
+      internalID: 1435532531
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_27
+      rect:
+        serializedVersion: 2
+        x: 1400
+        y: 1560
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d315d3d1eb6a41343b3dccc1780f1d5f
+      internalID: 1893815471
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_28
+      rect:
+        serializedVersion: 2
+        x: 1600
+        y: 1560
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6e439cfa8dd09a64e9c0d0143677a6b4
+      internalID: -375643005
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_29
+      rect:
+        serializedVersion: 2
+        x: 2000
+        y: 1560
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2008eca541c06fb4fb2190a516e28385
+      internalID: -596680300
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_30
+      rect:
+        serializedVersion: 2
+        x: 2200
+        y: 1560
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ce82bf5cbd2d53949aa229d256458b3c
+      internalID: -1185518897
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_31
+      rect:
+        serializedVersion: 2
+        x: 2400
+        y: 1560
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3aab5a352a3c6b5429ee3c5e7ac28815
+      internalID: -1386188112
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_32
+      rect:
+        serializedVersion: 2
+        x: 2600
+        y: 1560
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 51f7e340c89743c4bbf54032aef50cb1
+      internalID: -346301264
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_33
+      rect:
+        serializedVersion: 2
+        x: 2800
+        y: 1560
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e094ff15e7af4e843ab5bcf58a02e0f0
+      internalID: -129396697
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_34
+      rect:
+        serializedVersion: 2
+        x: 3000
+        y: 1560
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 43d85fc3c0440b84092de6c2269b7bfd
+      internalID: 1348964698
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_35
+      rect:
+        serializedVersion: 2
+        x: 3200
+        y: 1560
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 423d3a215edacd54cad869e913116c81
+      internalID: -828497492
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_36
+      rect:
+        serializedVersion: 2
+        x: 3400
+        y: 1560
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 017c2c442c0a69f40bd5c5d149f2a172
+      internalID: -1918066426
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_37
+      rect:
+        serializedVersion: 2
+        x: 3600
+        y: 1560
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c4bab0736b3a7644c8be8146f20afa56
+      internalID: -1959045831
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_38
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1360
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e9c9163d038755349b1f7b308968fa6a
+      internalID: 1731549507
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_39
+      rect:
+        serializedVersion: 2
+        x: 200
+        y: 1360
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 37c57b5bc3cd0774390be5dfbea50422
+      internalID: -1733764697
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_40
+      rect:
+        serializedVersion: 2
+        x: 400
+        y: 1360
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 50ac92388d892fd40a3d315f700e2777
+      internalID: -1363931994
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_41
+      rect:
+        serializedVersion: 2
+        x: 600
+        y: 1360
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1f73ff20963dca646b9c15b28fe50c2e
+      internalID: -1156714446
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_42
+      rect:
+        serializedVersion: 2
+        x: 800
+        y: 1360
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3825b46d57df7f44facb25dec92f28a6
+      internalID: -11132963
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_43
+      rect:
+        serializedVersion: 2
+        x: 1000
+        y: 1360
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 99bb34f9a8995804b921b19b02aed086
+      internalID: 212066712
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_44
+      rect:
+        serializedVersion: 2
+        x: 1200
+        y: 1360
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 072ae2e95ed7bc141ace49008f27a23b
+      internalID: -1109729208
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_45
+      rect:
+        serializedVersion: 2
+        x: 1400
+        y: 1360
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 975ee575e47d125459286c8edbc30a6e
+      internalID: 1253020687
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_46
+      rect:
+        serializedVersion: 2
+        x: 1600
+        y: 1360
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 079db2b4672ee634f9512e4a7f743ac4
+      internalID: -1553401558
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_47
+      rect:
+        serializedVersion: 2
+        x: 1800
+        y: 1360
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8d81ee39ba45b514180214b6ea2f8b4e
+      internalID: 2029463312
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_48
+      rect:
+        serializedVersion: 2
+        x: 2000
+        y: 1360
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 74f076d7388feeb43a73a4357eb36c8d
+      internalID: 318893880
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_49
+      rect:
+        serializedVersion: 2
+        x: 2200
+        y: 1360
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 04c8986b0408bb84eb6f884a9056976c
+      internalID: -1790311761
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_50
+      rect:
+        serializedVersion: 2
+        x: 2400
+        y: 1360
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 165b8d2d9be0da44584c74829ea077c5
+      internalID: 1366508324
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_51
+      rect:
+        serializedVersion: 2
+        x: 2600
+        y: 1360
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 636164ce3b811ee4a9cd3df67bec30bf
+      internalID: -296974304
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_52
+      rect:
+        serializedVersion: 2
+        x: 2800
+        y: 1360
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: eb5359c1162fe7d45be14ea65c3b7e1a
+      internalID: 1027335571
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_53
+      rect:
+        serializedVersion: 2
+        x: 3000
+        y: 1360
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 338157f7fec5a954d92cce18b3d93c22
+      internalID: 93085178
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_54
+      rect:
+        serializedVersion: 2
+        x: 3200
+        y: 1360
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c2d8f58eaa715f34abfb13d1532ec6ed
+      internalID: 63863521
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_55
+      rect:
+        serializedVersion: 2
+        x: 3400
+        y: 1360
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 05eaddec5b064994db01a54cc0eb1232
+      internalID: 1918987680
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_56
+      rect:
+        serializedVersion: 2
+        x: 3600
+        y: 1360
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 164bfb00ae431c246a46ced2c10ada5b
+      internalID: 481734469
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_57
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1160
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4233ad29d4daaee43a5a4202a560977f
+      internalID: -1573451788
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_58
+      rect:
+        serializedVersion: 2
+        x: 200
+        y: 1160
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3da407aaa0e52b14db990a6224a2e7ea
+      internalID: 33418646
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_59
+      rect:
+        serializedVersion: 2
+        x: 400
+        y: 1160
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: aeabe123ebfac0a4696726eb4decc32d
+      internalID: 1077386790
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_60
+      rect:
+        serializedVersion: 2
+        x: 600
+        y: 1160
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7d3f8c72972f29e4581212a70cee9dc0
+      internalID: -168277277
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_61
+      rect:
+        serializedVersion: 2
+        x: 800
+        y: 1160
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 97dc05ddc5c6d9e40b02fd10730dc990
+      internalID: -1982908122
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_62
+      rect:
+        serializedVersion: 2
+        x: 1000
+        y: 1160
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 61b010c69552b4e4c83583a6dc013f9f
+      internalID: -2026960922
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_63
+      rect:
+        serializedVersion: 2
+        x: 1200
+        y: 1160
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 864f1c296e8129448879d4b2e6c243ef
+      internalID: -1614921048
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_64
+      rect:
+        serializedVersion: 2
+        x: 1400
+        y: 1160
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 60379ed47f5428140aea51ef69fc2619
+      internalID: 683165591
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_65
+      rect:
+        serializedVersion: 2
+        x: 1600
+        y: 1160
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7cc72df17caaea64a9d530709c507da4
+      internalID: 1500240247
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_66
+      rect:
+        serializedVersion: 2
+        x: 1800
+        y: 1160
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ca5a64484044feb42b2d26e6444bac9c
+      internalID: -1839652698
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_67
+      rect:
+        serializedVersion: 2
+        x: 2000
+        y: 1160
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f2f40844c35b66643a06b5ef7e4828a6
+      internalID: 1196098647
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_68
+      rect:
+        serializedVersion: 2
+        x: 2200
+        y: 1160
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 63b9f22dd752a5b478b4042236bb8107
+      internalID: 77987331
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_69
+      rect:
+        serializedVersion: 2
+        x: 2400
+        y: 1160
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3123783f8a971e94380d121c29dbc583
+      internalID: 763445890
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_70
+      rect:
+        serializedVersion: 2
+        x: 2600
+        y: 1160
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e1445f278fb022d44a8702bdfa76cfae
+      internalID: 1424173941
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_71
+      rect:
+        serializedVersion: 2
+        x: 2800
+        y: 1160
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f2b234676e7eef2409a5bc890144be04
+      internalID: 359162509
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_72
+      rect:
+        serializedVersion: 2
+        x: 3000
+        y: 1160
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b50ea65e44551d74ab4c9f738f71b5a8
+      internalID: -1521534183
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_73
+      rect:
+        serializedVersion: 2
+        x: 3200
+        y: 1160
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 17da4a94af923b648ada3e7d5cc79921
+      internalID: 1803773906
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_74
+      rect:
+        serializedVersion: 2
+        x: 3400
+        y: 1160
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fa8063ee93c9cd4479eff6f7a71c1a96
+      internalID: -20972869
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_75
+      rect:
+        serializedVersion: 2
+        x: 3600
+        y: 1160
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c9102eeb585fc6e4090a14a090a673d1
+      internalID: -1711201784
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_76
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 960
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d8b6bb4218b88e6478376386856369ab
+      internalID: 2080668315
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_77
+      rect:
+        serializedVersion: 2
+        x: 600
+        y: 960
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d9327ab868b8e544b9e3ba0cdb9444ad
+      internalID: 865102965
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_78
+      rect:
+        serializedVersion: 2
+        x: 800
+        y: 960
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2dc8194ba035a1e4489f937b659ba4a6
+      internalID: 1625228290
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_79
+      rect:
+        serializedVersion: 2
+        x: 1000
+        y: 960
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a6d651237c2f1d547a44cdb7588e1694
+      internalID: -1198235125
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_80
+      rect:
+        serializedVersion: 2
+        x: 1200
+        y: 960
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 79afa02e4f0bf6b4481270ec1da94be3
+      internalID: 1235497018
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_81
+      rect:
+        serializedVersion: 2
+        x: 1400
+        y: 960
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8772b6d4d6f719f4a83da6a75d004c98
+      internalID: -244721174
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_82
+      rect:
+        serializedVersion: 2
+        x: 1600
+        y: 960
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 322d0a067df7df24990d2ef691660320
+      internalID: 1314199468
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_83
+      rect:
+        serializedVersion: 2
+        x: 1800
+        y: 960
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1094b89f8e4c822468bb68c0087eb34d
+      internalID: 1015976699
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_84
+      rect:
+        serializedVersion: 2
+        x: 2000
+        y: 960
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 158954a635be70f4ab54f29a32f767d9
+      internalID: 509117311
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_85
+      rect:
+        serializedVersion: 2
+        x: 2200
+        y: 960
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 836266baf0b5fdb4e87e0c5597d2b546
+      internalID: 1299092312
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_86
+      rect:
+        serializedVersion: 2
+        x: 2400
+        y: 960
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f3a6044c5414367439da6ba29ffce5d9
+      internalID: 1429155440
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_87
+      rect:
+        serializedVersion: 2
+        x: 2600
+        y: 960
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b431d0ad55e7bcc4c81d131035b47160
+      internalID: 16870165
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_88
+      rect:
+        serializedVersion: 2
+        x: 2800
+        y: 960
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 05b66cca8d23b8640af926f54195f3b8
+      internalID: 479494140
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_89
+      rect:
+        serializedVersion: 2
+        x: 3000
+        y: 960
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6b238d044b08694499e27205d4dd31bf
+      internalID: -1151108846
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_90
+      rect:
+        serializedVersion: 2
+        x: 3200
+        y: 960
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7d2ffb33e15b268489a38bab38aa2bef
+      internalID: 505254102
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_91
+      rect:
+        serializedVersion: 2
+        x: 3400
+        y: 960
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f5791437886f0704e8b462bf072cb57e
+      internalID: 528599085
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_92
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 760
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7b8f5f8aacbdbf24b9298ff019d928a0
+      internalID: -269788017
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_93
+      rect:
+        serializedVersion: 2
+        x: 600
+        y: 760
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e4e8957e55d9ce544b2855d4f354f880
+      internalID: -1030567320
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_94
+      rect:
+        serializedVersion: 2
+        x: 800
+        y: 760
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4a1d51ab314ea5a4b9212da8995cdb52
+      internalID: 576149529
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_95
+      rect:
+        serializedVersion: 2
+        x: 1000
+        y: 760
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ccc048e7f8142374897f07c23300d0e5
+      internalID: 53464656
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_96
+      rect:
+        serializedVersion: 2
+        x: 1200
+        y: 760
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 06382392b38179e4397bf746ade40201
+      internalID: -30993082
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_97
+      rect:
+        serializedVersion: 2
+        x: 1400
+        y: 760
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8c39c6bfa8de23042bdd0d511566edc5
+      internalID: 2101503673
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_98
+      rect:
+        serializedVersion: 2
+        x: 1600
+        y: 760
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0cdcaf9235263c646a20df096b4feea5
+      internalID: 1972153899
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_99
+      rect:
+        serializedVersion: 2
+        x: 1800
+        y: 760
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: badc6b198ae70a04fbc98235d655ad25
+      internalID: -844903431
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_100
+      rect:
+        serializedVersion: 2
+        x: 2000
+        y: 760
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6165966aca52c68458192b66f6ebe56f
+      internalID: 812208044
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_101
+      rect:
+        serializedVersion: 2
+        x: 2200
+        y: 760
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5b12a0cdfcccf0a41a176d60d4781667
+      internalID: 1334832854
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_102
+      rect:
+        serializedVersion: 2
+        x: 2400
+        y: 760
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: faef93a44caa04943a26380dcd5e349a
+      internalID: -1602603356
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_103
+      rect:
+        serializedVersion: 2
+        x: 2600
+        y: 760
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f03f98bda66e95244b8a9ee7fa2eaff7
+      internalID: 6722690
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_104
+      rect:
+        serializedVersion: 2
+        x: 2800
+        y: 760
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: aadfb5a82e374b645b340dbee17098a0
+      internalID: 242927599
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_105
+      rect:
+        serializedVersion: 2
+        x: 3000
+        y: 760
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5f457a1c3ba209d41be3689af5250380
+      internalID: 771879728
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_106
+      rect:
+        serializedVersion: 2
+        x: 3200
+        y: 760
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0fe0a3960e6dc0047b9f5d1a7701ad83
+      internalID: -1531881716
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_107
+      rect:
+        serializedVersion: 2
+        x: 3400
+        y: 760
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 74a3231ad3d15c947a93bc153e5e216b
+      internalID: 554137302
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_108
+      rect:
+        serializedVersion: 2
+        x: 3600
+        y: 760
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 482e6dbbae86bca47bf82970fef4c47f
+      internalID: 348174546
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_109
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 560
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4942c801c8133764ba7bc3f40f297911
+      internalID: 53577623
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_110
+      rect:
+        serializedVersion: 2
+        x: 200
+        y: 560
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 77792a5facb41504b927ef3422a914cb
+      internalID: -658173572
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_111
+      rect:
+        serializedVersion: 2
+        x: 400
+        y: 560
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 19791c0b78005814a90404118fdfee36
+      internalID: 1264247696
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_112
+      rect:
+        serializedVersion: 2
+        x: 600
+        y: 560
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 16e6f183d9d5ba743b365239e5dbd58d
+      internalID: 1057474681
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_113
+      rect:
+        serializedVersion: 2
+        x: 800
+        y: 560
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9b4639a58372cbf45953e9e76bf22ffb
+      internalID: 1072021898
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_114
+      rect:
+        serializedVersion: 2
+        x: 1000
+        y: 560
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2e730913c24c23647bb7ced657f3d045
+      internalID: 700933408
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_115
+      rect:
+        serializedVersion: 2
+        x: 1200
+        y: 560
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 016beea66d637c141ad6b0e1d2b3b1ee
+      internalID: -230089330
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_116
+      rect:
+        serializedVersion: 2
+        x: 1400
+        y: 560
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e26dd28d0fe47d142848ef4051061cb1
+      internalID: -187026967
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_117
+      rect:
+        serializedVersion: 2
+        x: 1600
+        y: 560
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 30970a73ed9b25e45b3732b0cb702e8e
+      internalID: 1663809388
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_118
+      rect:
+        serializedVersion: 2
+        x: 1800
+        y: 560
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: da65b5f788dfda948b81a15f6fd7d98b
+      internalID: 70388743
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_119
+      rect:
+        serializedVersion: 2
+        x: 2000
+        y: 560
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5730e4f9f36666f4c9d8d998f753ddf0
+      internalID: -1618875875
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_120
+      rect:
+        serializedVersion: 2
+        x: 2200
+        y: 560
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a0ab3ee211038d24a907f6769166fde9
+      internalID: 632364816
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_121
+      rect:
+        serializedVersion: 2
+        x: 2400
+        y: 560
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d5bd416fbb63e1a4282343e9862b8863
+      internalID: -1447558320
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_122
+      rect:
+        serializedVersion: 2
+        x: 2600
+        y: 560
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e6ff58c808ada3045a1915219ee6cf54
+      internalID: -2044251370
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_123
+      rect:
+        serializedVersion: 2
+        x: 2800
+        y: 560
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 956be93159b7924428b09a2d6d0c3de3
+      internalID: -953229700
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_124
+      rect:
+        serializedVersion: 2
+        x: 3000
+        y: 560
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c08a2806894f25242b28770f1661db74
+      internalID: -405716049
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_125
+      rect:
+        serializedVersion: 2
+        x: 3200
+        y: 560
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 76b59b7b95bac9e48b4648390e55a61a
+      internalID: -721031622
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_126
+      rect:
+        serializedVersion: 2
+        x: 3400
+        y: 560
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: baf22c3352f6bbc47953b5cd29681d9e
+      internalID: -550682365
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_127
+      rect:
+        serializedVersion: 2
+        x: 3600
+        y: 560
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 71678ff6d023e814ca1fb1583cd8b470
+      internalID: 1691233305
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_128
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 360
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c69082df8685cfe44bd15101f3e30bd4
+      internalID: -1170081585
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_129
+      rect:
+        serializedVersion: 2
+        x: 200
+        y: 360
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b88481a0cacb85143a21e8a719efec34
+      internalID: 195156485
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_130
+      rect:
+        serializedVersion: 2
+        x: 400
+        y: 360
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7da0666ed19b49b4db097c932587658d
+      internalID: -546815051
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_131
+      rect:
+        serializedVersion: 2
+        x: 600
+        y: 360
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b5cafaff1c3176c4b8cb009f73bfc698
+      internalID: 436166878
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_132
+      rect:
+        serializedVersion: 2
+        x: 800
+        y: 360
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e7a982be1c7fd1348afac8af07133647
+      internalID: 1218184903
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_133
+      rect:
+        serializedVersion: 2
+        x: 1000
+        y: 360
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c8d2d41a009e84140a83d129afaa1519
+      internalID: -1272955738
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_134
+      rect:
+        serializedVersion: 2
+        x: 1200
+        y: 360
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 087801fbdebee2a41919bad72aedbbf3
+      internalID: 1679803162
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_135
+      rect:
+        serializedVersion: 2
+        x: 1400
+        y: 360
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 327d975d1332efe4cba1943b96be0bf0
+      internalID: 1910948659
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_136
+      rect:
+        serializedVersion: 2
+        x: 1600
+        y: 360
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7213458a020c0b94e9202eb15a54e119
+      internalID: 651165096
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_137
+      rect:
+        serializedVersion: 2
+        x: 1800
+        y: 360
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dc0133f3c2ca9eb4ab6882623b0e9e1b
+      internalID: 1030960076
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_138
+      rect:
+        serializedVersion: 2
+        x: 2000
+        y: 360
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 154057970f18cb94c87c9d208d3954d8
+      internalID: -1836742759
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_139
+      rect:
+        serializedVersion: 2
+        x: 2200
+        y: 360
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1275d8002cb6f8e499ab5e8e38565cdc
+      internalID: -35439759
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_140
+      rect:
+        serializedVersion: 2
+        x: 2400
+        y: 360
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d5017f5cd9e06714eb06218edd6e5bc5
+      internalID: -693950401
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_141
+      rect:
+        serializedVersion: 2
+        x: 2600
+        y: 360
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9cc33e99114169744a9736c8cca956dd
+      internalID: -1893966084
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_142
+      rect:
+        serializedVersion: 2
+        x: 2800
+        y: 360
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a9f360de6fcc59843b9c4697fc6c68db
+      internalID: 1642975860
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_143
+      rect:
+        serializedVersion: 2
+        x: 3000
+        y: 360
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 28792813e0c8e49488f6cecd530cbbe5
+      internalID: -301351767
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_144
+      rect:
+        serializedVersion: 2
+        x: 3200
+        y: 360
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a053c2e9640f6584a94e15ab7c9c9267
+      internalID: 1754079313
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_145
+      rect:
+        serializedVersion: 2
+        x: 3400
+        y: 360
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 497a7fc3c85605b4982b632a575a0cc3
+      internalID: -2096731496
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_146
+      rect:
+        serializedVersion: 2
+        x: 3600
+        y: 360
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b8e9b7f64c168084babe067852b70bd7
+      internalID: 1833806769
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_147
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 160
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a2c0b4240ac91744aa01ca47edfa7441
+      internalID: 89307054
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_148
+      rect:
+        serializedVersion: 2
+        x: 200
+        y: 160
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 377cd3067ad528c499634f791150a02f
+      internalID: -792603388
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_149
+      rect:
+        serializedVersion: 2
+        x: 400
+        y: 160
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4dc70e831457a4d4987215ec489520c6
+      internalID: -1410434132
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_150
+      rect:
+        serializedVersion: 2
+        x: 600
+        y: 160
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 70882bc1e1981ea49b7ed5eceb35e9d4
+      internalID: 1736135270
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_151
+      rect:
+        serializedVersion: 2
+        x: 800
+        y: 160
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7cae40453d5e2b94f8ecffa75112d634
+      internalID: 416417134
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_152
+      rect:
+        serializedVersion: 2
+        x: 1000
+        y: 160
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7acdcd0790dd1164fa6cdbe83e638c04
+      internalID: 754482626
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_153
+      rect:
+        serializedVersion: 2
+        x: 1200
+        y: 160
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4fcdcbef8a85ec642b3fbed5d2aa2879
+      internalID: 100869179
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_154
+      rect:
+        serializedVersion: 2
+        x: 1400
+        y: 160
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c58c750274672b048af8f5c687d06474
+      internalID: -930023709
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_155
+      rect:
+        serializedVersion: 2
+        x: 1600
+        y: 160
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8cbbc83191183404eaa06de8ab71a5a7
+      internalID: 320091661
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_156
+      rect:
+        serializedVersion: 2
+        x: 1800
+        y: 160
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5cede34769b51cb43a72441309c74e9c
+      internalID: 1584683256
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_157
+      rect:
+        serializedVersion: 2
+        x: 2000
+        y: 160
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6f467c91099c0f44798cec84109e8333
+      internalID: 1361910796
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_158
+      rect:
+        serializedVersion: 2
+        x: 2200
+        y: 160
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ac896e8f3b26c994898ffb348e088d70
+      internalID: -455524983
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_159
+      rect:
+        serializedVersion: 2
+        x: 2400
+        y: 160
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bcb0aaf04d5122f4db94afd6c02f1cfa
+      internalID: 1209102838
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_160
+      rect:
+        serializedVersion: 2
+        x: 2600
+        y: 160
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2518122b2b63b74479e35e84d8fbff5f
+      internalID: -1554222994
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_161
+      rect:
+        serializedVersion: 2
+        x: 2800
+        y: 160
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 38badf24caf38144880a793bc0f10297
+      internalID: -2055750185
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_162
+      rect:
+        serializedVersion: 2
+        x: 3000
+        y: 160
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 34b158ca3084da748b0fea9720041976
+      internalID: 509886270
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_163
+      rect:
+        serializedVersion: 2
+        x: 3200
+        y: 160
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7f123d77fb43dbe4384d1d2edc691db8
+      internalID: -1210550474
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_164
+      rect:
+        serializedVersion: 2
+        x: 3400
+        y: 160
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b88306300c1b7e14592d7ae90dbd8b5a
+      internalID: -1027270706
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confusion_tilemap_165
+      rect:
+        serializedVersion: 2
+        x: 3600
+        y: 160
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e3ed22e5b36d5054ca6be473b0af3ddd
+      internalID: -1794039846
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      confusion_tilemap_0: 329001449
+      confusion_tilemap_1: -1825889889
+      confusion_tilemap_10: -1124507496
+      confusion_tilemap_100: 812208044
+      confusion_tilemap_101: 1334832854
+      confusion_tilemap_102: -1602603356
+      confusion_tilemap_103: 6722690
+      confusion_tilemap_104: 242927599
+      confusion_tilemap_105: 771879728
+      confusion_tilemap_106: -1531881716
+      confusion_tilemap_107: 554137302
+      confusion_tilemap_108: 348174546
+      confusion_tilemap_109: 53577623
+      confusion_tilemap_11: -1546839894
+      confusion_tilemap_110: -658173572
+      confusion_tilemap_111: 1264247696
+      confusion_tilemap_112: 1057474681
+      confusion_tilemap_113: 1072021898
+      confusion_tilemap_114: 700933408
+      confusion_tilemap_115: -230089330
+      confusion_tilemap_116: -187026967
+      confusion_tilemap_117: 1663809388
+      confusion_tilemap_118: 70388743
+      confusion_tilemap_119: -1618875875
+      confusion_tilemap_12: -1507185559
+      confusion_tilemap_120: 632364816
+      confusion_tilemap_121: -1447558320
+      confusion_tilemap_122: -2044251370
+      confusion_tilemap_123: -953229700
+      confusion_tilemap_124: -405716049
+      confusion_tilemap_125: -721031622
+      confusion_tilemap_126: -550682365
+      confusion_tilemap_127: 1691233305
+      confusion_tilemap_128: -1170081585
+      confusion_tilemap_129: 195156485
+      confusion_tilemap_13: 688282250
+      confusion_tilemap_130: -546815051
+      confusion_tilemap_131: 436166878
+      confusion_tilemap_132: 1218184903
+      confusion_tilemap_133: -1272955738
+      confusion_tilemap_134: 1679803162
+      confusion_tilemap_135: 1910948659
+      confusion_tilemap_136: 651165096
+      confusion_tilemap_137: 1030960076
+      confusion_tilemap_138: -1836742759
+      confusion_tilemap_139: -35439759
+      confusion_tilemap_14: -1251717149
+      confusion_tilemap_140: -693950401
+      confusion_tilemap_141: -1893966084
+      confusion_tilemap_142: 1642975860
+      confusion_tilemap_143: -301351767
+      confusion_tilemap_144: 1754079313
+      confusion_tilemap_145: -2096731496
+      confusion_tilemap_146: 1833806769
+      confusion_tilemap_147: 89307054
+      confusion_tilemap_148: -792603388
+      confusion_tilemap_149: -1410434132
+      confusion_tilemap_15: -121174429
+      confusion_tilemap_150: 1736135270
+      confusion_tilemap_151: 416417134
+      confusion_tilemap_152: 754482626
+      confusion_tilemap_153: 100869179
+      confusion_tilemap_154: -930023709
+      confusion_tilemap_155: 320091661
+      confusion_tilemap_156: 1584683256
+      confusion_tilemap_157: 1361910796
+      confusion_tilemap_158: -455524983
+      confusion_tilemap_159: 1209102838
+      confusion_tilemap_16: 1544980958
+      confusion_tilemap_160: -1554222994
+      confusion_tilemap_161: -2055750185
+      confusion_tilemap_162: 509886270
+      confusion_tilemap_163: -1210550474
+      confusion_tilemap_164: -1027270706
+      confusion_tilemap_165: -1794039846
+      confusion_tilemap_17: 1416484147
+      confusion_tilemap_18: -795089066
+      confusion_tilemap_19: -1828941511
+      confusion_tilemap_2: 1476242567
+      confusion_tilemap_20: -572390973
+      confusion_tilemap_21: 228521722
+      confusion_tilemap_22: 1077129824
+      confusion_tilemap_23: -989248546
+      confusion_tilemap_24: 1324141393
+      confusion_tilemap_25: 450574120
+      confusion_tilemap_26: 1435532531
+      confusion_tilemap_27: 1893815471
+      confusion_tilemap_28: -375643005
+      confusion_tilemap_29: -596680300
+      confusion_tilemap_3: 740375867
+      confusion_tilemap_30: -1185518897
+      confusion_tilemap_31: -1386188112
+      confusion_tilemap_32: -346301264
+      confusion_tilemap_33: -129396697
+      confusion_tilemap_34: 1348964698
+      confusion_tilemap_35: -828497492
+      confusion_tilemap_36: -1918066426
+      confusion_tilemap_37: -1959045831
+      confusion_tilemap_38: 1731549507
+      confusion_tilemap_39: -1733764697
+      confusion_tilemap_4: -594235311
+      confusion_tilemap_40: -1363931994
+      confusion_tilemap_41: -1156714446
+      confusion_tilemap_42: -11132963
+      confusion_tilemap_43: 212066712
+      confusion_tilemap_44: -1109729208
+      confusion_tilemap_45: 1253020687
+      confusion_tilemap_46: -1553401558
+      confusion_tilemap_47: 2029463312
+      confusion_tilemap_48: 318893880
+      confusion_tilemap_49: -1790311761
+      confusion_tilemap_5: -136539574
+      confusion_tilemap_50: 1366508324
+      confusion_tilemap_51: -296974304
+      confusion_tilemap_52: 1027335571
+      confusion_tilemap_53: 93085178
+      confusion_tilemap_54: 63863521
+      confusion_tilemap_55: 1918987680
+      confusion_tilemap_56: 481734469
+      confusion_tilemap_57: -1573451788
+      confusion_tilemap_58: 33418646
+      confusion_tilemap_59: 1077386790
+      confusion_tilemap_6: 320728957
+      confusion_tilemap_60: -168277277
+      confusion_tilemap_61: -1982908122
+      confusion_tilemap_62: -2026960922
+      confusion_tilemap_63: -1614921048
+      confusion_tilemap_64: 683165591
+      confusion_tilemap_65: 1500240247
+      confusion_tilemap_66: -1839652698
+      confusion_tilemap_67: 1196098647
+      confusion_tilemap_68: 77987331
+      confusion_tilemap_69: 763445890
+      confusion_tilemap_7: 2052329038
+      confusion_tilemap_70: 1424173941
+      confusion_tilemap_71: 359162509
+      confusion_tilemap_72: -1521534183
+      confusion_tilemap_73: 1803773906
+      confusion_tilemap_74: -20972869
+      confusion_tilemap_75: -1711201784
+      confusion_tilemap_76: 2080668315
+      confusion_tilemap_77: 865102965
+      confusion_tilemap_78: 1625228290
+      confusion_tilemap_79: -1198235125
+      confusion_tilemap_8: -411133224
+      confusion_tilemap_80: 1235497018
+      confusion_tilemap_81: -244721174
+      confusion_tilemap_82: 1314199468
+      confusion_tilemap_83: 1015976699
+      confusion_tilemap_84: 509117311
+      confusion_tilemap_85: 1299092312
+      confusion_tilemap_86: 1429155440
+      confusion_tilemap_87: 16870165
+      confusion_tilemap_88: 479494140
+      confusion_tilemap_89: -1151108846
+      confusion_tilemap_9: -762333194
+      confusion_tilemap_90: 505254102
+      confusion_tilemap_91: 528599085
+      confusion_tilemap_92: -269788017
+      confusion_tilemap_93: -1030567320
+      confusion_tilemap_94: 576149529
+      confusion_tilemap_95: 53464656
+      confusion_tilemap_96: -30993082
+      confusion_tilemap_97: 2101503673
+      confusion_tilemap_98: 1972153899
+      confusion_tilemap_99: -844903431
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
