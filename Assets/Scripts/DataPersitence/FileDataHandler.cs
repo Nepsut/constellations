@@ -25,6 +25,7 @@ namespace constellations
         {
             //using path.combine to account for differing file systems on some operating systems
             string fullPath = Path.Combine(dataDirPath, "saves", dataFileName);
+            Debug.Log(message: $"loading data from {fullPath}");
             GameData loadedData = null;
             if (File.Exists(fullPath))
             {
@@ -43,7 +44,7 @@ namespace constellations
                 }
                 catch (Exception e)
                 {
-                Debug.LogError(message: $"Error occured while trying to load data from file: {fullPath}'\n{e}");
+                    Debug.LogError(message: $"Error occured while trying to load data from file: {fullPath}'\n{e}");
                 }
             }
             return loadedData;

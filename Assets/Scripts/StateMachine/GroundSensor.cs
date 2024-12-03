@@ -20,7 +20,7 @@ namespace constellations
             groundCheckBox = new Vector2(boxCollider.size.x - colliderOffset, colliderOffset);
         }
 
-        void FixedUpdate()
+        void Update()
         {
             CheckGround();
         }

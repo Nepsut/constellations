@@ -15,7 +15,7 @@ namespace constellations
             //which one? why? should be moved to update when this changes as well
             if (gameObject.CompareTag("Player"))
             {
-                maxSpeed = PlayerController.maxSpeed;
+                maxSpeed = StateMachineCore.maxSpeed;
             }
         }
 

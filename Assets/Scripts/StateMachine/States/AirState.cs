@@ -8,6 +8,7 @@ namespace constellations
     public class AirState : State
     {
         public float jumpSpeed;
+        private float animTime;
         [SerializeField] private AnimationClip anim;
 
         public override void Enter()
@@ -17,9 +18,9 @@ namespace constellations
 
         public override void Do()
         {
-            float time = Helpers.Map(core.rb2d.velocity.y, jumpSpeed, -jumpSpeed, 0, 1, true);
-            // animator.Play(anim.name, 0, time);
-            // animator.speed = 0;
+            animTime = Helpers.Map((core.rb2d.velocity.y), jumpSpeed, -jumpSpeed, 0, 1, true);
+            core.animator.speed = 0;
+            core.animator.Play(anim.name, 0, animTime);
 
             if (core.groundSensor.grounded)
             {
@@ -29,7 +30,8 @@ namespace constellations
 
         public override void Exit()
         {
-            
+            core.animator.Play(anim.name, 0, time);
+            core.animator.speed = 1;
         }
     }
 }

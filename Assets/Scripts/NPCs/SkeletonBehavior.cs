@@ -25,7 +25,7 @@ namespace constellations
         private const float moveSpeedTransitionTime = 3f;
         private const float knockbackStrength = 25f;
         private const float heavyHitMultiplier = 1.4f;
-        private const float maxSpeed = 2f;
+        public new const float maxSpeed = 2f;
         private const float climbMult = 0.4f;
         private const float accelerationTime = 2f;
         private const float jumpForce = 65f;
@@ -81,6 +81,8 @@ namespace constellations
                 return;
             }
 
+            Debug.Log(groundSensor.grounded);
+
             //change this to proper midpoint calculation when sprite added
             CheckWall(transform.position + new Vector3(offset.x, offset.y, 0), size);
 
@@ -105,7 +107,7 @@ namespace constellations
             IsClimbing(direction.x);
 
             //various checks ran to see if jumping is a good option
-            if (!jumpOnCD && rb2d.velocity.x == 0 && seesPlayer && CanJump() && canClimb < 0 && !touchingPlayer)
+            if (!jumpOnCD && rb2d.velocity.x == 0 && seesPlayer && groundSensor.grounded && canClimb < 0 && !touchingPlayer)
             StartCoroutine(Jump());
 
             //more checks to see if climbing is possible and a good option

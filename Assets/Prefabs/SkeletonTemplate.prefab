@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 2632899055446979355}
   - component: {fileID: 2290929284540958595}
   - component: {fileID: 686069326204877418}
+  - component: {fileID: 7148268288772098334}
   m_Layer: 0
   m_Name: SkeletonFunctions
   m_TagString: Skeleton
@@ -74,11 +75,11 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -5177388603050735206, guid: 8884154dfe85442a3a3578be807dbcdf, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 67ef16343eab69048bf3c86913ea1836, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
-  m_DrawMode: 2
+  m_DrawMode: 0
   m_Size: {x: 1, y: 1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
@@ -117,19 +118,40 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: -0.04, y: -0.24}
   m_SpriteTilingProperty:
-    border: {x: 0.25, y: 0.25, z: 0.25, w: 0.25}
+    border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
+    oldSize: {x: 2.3333333, y: 1.6666666}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
-    drawMode: 2
+    drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 0.84, y: 1.04}
   m_EdgeRadius: 0
+--- !u!95 &7148268288772098334
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6566435888988865629}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 22616d818e46d06429b954be9e640d0e, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &7111954779426098534
 GameObject:
   m_ObjectHideFlags: 0
@@ -203,11 +225,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67ad72728d586ba4080d9f0e976b54e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 100
-  wasHeavyHit: 0
   climbable:
     serializedVersion: 2
     m_Bits: 64
+  rb2d: {fileID: 0}
+  animator: {fileID: 0}
+  groundSensor: {fileID: 0}
+  size: {x: 0.84, y: 1.04}
+  offset: {x: -0.04, y: -0.24}
+  health: 100
+  wasHeavyHit: 0
+  player: {fileID: 0}
   ground:
     serializedVersion: 2
     m_Bits: 8

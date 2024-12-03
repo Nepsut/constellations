@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace constellations
 {
-    public class PlayerController : StateMachineCore
+    public class PlayerController : StateMachineCore, IDataPersistence
     {
         #region variables
 
@@ -19,8 +19,6 @@ namespace constellations
         //and not via an object made from the class, so PlayerController.maxSpeed
         //instead of object.maxSpeed
         [Header("Constant Movement Variables")]
-        public const float maxSpeed = 3f;
-        public const float maxClimbSpeed = 2.5f;
         private const float acceleration = 6000f;
         private const float deceleration = 8f;
         private const float jumpForce = 50f;
@@ -31,9 +29,7 @@ namespace constellations
         private const float fallGravMult = 3.7f;
         private const float lowJumpMult = 1.8f;
         private const float airLinearDrag = 2.5f;
-        public const float jumpMaxDuration = 0.35f;
         public const float runSpeedMult = 1.8f;
-        public const float crouchSpeedMult = 0.6f;
         private const float baseColliderHeight = 1.5f;
         private const float crouchColliderHeight = 1f;
 
@@ -45,16 +41,11 @@ namespace constellations
         private float trueAcceleration;
         private float climbAcceleration;
         private float trueAllowedSpeed;
-        public bool wallJumped { get; private set; } = false;
-        public bool dashing { get; private set; } = false;
-        public bool swimming { get; private set; } = false;
-        public bool sliding { get; private set; } = false;
         private bool dashHappened = false;
         private bool dashOnCooldown = false;
         private bool dashDecelerating = true;
         private bool lerpingMaxSpeed = false;
-        public bool running { get; private set; } = false;
-        public bool crouching { get; private set; } = false;
+        public bool runningHelper { get; private set; } = false;
         private float fallYDampThreshold;
 
         //if input differs from movement direction, changingDirection = true
@@ -86,6 +77,7 @@ namespace constellations
             capsuleCollider = GetComponent<CapsuleCollider2D>();
             animator = GetComponent<Animator>();
 
+            //this populates all states' "core" variable as this object
             SetupInstances();
 
             //add methods to events in InputReader
@@ -186,9 +178,9 @@ namespace constellations
             float startSpeed = Mathf.Abs(rb2d.velocity.x);
             float takenTime = 0f;
 
-            if (running)
+            if (runningHelper)
             {
-                running = false;
+                runningHelper = false;
                 while (takenTime < moveSpeedTransitionTime)
                 {
                     takenTime += Time.deltaTime;
@@ -208,6 +200,7 @@ namespace constellations
                     trueAllowedSpeed = lerpedMaxSpeed;
                     yield return null;
                 }
+                if (running) running = false;
             }
             lerpingMaxSpeed = false;
         }
@@ -309,6 +302,7 @@ namespace constellations
                 }
                 dashing = true;
                 running = true;
+                runningHelper = true;
             }
             else dashHappened = false;
         }
@@ -339,6 +333,7 @@ namespace constellations
             {
                 crouching = true;
                 running = false;
+                runningHelper = false;
                 capsuleCollider.size = new Vector2(capsuleCollider.size.x, crouchColliderHeight);   //make collider smaller
                 StartCoroutine(CameraManager.instance.CrouchOffset(true));                          //pan cam down
             }
@@ -354,6 +349,11 @@ namespace constellations
         #endregion
 
         #region checks
+
+        private void StatePicker()
+        {
+            
+        }
 
         private void SelectState()
         {
@@ -393,13 +393,13 @@ namespace constellations
             {
                 machine.Set(dashState);
             }
-            else if (running && horizontal != 0)
-            {
-                machine.Set(runState);
-            }
             else if (!running && horizontal != 0)
             {
                 machine.Set(walkState);
+            }
+            else if (running && horizontal != 0)
+            {
+                machine.Set(runState);
             }
             else
             {
@@ -514,6 +514,20 @@ namespace constellations
             {
                 rb2d.velocity = new Vector2(rb2d.velocity.x, Mathf.Sign(rb2d.velocity.y) * maxClimbSpeed);
             }
+        }
+
+        #endregion
+
+        #region data persistence
+        
+        public void LoadData(GameData data)
+        {
+            gameObject.transform.position = data.savedPosition;
+        }
+
+        public void SaveData(ref GameData data)
+        {
+            data.savedPosition = gameObject.transform.position;
         }
 
         #endregion

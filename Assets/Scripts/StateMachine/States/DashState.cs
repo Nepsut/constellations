@@ -14,7 +14,9 @@ namespace constellations
 
         public override void Do()
         {
-            if (time >= PlayerController.dashDecelerationIgnore)
+            core.animator.speed = 1;
+
+            if (time >= StateMachineCore.dashAnimDuration)
             {
                 isComplete = true;
             }
