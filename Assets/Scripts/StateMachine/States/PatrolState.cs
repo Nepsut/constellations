@@ -15,7 +15,7 @@ namespace constellations
         private void NextDestination()
         {
             float randomPoint = Random.Range(anchor1.position.x, anchor2.position.x);
-            navigate.destination = new Vector2(randomPoint, core.transform.position.y);
+            // navigate.destination = new Vector2(randomPoint, core.transform.position.y);
             machine.Set(navigate, true);
         }
 
