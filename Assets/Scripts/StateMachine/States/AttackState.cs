@@ -10,6 +10,7 @@ namespace constellations
         public override void Enter()
         {
             animator.Play(anim.name);
+            timer = 0;
         }
 
         public override void Do()
@@ -17,13 +18,16 @@ namespace constellations
             timer += Time.deltaTime;
 
             if (timer >= anim.length)
-            isComplete = true;
+            {
+                core.attacking = false;
+                isComplete = true;
+                core.timeSinceLastAttack = 0;
+            }
         }
 
         public override void Exit()
         {
             core.animator.speed = 1;
-            core.attacking = false;
         }
     }
 }

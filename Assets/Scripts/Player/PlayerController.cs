@@ -39,6 +39,7 @@ namespace constellations
         private const float crouchColliderHeight = 1f;
 
         [Header("Dynamic Movement Variables")]
+        private bool disableMovement = false;
         private bool jump = false;
         private bool longJump = false;
         public float horizontal { get; private set; } = 0f;
@@ -60,7 +61,6 @@ namespace constellations
         [Header("Constant Action Variables")]
         private const int attackDamage = 20;
         private const int attackBuffAmount = 5;
-        private const float attackSpeed = 10f;      //real attackspeed ends up being 10/attackSpeed
         private const float attackChargeTime = 1f;
         public const int knockbackbBuffAmount = 5;
         private const float screamMinDuration = 1.5f;
@@ -74,8 +74,10 @@ namespace constellations
         private float heavyAttackMult = 1.5f;
         private bool attackCooldown = false;
         private bool didAttack = false;
+        private bool attackStarted = false;     //this one helps with chaining attacks
         private bool canHeavyAttack = false;
         private bool heavyAttackCoolingDown = false;
+        public int totalSlashAttacks { get; private set; } = 0;
         private bool screaming = false;
         private bool screamKeyHeld = false;
         private bool meow = false;
@@ -90,8 +92,17 @@ namespace constellations
         private GameObject interactingObject;
         private GameObject saveObject;
 
+        [Header("Other Const Variables")]
+        private const int maxHealth = 100;
+        private const int manaOrbHealAmount = 20;
+
         [Header("Other Dynamic Variables")]
         private int attackChain = 0;
+        private float currentHealth = 100;
+        public bool dead
+        {
+            get { return currentHealth < 0; }
+        }
 
         [Header("States")]
         [SerializeField] private State idleState;
@@ -158,6 +169,8 @@ namespace constellations
             //first calculate true acceleration for movement
             CalcAccel();
 
+            OverrideNonAttackStates();
+
             if (facingRight)
             {
                 CheckWall(transform.position + new Vector3(offset.x, offset.y, 0), size);
@@ -182,7 +195,12 @@ namespace constellations
             //adjust drag (and gravity) for smoother movement
             if (!climbing) FallAdjuster();
             if (groundSensor.grounded) HandleDrag();
-            else HandleAirDrag();
+            else
+            {
+                HandleAirDrag();
+                attacking = false;
+                bigAttacking = false;
+            }
 
 
             //CAMERA HANDLING BELOW, TAKE HEED
@@ -200,13 +218,15 @@ namespace constellations
                 StartCoroutine(CameraManager.instance.LerpYAction(false));
             }
             
+            if (machine.state.isComplete)
+            machine.state.Exit();
             SelectState();
             machine.state.Do();
         }
 
         private void Update()
         {
-            if (timeSinceLastAttack < chainAttacksThreshold) TimeAttacks();
+            if (!attacking && timeSinceLastAttack < chainAttacksThreshold) TimeAttacks();
         }
 
         //when entering a 2d trigger, check if it's from an NPC or an interactable object
@@ -234,6 +254,12 @@ namespace constellations
                 {
                     interactingObject.transform.GetChild(0).gameObject.SetActive(true);
                 }
+            }
+            else if (collision.gameObject.CompareTag("Mana"))
+            {
+                currentHealth += manaOrbHealAmount;
+                if (currentHealth > maxHealth) currentHealth = maxHealth;
+                Destroy(collision.gameObject);
             }
             if (collision.gameObject.CompareTag("SavePoint"))
             {
@@ -477,7 +503,7 @@ namespace constellations
 
         private void HandleAttack()
         {
-            if (!attackEnabled) return;
+            if (!attackEnabled || !groundSensor.grounded) return;
             if (!attackCooldown && !screaming)
             {
                 Debug.Log("attack pressed");
@@ -488,7 +514,7 @@ namespace constellations
 
         private void HandleAttackCancel()
         {
-            if (!attackEnabled) return;
+            if (!attackEnabled || !groundSensor.grounded) return;
             if (didAttack)
             {
                 Debug.Log("attack released");
@@ -540,6 +566,7 @@ namespace constellations
 
         #region checks
 
+        //this was for something i swear i just forgot and i'll never remember if this is removed
         private void StatePicker()
         {
             
@@ -571,6 +598,31 @@ namespace constellations
             {
                 machine.Set(airState);
             }
+            else if (attacking)
+            {
+                //might be a "slightly" scuffed way to do chain attacks but hey it works
+                if (ChainAttacks())
+                {
+                    machine.Set(attackStates[attackChain] as State);
+
+                    if (attackStarted)
+                    {
+                        attackStarted = false;
+                        attackChain++;
+                    }
+                    if (attackChain > 2) attackChain = 0;
+                }
+                else
+                {
+                    attackChain = 0;
+                    machine.Set(attackStates[attackChain]);
+                }
+                if (attackChain > attackStates.Length) attackChain = 0;
+            }
+            else if (bigAttacking)
+            {
+                machine.Set(slashAttackState as State);
+            }
             else if (crouching && horizontal == 0)
             {
                 machine.Set(crouchIdleState);
@@ -590,16 +642,6 @@ namespace constellations
             else if (running && horizontal != 0)
             {
                 machine.Set(runState);
-            }
-            else if (attacking)
-            {
-                machine.Set(attackStates[attackChain] as State);
-                attackChain++;
-                if (attackChain > attackStates.Length) attackChain = 0;
-            }
-            else if (bigAttacking)
-            {
-                machine.Set(slashAttackState as State);
             }
             else
             {
@@ -636,6 +678,12 @@ namespace constellations
 
         private void MoveAction()
         {
+            if (disableMovement)
+            {
+                rb2d.velocity = Vector2.zero;
+                return;
+            }
+
             //STANDARD MOVEMENT
             if (crouching && !wallJumped)   //crouch movement, accelerate slower until trueAllowedSpeed*crouchSpeedMult
             {
@@ -669,6 +717,8 @@ namespace constellations
 
         private void JumpAction()
         {
+            if (disableMovement) return;
+
             //executing jump
             if (canClimb < 0)         //IF CAN'T CLIMB, EXECUTE NORMAL JUMP
             {
@@ -733,13 +783,14 @@ namespace constellations
             StopCoroutine(attackTypeCheck);
             if (canHeavyAttack && !heavyAttackCoolingDown) HeavyAttack(); 
             else NormalAttack();
-            yield return new WaitForSeconds(10f / attackSpeed + attackStates[attackChain].anim.length);
+            yield return new WaitForSeconds(attackStates[attackChain].anim.length);
             attackCooldown = false;
         }
 
         private void NormalAttack()
         {
             attacking = true;
+            attackStarted = true;
             StopCoroutine(attackTypeCheck);
             Debug.Log("normal attack done");
             if (attackHitbox.canAttackEnemy && attackHitbox.targetEnemy != null)
@@ -751,7 +802,9 @@ namespace constellations
 
         private void HeavyAttack()
         {
+            totalSlashAttacks++;
             bigAttacking = true;
+            attackStarted = true;
             canHeavyAttack = false;
             Debug.Log("heavy attack done");
             if (attackHitbox.canAttackEnemy && attackHitbox.targetEnemy != null)
@@ -810,10 +863,31 @@ namespace constellations
             meow = false;
         }
 
+        private void OverrideNonAttackStates()
+        {
+            if (attacking || bigAttacking)
+            {
+                disableMovement = true;
+            }
+            else
+            {
+                disableMovement = false;
+            }
+        }
+
+        #endregion
+
+        #region combat handling
+
+        public void DamagePlayer(int _damage)
+        {
+            currentHealth -= _damage;
+        }
+
         #endregion
 
         #region data persistence
-        
+
         public void LoadData(GameData data)
         {
             gameObject.transform.position = data.savedPosition;

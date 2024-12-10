@@ -980,7 +980,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 713b0df832ae2544a8aada926db8ac20, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <anim>k__BackingField: {fileID: 0}
+  <anim>k__BackingField: {fileID: 7400000, guid: 24df7999d5fdee3429f87c784d6122ce, type: 2}
 --- !u!1 &271204097
 GameObject:
   m_ObjectHideFlags: 0
@@ -1808,7 +1808,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ad12928c7de5c74e8005552a333272b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <anim>k__BackingField: {fileID: 0}
+  <anim>k__BackingField: {fileID: 7400000, guid: b6a828d0d0906cd469fbe089057a6731, type: 2}
 --- !u!1 &580175265
 GameObject:
   m_ObjectHideFlags: 0
@@ -2616,10 +2616,10 @@ MonoBehaviour:
   airState: {fileID: 729432863}
   wallJumpState: {fileID: 1038762637}
   attackStates:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  slashAttackState: {fileID: 0}
+  - {fileID: 822349268}
+  - {fileID: 210083212}
+  - {fileID: 1746726897}
+  slashAttackState: {fileID: 558528767}
 --- !u!70 &803418726
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -2911,7 +2911,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 713b0df832ae2544a8aada926db8ac20, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <anim>k__BackingField: {fileID: 0}
+  <anim>k__BackingField: {fileID: 7400000, guid: 55b524201ec5a3f4f993d2fbc6c5990b, type: 2}
 --- !u!1 &823256529
 GameObject:
   m_ObjectHideFlags: 0
@@ -5582,7 +5582,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 713b0df832ae2544a8aada926db8ac20, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <anim>k__BackingField: {fileID: 0}
+  <anim>k__BackingField: {fileID: 7400000, guid: c83f9d83b01a198429b15c9c6de4a056, type: 2}
 --- !u!1 &1771381186
 GameObject:
   m_ObjectHideFlags: 0
