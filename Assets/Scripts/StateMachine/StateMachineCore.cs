@@ -24,6 +24,9 @@ namespace constellations
         public bool sliding { get; protected set; } = false;
         public bool running { get; protected set; } = false;
         public bool crouching { get; protected set; } = false;
+        public bool attacking { get; set; } = false;
+        public float timeSinceLastAttack { get; protected set; } = 0;
+        public bool bigAttacking { get; set; } = false;
 
         //CONSTANT VALUES RELATED TO PLAYER MOVEMENT
         //SHOULD PROBABLY BE MOVED BACK TO PLAYERCONTROLLER
@@ -33,6 +36,8 @@ namespace constellations
         public const float crouchSpeedMult = 0.6f;
         public const float jumpMaxDuration = 0.35f;
         public const float maxClimbSpeed = 2.5f;
+        public const float heavyAttackCooldown = 3.5f;
+        public const float chainAttacksThreshold = 0.4f;
 
         public void SetupInstances()
         {

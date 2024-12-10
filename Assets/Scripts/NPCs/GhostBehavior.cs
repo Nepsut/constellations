@@ -13,7 +13,7 @@ namespace constellations
         [Header("Engine Variables")]
         private Rigidbody2D rb;
         [SerializeField] private GameObject player;
-        private PlayerAction playerAction;
+        private PlayerController playerController;
 
         [Header("Constant Variables")]
         private const float awakeCheckFrequency = 0.5f;
@@ -44,7 +44,7 @@ namespace constellations
         void Awake()
         {
             //grab some references necessary later
-            playerAction = player.GetComponent<PlayerAction>();
+            playerController = player.GetComponent<PlayerController>();
             rb = GetComponent<Rigidbody2D>();
         }
 
@@ -116,12 +116,12 @@ namespace constellations
             //calc true knockback for less messy calc later
             if (wasHeavyHit)
             {
-                trueKnockback = (knockbackStrength + (playerAction.knockbackBuffs * PlayerAction.knockbackbBuffAmount)) *
+                trueKnockback = (knockbackStrength + (playerController.knockbackBuffs * PlayerController.knockbackbBuffAmount)) *
                 heavyHitMultiplier;
             }
             else 
             {
-                trueKnockback = (knockbackStrength + (playerAction.knockbackBuffs * PlayerAction.knockbackbBuffAmount));
+                trueKnockback = (knockbackStrength + (playerController.knockbackBuffs * PlayerController.knockbackbBuffAmount));
             }
             //add force toward direction opposite of player as impulse
             rb.AddForce(-direction * trueKnockback, ForceMode2D.Impulse);
