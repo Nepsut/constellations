@@ -11,9 +11,8 @@ namespace constellations
         #region variables
 
         [Header("Engine Variables")]
-        private Rigidbody2D rb;
         [SerializeField] private GameObject player;
-        private PlayerAction playerAction;
+        private PlayerController playerController;
 
         [Header("Constant Variables")]
         private const float awakeCheckFrequency = 0.5f;
@@ -29,6 +28,7 @@ namespace constellations
         public new const float maxSpeed = 2f;
         private const float accelerationTime = 2f;
         public const float deathDuration = 1f;         //adjust depending on animation length
+        private const int damage = 20;
 
         [Header("Dynamic Variables")]
         private bool awake = false;
@@ -36,6 +36,12 @@ namespace constellations
         private float distance = 0;
         private Vector2 direction = Vector2.zero;
         private Coroutine lerpSpeed;
+        private bool touchingPlayer = false;
+
+        [Header("States")]
+        [SerializeField] private State idleState;
+        [SerializeField] private DamagedState damagedState;
+
 
         #endregion
 
@@ -44,8 +50,9 @@ namespace constellations
         void Awake()
         {
             //grab some references necessary later
-            playerAction = player.GetComponent<PlayerAction>();
-            rb = GetComponent<Rigidbody2D>();
+            playerController = player.GetComponent<PlayerController>();
+
+            SetupInstances();   //setup state machine
         }
 
         // Start is called before the first frame update
@@ -74,16 +81,43 @@ namespace constellations
             if (stopMovingDistance < distance && distance < seeDistance)
             {
                 Movement();
-                rb.drag = 0;
+                rb2d.drag = 0;
             }
             else if (distance > loseSightDistance)
             {
-                rb.drag = deceleration;
+                rb2d.drag = deceleration;
             }
-            else if (distance < stopMovingDistance) rb.drag = fastDeceleration;
+            else if (distance < stopMovingDistance) rb2d.drag = fastDeceleration;
 
             //self-explanatory
             if (doKnockback) Knockback();
+
+            SelectState();
+            machine.state.Do();
+        }
+
+        private void Update()
+        {
+            if (touchingPlayer && !playerController.invulnerable)
+            {
+                playerController.DamagePlayer(damage);
+            }
+        }
+
+        private void OnCollisionEnter2D(Collision2D collider)
+        {
+            if (collider == null) return;
+
+            if (collider.gameObject.CompareTag("Player")) touchingPlayer = true;
+
+        }
+
+        private void OnCollisionExit2D(Collision2D collider)
+        {
+            if (collider != null)
+            {
+                if (collider.gameObject.CompareTag("Player")) touchingPlayer = false;
+            }
         }
 
         #endregion
@@ -99,12 +133,14 @@ namespace constellations
 
         protected override void Movement()
         {
+            base.Movement();    //this runs sprite flipper
+
             //addforce toward direction of player
-            rb.AddForce(direction * acceleration * Time.deltaTime);
+            rb2d.AddForce(direction * acceleration * Time.deltaTime);
             //if speed over allowedSpeed, set speed to allowedSpeed
-            if (Mathf.Abs(rb.velocity.x) > allowedSpeed || Mathf.Abs(rb.velocity.y) > allowedSpeed)
+            if (Mathf.Abs(rb2d.velocity.x) > allowedSpeed || Mathf.Abs(rb2d.velocity.y) > allowedSpeed)
             {
-                rb.velocity = new Vector2(direction.x, direction.y) * allowedSpeed;
+                rb2d.velocity = new Vector2(direction.x, direction.y) * allowedSpeed;
             }
         }
 
@@ -116,15 +152,15 @@ namespace constellations
             //calc true knockback for less messy calc later
             if (wasHeavyHit)
             {
-                trueKnockback = (knockbackStrength + (playerAction.knockbackBuffs * PlayerAction.knockbackbBuffAmount)) *
+                trueKnockback = (knockbackStrength + (playerController.knockbackBuffs * PlayerController.knockbackbBuffAmount)) *
                 heavyHitMultiplier;
             }
             else 
             {
-                trueKnockback = (knockbackStrength + (playerAction.knockbackBuffs * PlayerAction.knockbackbBuffAmount));
+                trueKnockback = (knockbackStrength + (playerController.knockbackBuffs * PlayerController.knockbackbBuffAmount));
             }
             //add force toward direction opposite of player as impulse
-            rb.AddForce(-direction * trueKnockback, ForceMode2D.Impulse);
+            rb2d.AddForce(-direction * trueKnockback, ForceMode2D.Impulse);
 
             //stop and restart allowedSpeed calculation
             if (lerpSpeed != null ) StopCoroutine(lerpSpeed);
@@ -136,12 +172,12 @@ namespace constellations
         private IEnumerator MaxSpeedLerp()
         {
             float takenTime = 0f;
-            float startXSpeed = Mathf.Abs(rb.velocity.x);
-            float startYSpeed = Mathf.Abs(rb.velocity.y);
+            float startXSpeed = Mathf.Abs(rb2d.velocity.x);
+            float startYSpeed = Mathf.Abs(rb2d.velocity.y);
 
             while (takenTime < moveSpeedTransitionTime)
             {
-                if (Mathf.Abs(rb.velocity.x) < maxSpeed && Mathf.Abs(rb.velocity.y) < maxSpeed)
+                if (Mathf.Abs(rb2d.velocity.x) < maxSpeed && Mathf.Abs(rb2d.velocity.y) < maxSpeed)
                 {
                     allowedSpeed = maxSpeed;
                     break;
@@ -160,13 +196,31 @@ namespace constellations
         protected override IEnumerator Death()
         {
             isDying = true;
-            rb.drag = fastDeceleration;
+            rb2d.drag = fastDeceleration;
             //play death animation
             //below is a placeholder
             this.gameObject.GetComponentInChildren<SpriteRenderer>().color = Color.red;
 
             yield return new WaitForSeconds(deathDuration);
             Destroy(this.gameObject);
+        }
+
+        protected override IEnumerator EndDamagedState()
+        {
+            yield return new WaitForSeconds(damagedState.animLength);
+            damaged = false;
+        }
+
+        private void SelectState()
+        {
+            if (!damaged)
+            {
+                machine.Set(idleState);
+            }
+            else
+            {
+                machine.Set(damagedState as State);
+            }
         }
     }
 }

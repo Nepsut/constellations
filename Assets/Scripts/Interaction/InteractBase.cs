@@ -7,16 +7,16 @@ namespace constellations
     public abstract class InteractBase : MonoBehaviour, IInteractable
     {
         private bool checkingInteractions = false;
-        private GameObject player;
+        private PlayerController playerController;
 
         private void Update()
         {
             if (checkingInteractions)
             {
-                if (player.GetComponent<PlayerAction>().didInteractObject)
+                if (playerController.didInteractObject)
                 {
                     Interact();
-                    player.GetComponent<PlayerAction>().didInteractObject = false;
+                    playerController.didInteractObject = false;
                 }
             }
         }
@@ -28,7 +28,7 @@ namespace constellations
                 if (collider.gameObject.CompareTag("Player"))
                 {
                     checkingInteractions = true;
-                    player = collider.gameObject;
+                    playerController = collider.gameObject.GetComponent<PlayerController>();
                 }
             }
         }
@@ -40,7 +40,7 @@ namespace constellations
                 if (collider.gameObject.CompareTag("Player"))
                 {
                     checkingInteractions = false;
-                    player = null;
+                    playerController = null;
                 }
             }
         }

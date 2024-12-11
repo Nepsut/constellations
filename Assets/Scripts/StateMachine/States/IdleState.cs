@@ -15,7 +15,10 @@ namespace constellations
 
         public override void Do()
         {
-            if (!core.groundSensor.grounded) isComplete = true;
+            if (core.groundSensor != null)
+            {
+                if (!core.groundSensor.grounded) isComplete = true;
+            }
         }
     }
 }

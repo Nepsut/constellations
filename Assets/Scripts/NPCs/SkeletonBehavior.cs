@@ -12,7 +12,7 @@ namespace constellations
 
         [Header("Engine Variables")]
         [SerializeField] private GameObject player;
-        private PlayerAction playerAction;
+        private PlayerController playerController;
         [SerializeField] private LayerMask ground;
 
         [Header("Constant Variables")]
@@ -35,6 +35,7 @@ namespace constellations
         private Vector2 jumpRaycastBox;
         private Vector2 climbRaycastBox;
         public const float deathDuration = 1f;         //adjust depending on animation length
+        private const int damage = 15;
 
         [Header("Dynamic Variables")]
         private bool awake = false;
@@ -46,6 +47,11 @@ namespace constellations
         private bool jumpOnCD = false;
         private Coroutine lerpSpeed;
 
+        [Header("States")]
+        [SerializeField] private State walkingState;
+        [SerializeField] private State idleState;
+        [SerializeField] private DamagedState damagedState;
+
         #endregion
 
         #region standard methods
@@ -53,14 +59,15 @@ namespace constellations
         void Awake()
         {
             //grab some references necessary later
-            playerAction = player.GetComponent<PlayerAction>();
-            rb2d = GetComponent<Rigidbody2D>();
+            playerController = player.GetComponent<PlayerController>();
 
             BoxCollider2D box = gameObject.GetComponentInChildren<BoxCollider2D>();
 
+            SetupInstances();   //setup state machine
+
             //set raycast sizes based on collider sizes to ensure enemy is scaleable
-            jumpRaycastBox = new Vector2(box.size.x, box.size.y + 0.1f);
-            climbRaycastBox = new Vector2(box.size.x + 0.04f, box.size.y - 0.04f);
+            jumpRaycastBox = new(box.size.x, box.size.y + 0.1f);
+            climbRaycastBox = new(box.size.x + 0.04f, box.size.y - 0.04f);
         }
 
         // Start is called before the first frame update
@@ -81,10 +88,8 @@ namespace constellations
                 return;
             }
 
-            Debug.Log(groundSensor.grounded);
-
             //change this to proper midpoint calculation when sprite added
-            CheckWall(transform.position + new Vector3(offset.x, offset.y, 0), size);
+            CheckWall(transform.position + (Vector3)offset, size);
 
             //grab distance between player and this skeleton, then also grab normalized direction for movement
             distance = Vector2.Distance(transform.position, player.transform.position);
@@ -121,14 +126,28 @@ namespace constellations
 
             //self-explanatory
             if (doKnockback) Knockback();
+
+            SelectState();
+            machine.state.Do();
+        }
+
+        private void Update()
+        {
+            if (touchingPlayer && !playerController.invulnerable)
+            {
+                playerController.DamagePlayer(damage);
+            }
         }
 
         private void OnCollisionEnter2D(Collision2D collider)
         {
-            if (collider != null)
+            if (collider == null) return;
+
+            if (collider.gameObject.CompareTag("Player"))
             {
-                if (collider.gameObject.CompareTag("Player")) touchingPlayer = true;
+                touchingPlayer = true;
             }
+
         }
 
         private void OnCollisionExit2D(Collision2D collider)
@@ -154,6 +173,10 @@ namespace constellations
 
         protected override void Movement()
         {
+            if (damaged) return;
+
+            base.Movement();    //this runs sprite flipper basically
+
             if (!climbing)
             {
                 //addforce toward direction of player
@@ -172,6 +195,7 @@ namespace constellations
 
         private void Climb()
         {
+            if (damaged) return;
             //addforce upwards
             rb2d.AddForce(Vector2.up * acceleration * climbMult * Time.deltaTime);
             //if speed over allowedSpeed, set speed to allowedSpeed
@@ -183,6 +207,7 @@ namespace constellations
 
         private IEnumerator Jump()
         {
+            if (damaged) yield break;
             jumpOnCD = true;
             yield return new WaitForSeconds(jumpDelay);
             rb2d.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
@@ -198,12 +223,12 @@ namespace constellations
             //calc true knockback for less messy calc later
             if (wasHeavyHit)
             {
-                trueKnockback = (knockbackStrength + (playerAction.knockbackBuffs * PlayerAction.knockbackbBuffAmount)) *
+                trueKnockback = (knockbackStrength + (playerController.knockbackBuffs * PlayerController.knockbackbBuffAmount)) *
                 heavyHitMultiplier;
             }
             else
             {
-                trueKnockback = (knockbackStrength + (playerAction.knockbackBuffs * PlayerAction.knockbackbBuffAmount));
+                trueKnockback = (knockbackStrength + (playerController.knockbackBuffs * PlayerController.knockbackbBuffAmount));
             }
             //add force toward direction opposite of player as impulse
             rb2d.AddForce(-direction * trueKnockback, ForceMode2D.Impulse);
@@ -239,6 +264,7 @@ namespace constellations
         //same simple climb raycast tech as player exceot on a boolean as walljumps are not necessary
         private bool CanJump()
         {
+            if (damaged) return false;
             RaycastHit2D hit = Physics2D.BoxCast(transform.position, jumpRaycastBox, 0f, Vector2.down, 0.1f, ground);
             if (hit) return true;
             else return false;
@@ -255,6 +281,28 @@ namespace constellations
 
             yield return new WaitForSeconds(deathDuration);
             Destroy(this.gameObject);
+        }
+
+        protected override IEnumerator EndDamagedState()
+        {
+            yield return new WaitForSeconds(damagedState.animLength);
+            damaged = false;
+        }
+
+        private void SelectState()
+        {
+            if ((rb2d.velocity.x > -0.1f && rb2d.velocity.x < 0.1f) && !damaged)
+            {
+                machine.Set(idleState);
+            }
+            else if (damaged)
+            {
+                machine.Set(damagedState as State);
+            }
+            else
+            {
+                machine.Set(walkingState);
+            }
         }
 
         #endregion

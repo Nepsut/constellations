@@ -8,8 +8,13 @@ namespace constellations
     {
         #region variables
 
+        [Header("Management Variables")]
+        private bool attackEnabled = true;
+        private bool screamEnabled = true;
+
         [Header("Engine Variables")]
         [SerializeField] private InputReader playerInput;
+        [SerializeField] private HitBoxController attackHitbox, bigAttackHitbox;
         private CapsuleCollider2D capsuleCollider;
         private const float colliderOffset = 0.4f;
         [SerializeField] private LayerMask ground;
@@ -34,6 +39,7 @@ namespace constellations
         private const float crouchColliderHeight = 1f;
 
         [Header("Dynamic Movement Variables")]
+        private bool disableMovement = false;
         private bool jump = false;
         private bool longJump = false;
         public float horizontal { get; private set; } = 0f;
@@ -52,6 +58,59 @@ namespace constellations
         private bool changingXDirection => (rb2d.velocity.x > 0f && horizontal < 0f) || (rb2d.velocity.x < 0f && horizontal > 0f);
         private bool changingYDirection => (rb2d.velocity.y > 0f && vertical < 0f) || (rb2d.velocity.y < 0f && vertical > 0f);
 
+        [Header("Constant Action Variables")]
+        private const int attackDamage = 20;
+        private const int attackBuffAmount = 5;
+        private const float attackChargeTime = 1f;
+        public const int knockbackbBuffAmount = 5;
+        private const float screamMinDuration = 1.5f;
+        private const float screamBufferTime = 0.1f;
+        private const float meowTime = 0.2f;
+
+        [Header("Dynamic Action Variables")]
+        private int attackBuffs = 0;                //add 1 every time player's attack gets buffed
+        public int knockbackBuffs { get; private set; } = 0;      //add 1 on knockback buff
+        private int realDamage = 20;
+        private float heavyAttackMult = 1.5f;
+        private bool attackCooldown = false;
+        private bool didAttack = false;
+        private bool attackStarted = false;     //this one helps with chaining attacks
+        private bool canHeavyAttack = false;
+        private bool heavyAttackCoolingDown = false;
+        public int totalSlashAttacks { get; private set; } = 0;
+        private bool screaming = false;
+        private bool screamKeyHeld = false;
+        private bool meow = false;
+        private Coroutine attackTypeCheck;
+        private Coroutine scream;
+
+        [Header("Interaction Variables")]
+        private bool canInteractNPC = false;
+        private bool canInteractObject = false;
+        [HideInInspector] public bool didInteractObject = false;
+        private GameObject interactingNPC;
+        private GameObject interactingObject;
+        private GameObject saveObject;
+
+        [Header("Other Const Variables")]
+        private const int maxHealth = 100;
+        private const int manaOrbHealAmount = 20;
+        private const float invulnerableDuration = 0.7f;
+
+        [Header("Other Dynamic Variables")]
+        private int attackChain = 0;
+        private float currentHealth = 100;
+        public bool dead
+        {
+            get { return currentHealth < 0; }
+        }
+
+        private float invulnerableTime;
+        public bool invulnerable
+        {
+            get { return invulnerableTime > 0; }
+        }
+
         [Header("States")]
         [SerializeField] private State idleState;
         [SerializeField] private State walkState;
@@ -65,6 +124,9 @@ namespace constellations
         [SerializeField] private State swimIdleState;
         [SerializeField] private State airState;
         [SerializeField] private State wallJumpState;
+        [SerializeField] private AttackState[] attackStates;
+        [SerializeField] private AttackSlashState slashAttackState;
+
 
         #endregion
 
@@ -88,6 +150,13 @@ namespace constellations
             playerInput.DashCanceledEvent += HandleDashCancel;
             playerInput.CrouchEvent += HandleCrouch;
             playerInput.CrouchCanceledEvent += HandleCrouchCancel;
+            playerInput.AttackEvent += HandleAttack;
+            playerInput.AttackCanceledEvent += HandleAttackCancel;
+            playerInput.ScreamEvent += HandleScream;
+            playerInput.ScreamCanceledEvent += HandleScreamCancel;
+            playerInput.MeowEvent += HandleMeow;
+            playerInput.InteractEvent += HandleInteract;
+            playerInput.InteractCanceledEvent += HandleInteractCancel;
         }
 
         void Start()
@@ -95,6 +164,7 @@ namespace constellations
             //set YDampThreshold to value specified in CameraManager
             fallYDampThreshold = CameraManager.instance.fallSpeedDampThreshold;
             trueAllowedSpeed = maxSpeed;
+            realDamage = attackDamage + attackBuffs * attackBuffAmount;
 
             machine.Set(idleState);
         }
@@ -105,6 +175,8 @@ namespace constellations
             //MOVEMENT-RELATED METHODS BELOW
             //first calculate true acceleration for movement
             CalcAccel();
+
+            OverrideNonAttackStates();
 
             if (facingRight)
             {
@@ -130,7 +202,12 @@ namespace constellations
             //adjust drag (and gravity) for smoother movement
             if (!climbing) FallAdjuster();
             if (groundSensor.grounded) HandleDrag();
-            else HandleAirDrag();
+            else
+            {
+                HandleAirDrag();
+                attacking = false;
+                bigAttacking = false;
+            }
 
 
             //CAMERA HANDLING BELOW, TAKE HEED
@@ -150,6 +227,82 @@ namespace constellations
             
             SelectState();
             machine.state.Do();
+        }
+
+        private void Update()
+        {
+            if (!attacking && timeSinceLastAttack < chainAttacksThreshold) TimeAttacks();
+
+            if (invulnerable)
+            invulnerableTime -= Time.deltaTime;
+        }
+
+        //when entering a 2d trigger, check if it's from an NPC or an interactable object
+        //this then lets player interact with said entity with the HandleInteract method
+        private void OnTriggerEnter2D(Collider2D collision)
+        {
+            if (collision == null) return;
+            if (collision.gameObject.CompareTag("NPC") || collision.gameObject.CompareTag("SavePoint"))
+            {
+                canInteractNPC = true;
+                //save interactable NPC so we can easily call the Talk() method from it
+                interactingNPC = collision.gameObject;
+                //activate indicator to show this NPC can be interacted with
+                if (interactingNPC.transform.GetChild(0).gameObject != null)
+                {
+                    interactingNPC.transform.GetChild(0).gameObject.SetActive(true);
+                }
+            }
+            else if (collision.gameObject.CompareTag("Interactable"))
+            {
+                canInteractObject = true;
+                //save interactable object so we can easily call the Interact() method from it
+                interactingObject = collision.gameObject;
+                if (interactingObject.transform.GetChild(0).gameObject != null)
+                {
+                    interactingObject.transform.GetChild(0).gameObject.SetActive(true);
+                }
+            }
+            else if (collision.gameObject.CompareTag("Mana"))
+            {
+                currentHealth += manaOrbHealAmount;
+                if (currentHealth > maxHealth) currentHealth = maxHealth;
+                Destroy(collision.gameObject);
+            }
+            if (collision.gameObject.CompareTag("SavePoint"))
+            {
+                collision.gameObject.GetComponent<SavePoint>().usedSavepoint = true;
+            }
+        }
+
+        //when leaving a 2d trigger, clear appropriate saved entity and disable indicators
+        private void OnTriggerExit2D(Collider2D collision)
+        {
+            if (collision == null) return;
+            if (collision.gameObject.CompareTag("NPC") || collision.gameObject.CompareTag("SavePoint"))
+            {
+                canInteractNPC = false;
+                if (interactingNPC == null) return;
+                if (interactingNPC.transform.GetChild(0).gameObject != null)
+                {
+                    interactingNPC.transform.GetChild(0).gameObject.SetActive(false);
+                }
+                interactingNPC = null;
+            }
+            else if (collision.gameObject.CompareTag("Interactable"))
+            {
+                canInteractObject = false;
+                if (interactingObject == null) return;
+                if (interactingObject.transform.GetChild(0).gameObject != null)
+                {
+                    interactingObject.transform.GetChild(0).gameObject.SetActive(false);
+                }
+                interactingObject = null;
+            }
+            if (collision.gameObject.CompareTag("SavePoint"))
+            {
+                collision.gameObject.GetComponent<SavePoint>().usedSavepoint = false;
+            }
         }
 
         #endregion
@@ -249,6 +402,16 @@ namespace constellations
             }
         }
 
+        private void TimeAttacks()
+        {
+            timeSinceLastAttack += Time.deltaTime;
+        }
+
+        private bool ChainAttacks()
+        {
+            return timeSinceLastAttack < chainAttacksThreshold;
+        }
+
         #endregion
 
         #region input handlers
@@ -346,10 +509,72 @@ namespace constellations
             StartCoroutine(CameraManager.instance.CrouchOffset(false));                             //pan cam to normal
         }
 
+        private void HandleAttack()
+        {
+            if (!attackEnabled || !groundSensor.grounded) return;
+            if (!attackCooldown && !screaming)
+            {
+                Debug.Log("attack pressed");
+                didAttack = true;
+                attackTypeCheck = StartCoroutine(AttackTypeCheck());
+            }
+        }
+
+        private void HandleAttackCancel()
+        {
+            if (!attackEnabled || !groundSensor.grounded) return;
+            if (didAttack)
+            {
+                Debug.Log("attack released");
+                didAttack = false;
+                StartCoroutine(Attack());
+            }
+        }
+
+        private void HandleScream()
+        {
+            if (!screamEnabled) return;
+            scream = StartCoroutine(Scream());
+            screamKeyHeld = true;
+        }
+
+        private void HandleScreamCancel()
+        {
+            if (!screamEnabled) return;
+            screamKeyHeld = false;
+        }
+
+        private void HandleMeow()
+        {
+            if (!meow) StartCoroutine(Meow());
+        }
+
+        //handles interaction based on data retrieved when entering trigger
+        private void HandleInteract()
+        {
+            if (canInteractNPC && interactingNPC != null)
+            {
+                //change input mode so player movement is disabled during dialogue
+                playerInput.SetDialogue();
+                //this calls the NPC's dialogue based in its INK story
+                interactingNPC.GetComponent<NPCDialogue>().Talk();
+            }
+            else if (canInteractObject && interactingObject != null)
+            {
+                didInteractObject = true;
+            }
+        }
+
+        private void HandleInteractCancel()
+        {
+            didInteractObject = false;
+        }
+
         #endregion
 
         #region checks
 
+        //this was for something i swear i just forgot and i'll never remember if this is removed
         private void StatePicker()
         {
             
@@ -380,6 +605,31 @@ namespace constellations
             else if (!groundSensor.grounded && !wallJumped)
             {
                 machine.Set(airState);
+            }
+            else if (attacking)
+            {
+                //might be a "slightly" scuffed way to do chain attacks but hey it works
+                if (ChainAttacks())
+                {
+                    machine.Set(attackStates[attackChain] as State);
+
+                    if (attackStarted)
+                    {
+                        attackStarted = false;
+                        attackChain++;
+                    }
+                    if (attackChain > 2) attackChain = 0;
+                }
+                else
+                {
+                    attackChain = 0;
+                    machine.Set(attackStates[attackChain]);
+                }
+                if (attackChain > attackStates.Length) attackChain = 0;
+            }
+            else if (bigAttacking)
+            {
+                machine.Set(slashAttackState as State);
             }
             else if (crouching && horizontal == 0)
             {
@@ -436,6 +686,12 @@ namespace constellations
 
         private void MoveAction()
         {
+            if (disableMovement)
+            {
+                rb2d.velocity = Vector2.zero;
+                return;
+            }
+
             //STANDARD MOVEMENT
             if (crouching && !wallJumped)   //crouch movement, accelerate slower until trueAllowedSpeed*crouchSpeedMult
             {
@@ -469,6 +725,8 @@ namespace constellations
 
         private void JumpAction()
         {
+            if (disableMovement) return;
+
             //executing jump
             if (canClimb < 0)         //IF CAN'T CLIMB, EXECUTE NORMAL JUMP
             {
@@ -518,16 +776,145 @@ namespace constellations
 
         #endregion
 
+        #region action methods
+
+        private IEnumerator AttackTypeCheck()
+        {
+            //play animation for charge here
+            yield return new WaitForSeconds(attackChargeTime);
+            canHeavyAttack = true;
+        }
+
+        private IEnumerator Attack()
+        {
+            attackCooldown = true;
+            StopCoroutine(attackTypeCheck);
+            if (canHeavyAttack && !heavyAttackCoolingDown) HeavyAttack(); 
+            else NormalAttack();
+            yield return new WaitForSeconds(attackStates[attackChain].anim.length);
+            attackCooldown = false;
+        }
+
+        private void NormalAttack()
+        {
+            attacking = true;
+            attackStarted = true;
+            StopCoroutine(attackTypeCheck);
+            Debug.Log("normal attack done");
+            if (attackHitbox.canAttackEnemy && attackHitbox.targetEnemy != null)
+            {
+                DealDamage(realDamage, false);
+                Debug.Log(message: $"did normal attack on enemy for {realDamage} damage");
+            }
+        }
+
+        private void HeavyAttack()
+        {
+            totalSlashAttacks++;
+            bigAttacking = true;
+            attackStarted = true;
+            canHeavyAttack = false;
+            Debug.Log("heavy attack done");
+            if (attackHitbox.canAttackEnemy && attackHitbox.targetEnemy != null)
+            {
+                DealDamage(realDamage * heavyAttackMult, true);
+                Debug.Log(message: $"did heavy attack on enemy for {realDamage * heavyAttackMult} damage");
+            }
+            heavyAttackCoolingDown = true;
+            StartCoroutine(HeavyAttackCooldown());
+        }
+
+        private IEnumerator HeavyAttackCooldown()
+        {
+            yield return new WaitForSeconds(heavyAttackCooldown + slashAttackState.anim.length);
+            heavyAttackCoolingDown = false;
+        }
+
+        private void DealDamage(float t_damage, bool wasHeavy)
+        {
+            if (attackHitbox.targetEnemy.CompareTag("Ghost"))
+            {
+                attackHitbox.targetEnemy.GetComponentInParent<GhostBehavior>().TakeDamage(t_damage);
+                attackHitbox.targetEnemy.GetComponentInParent<GhostBehavior>().wasHeavyHit = wasHeavy;
+
+            }
+            else if (attackHitbox.targetEnemy.CompareTag("Skeleton"))
+            {
+                attackHitbox.targetEnemy.GetComponentInParent<SkeletonBehavior>().TakeDamage(t_damage);
+                attackHitbox.targetEnemy.GetComponentInParent<SkeletonBehavior>().wasHeavyHit = wasHeavy;
+            }
+            Debug.Log(message: $"did hit enemy for {t_damage} damage");
+        }
+
+        private IEnumerator Scream()
+        {
+            screaming = true;
+            Debug.Log("screaming");
+            //set screaming animation and sound here
+            yield return new WaitForSeconds(screamMinDuration);
+            while (screamKeyHeld)
+            {
+                yield return new WaitForSeconds(screamBufferTime);
+            }
+            Debug.Log("stopped screaming");
+            //end screaming animation and sound here
+            screaming = false;
+        }
+
+        private IEnumerator Meow()
+        {
+            meow = true;
+            //meow sound go here
+            yield return new WaitForSeconds(meowTime);
+            Debug.Log("meow");
+            //and they end here
+            meow = false;
+        }
+
+        private void OverrideNonAttackStates()
+        {
+            if (attacking || bigAttacking)
+            {
+                disableMovement = true;
+            }
+            else
+            {
+                disableMovement = false;
+            }
+        }
+
+        #endregion
+
+        #region combat handling
+
+        public void DamagePlayer(int _damage)
+        {
+            currentHealth -= _damage;
+            invulnerableTime = invulnerableDuration;
+            Debug.Log($"Player took {_damage} damage");
+            Debug.Log($"Player is dead: {dead}");
+        }
+
+        #endregion
+
         #region data persistence
-        
+
         public void LoadData(GameData data)
         {
             gameObject.transform.position = data.savedPosition;
+            this.attackEnabled = data.attackEnabled;
+            this.screamEnabled = data.screamEnabled;
+            this.attackBuffs = data.attackBuffs;
+            this.knockbackBuffs = data.knockbackBuffs;
         }
 
         public void SaveData(ref GameData data)
         {
             data.savedPosition = gameObject.transform.position;
+            data.attackEnabled = this.attackEnabled;
+            data.screamEnabled = this.screamEnabled;
+            data.attackBuffs = this.attackBuffs;
+            data.knockbackBuffs = this.knockbackBuffs;
         }
 
         #endregion

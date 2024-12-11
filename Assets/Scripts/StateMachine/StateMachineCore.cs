@@ -17,22 +17,28 @@ namespace constellations
         public Vector2 offset = Vector2.zero;
         
         //STATE BOOLEANS
-        public bool facingRight { get; protected set; } = true;
+        [field: SerializeField] public bool facingRight { get; protected set; } = true;
         public bool wallJumped { get; protected set; } = false;
         public bool dashing { get; protected set; } = false;
         public bool swimming { get; protected set; } = false;
         public bool sliding { get; protected set; } = false;
         public bool running { get; protected set; } = false;
         public bool crouching { get; protected set; } = false;
+        public bool attacking { get; set; } = false;
+        public float timeSinceLastAttack { get; set; } = 0;
+        public bool bigAttacking { get; set; } = false;
+        public bool damaged { get; protected set; } = false;
 
         //CONSTANT VALUES RELATED TO PLAYER MOVEMENT
-        //SHOULD PROBABLY BE MOVED BACK TO PLAYERCONTROLLER
+        //SHOULD PROBABLY BE MOVED BACK TO PLAYERCONTROLLER (maybe player states instead? idiot)
         //BUT FIRST FIGURE OUT THE STUPID HIERARCHY SHIT
         public const float dashAnimDuration = 0.5f;
         public const float maxSpeed = 3f;
         public const float crouchSpeedMult = 0.6f;
         public const float jumpMaxDuration = 0.35f;
         public const float maxClimbSpeed = 2.5f;
+        public const float heavyAttackCooldown = 3.5f;
+        public const float chainAttacksThreshold = 1f;
 
         public void SetupInstances()
         {
@@ -43,8 +49,6 @@ namespace constellations
                 state.SetCore(this);
             }
         }
-
-        
 
         private void OnDrawGizmos()
         {

@@ -10,6 +10,7 @@ TagManager:
   - SavePoint
   - Ghost
   - Skeleton
+  - Mana
   layers:
   - Default
   - TransparentFX
