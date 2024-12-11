@@ -14,7 +14,7 @@ namespace constellations
 
         [Header("Engine Variables")]
         [SerializeField] private InputReader playerInput;
-        [SerializeField] private HitBoxController attackHitbox, bigAttackHitbox;
+        [SerializeField] private BoxCollider2D attackHitbox;
         private CapsuleCollider2D capsuleCollider;
         private const float colliderOffset = 0.4f;
         [SerializeField] private LayerMask ground;
@@ -209,6 +209,11 @@ namespace constellations
                 bigAttacking = false;
             }
 
+            //if attacking, check for enemies inside hitbox
+            if (attacking || bigAttacking)
+            {
+                CheckForHitEnemies();
+            }
 
             //CAMERA HANDLING BELOW, TAKE HEED
             //if falling faster than set threshold, lerp damping slightly
@@ -788,62 +793,71 @@ namespace constellations
         private IEnumerator Attack()
         {
             attackCooldown = true;
+            attackStarted = true;
             StopCoroutine(attackTypeCheck);
-            if (canHeavyAttack && !heavyAttackCoolingDown) HeavyAttack(); 
-            else NormalAttack();
-            yield return new WaitForSeconds(attackStates[attackChain].anim.length);
+            Debug.Log(attackStates[attackChain].anim.length);
+
+            //attack styles do their own things
+            if (canHeavyAttack && !heavyAttackCoolingDown)
+            {
+                totalSlashAttacks++;
+                bigAttacking = true;
+                canHeavyAttack = false;
+                heavyAttackCoolingDown = true;
+                StartCoroutine(HeavyAttackCooldown());
+                yield return new WaitForSeconds(slashAttackState.anim.length);
+            }
+            else
+            {
+                attacking = true;
+                yield return new WaitForSeconds(attackStates[attackChain].anim.length);
+            }
             attackCooldown = false;
+            bigAttacking = false;
+            attacking = false;
+            timeSinceLastAttack = 0;
+            Debug.Log(slashAttackState.anim.length);
         }
 
-        private void NormalAttack()
+        private void CheckForHitEnemies()
         {
-            attacking = true;
-            attackStarted = true;
-            StopCoroutine(attackTypeCheck);
-            Debug.Log("normal attack done");
-            if (attackHitbox.canAttackEnemy && attackHitbox.targetEnemy != null)
-            {
-                DealDamage(realDamage, false);
-                Debug.Log(message: $"did normal attack on enemy for {realDamage} damage");
-            }
-        }
+            EnemyBase enemyScript;
+            Vector2 pos = (Vector2)transform.position + attackHitbox.offset;
+            Debug.Log(pos);
+            //check if enemies are within player's attack hitbox
+            Collider2D[] hitEnemies = Physics2D.OverlapBoxAll(pos, attackHitbox.size, 0, 1 << LayerMask.NameToLayer("Enemy"));
 
-        private void HeavyAttack()
-        {
-            totalSlashAttacks++;
-            bigAttacking = true;
-            attackStarted = true;
-            canHeavyAttack = false;
-            Debug.Log("heavy attack done");
-            if (attackHitbox.canAttackEnemy && attackHitbox.targetEnemy != null)
+            if (hitEnemies == null || hitEnemies.Length == 0) return;
+
+            for (int i = 0; i < hitEnemies.Length; i++)
             {
-                DealDamage(realDamage * heavyAttackMult, true);
-                Debug.Log(message: $"did heavy attack on enemy for {realDamage * heavyAttackMult} damage");
+                if (hitEnemies[i].CompareTag("Skeleton"))
+                {
+                    enemyScript = hitEnemies[i].GetComponent<SkeletonBehavior>();
+                }
+                else if (hitEnemies[i].CompareTag("Ghost"))
+                {
+                    enemyScript = hitEnemies[i].GetComponent<GhostBehavior>();
+                }
+                else continue;
+                
+                if (attacking)
+                {
+                    enemyScript.TakeDamage(realDamage);
+                    enemyScript.wasHeavyHit = false;
+                }
+                else
+                {
+                    enemyScript.TakeDamage(realDamage * heavyAttackMult);
+                    enemyScript.wasHeavyHit = true;
+                }
             }
-            heavyAttackCoolingDown = true;
-            StartCoroutine(HeavyAttackCooldown());
         }
 
         private IEnumerator HeavyAttackCooldown()
         {
             yield return new WaitForSeconds(heavyAttackCooldown + slashAttackState.anim.length);
             heavyAttackCoolingDown = false;
-        }
-
-        private void DealDamage(float t_damage, bool wasHeavy)
-        {
-            if (attackHitbox.targetEnemy.CompareTag("Ghost"))
-            {
-                attackHitbox.targetEnemy.GetComponentInParent<GhostBehavior>().TakeDamage(t_damage);
-                attackHitbox.targetEnemy.GetComponentInParent<GhostBehavior>().wasHeavyHit = wasHeavy;
-
-            }
-            else if (attackHitbox.targetEnemy.CompareTag("Skeleton"))
-            {
-                attackHitbox.targetEnemy.GetComponentInParent<SkeletonBehavior>().TakeDamage(t_damage);
-                attackHitbox.targetEnemy.GetComponentInParent<SkeletonBehavior>().wasHeavyHit = wasHeavy;
-            }
-            Debug.Log(message: $"did hit enemy for {t_damage} damage");
         }
 
         private IEnumerator Scream()

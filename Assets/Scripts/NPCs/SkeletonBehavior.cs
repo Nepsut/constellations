@@ -237,6 +237,8 @@ namespace constellations
             if (lerpSpeed != null ) StopCoroutine(lerpSpeed);
             lerpSpeed = null;
             lerpSpeed = StartCoroutine(MaxSpeedLerp());
+
+            wasHeavyHit = false;
         }
 
         //this lerp calculates max allowed speed, decreasing it slowly after a knockback

@@ -19,9 +19,7 @@ namespace constellations
 
             if (timer >= anim.length)
             {
-                core.attacking = false;
                 isComplete = true;
-                core.timeSinceLastAttack = 0;
             }
         }
 
