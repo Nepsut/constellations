@@ -19,7 +19,6 @@ namespace constellations
 
             if (timer >= anim.length)
             {
-                core.bigAttacking = false;
                 isComplete = true;
             }
         }
