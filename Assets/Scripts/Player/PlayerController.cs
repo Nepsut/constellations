@@ -110,6 +110,7 @@ namespace constellations
         {
             get { return invulnerableTime > 0; }
         }
+        private float attackRemainingDuration = 0;
 
         [Header("States")]
         [SerializeField] private State idleState;
@@ -240,6 +241,11 @@ namespace constellations
 
             if (invulnerable)
             invulnerableTime -= Time.deltaTime;
+
+            if (attacking || bigAttacking)
+            {
+                attackRemainingDuration -= Time.deltaTime;
+            }
         }
 
         //when entering a 2d trigger, check if it's from an NPC or an interactable object
@@ -519,7 +525,6 @@ namespace constellations
             if (!attackEnabled || !groundSensor.grounded) return;
             if (!attackCooldown && !screaming)
             {
-                Debug.Log("attack pressed");
                 didAttack = true;
                 attackTypeCheck = StartCoroutine(AttackTypeCheck());
             }
@@ -530,7 +535,6 @@ namespace constellations
             if (!attackEnabled || !groundSensor.grounded) return;
             if (didAttack)
             {
-                Debug.Log("attack released");
                 didAttack = false;
                 StartCoroutine(Attack());
             }
@@ -805,25 +809,36 @@ namespace constellations
                 canHeavyAttack = false;
                 heavyAttackCoolingDown = true;
                 StartCoroutine(HeavyAttackCooldown());
+                attackRemainingDuration = slashAttackState.anim.length;
                 yield return new WaitForSeconds(slashAttackState.anim.length);
             }
             else
             {
                 attacking = true;
+                attackRemainingDuration = attackStates[attackChain].anim.length;
                 yield return new WaitForSeconds(attackStates[attackChain].anim.length);
             }
             attackCooldown = false;
             bigAttacking = false;
             attacking = false;
             timeSinceLastAttack = 0;
-            Debug.Log(slashAttackState.anim.length);
         }
 
         private void CheckForHitEnemies()
         {
             EnemyBase enemyScript;
-            Vector2 pos = (Vector2)transform.position + attackHitbox.offset;
-            Debug.Log(pos);
+            Vector2 pos;
+
+            //correct offset according to which direction cat is facing
+            if (facingRight)
+            {
+                pos = (Vector2)transform.position + attackHitbox.offset;
+            }
+            else
+            {
+                pos = new(transform.position.x - attackHitbox.offset.x, transform.position.y + attackHitbox.offset.y);
+            }
+
             //check if enemies are within player's attack hitbox
             Collider2D[] hitEnemies = Physics2D.OverlapBoxAll(pos, attackHitbox.size, 0, 1 << LayerMask.NameToLayer("Enemy"));
 
@@ -833,22 +848,23 @@ namespace constellations
             {
                 if (hitEnemies[i].CompareTag("Skeleton"))
                 {
-                    enemyScript = hitEnemies[i].GetComponent<SkeletonBehavior>();
+                    Debug.Log("found skeleton");
+                    enemyScript = hitEnemies[i].GetComponentInParent<SkeletonBehavior>() as EnemyBase;
                 }
                 else if (hitEnemies[i].CompareTag("Ghost"))
                 {
-                    enemyScript = hitEnemies[i].GetComponent<GhostBehavior>();
+                    enemyScript = hitEnemies[i].GetComponentInParent<GhostBehavior>() as EnemyBase;
                 }
                 else continue;
                 
                 if (attacking)
                 {
-                    enemyScript.TakeDamage(realDamage);
+                    enemyScript.TakeDamage(realDamage, attackRemainingDuration);
                     enemyScript.wasHeavyHit = false;
                 }
                 else
                 {
-                    enemyScript.TakeDamage(realDamage * heavyAttackMult);
+                    enemyScript.TakeDamage(realDamage * heavyAttackMult, attackRemainingDuration);
                     enemyScript.wasHeavyHit = true;
                 }
             }
@@ -905,8 +921,6 @@ namespace constellations
         {
             currentHealth -= _damage;
             invulnerableTime = invulnerableDuration;
-            Debug.Log($"Player took {_damage} damage");
-            Debug.Log($"Player is dead: {dead}");
         }
 
         #endregion

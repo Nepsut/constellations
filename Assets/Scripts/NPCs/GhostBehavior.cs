@@ -96,8 +96,10 @@ namespace constellations
             machine.state.Do();
         }
 
-        private void Update()
+        protected override void Update()
         {
+            base.Update();
+            
             if (touchingPlayer && !playerController.invulnerable)
             {
                 playerController.DamagePlayer(damage);
