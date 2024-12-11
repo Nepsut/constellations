@@ -14,7 +14,7 @@ namespace constellations
 
         [Header("Engine Variables")]
         [SerializeField] private InputReader playerInput;
-        [SerializeField] private HitBoxController attackHitbox;
+        [SerializeField] private HitBoxController attackHitbox, bigAttackHitbox;
         private CapsuleCollider2D capsuleCollider;
         private const float colliderOffset = 0.4f;
         [SerializeField] private LayerMask ground;
@@ -95,6 +95,7 @@ namespace constellations
         [Header("Other Const Variables")]
         private const int maxHealth = 100;
         private const int manaOrbHealAmount = 20;
+        private const float invulnerableDuration = 0.7f;
 
         [Header("Other Dynamic Variables")]
         private int attackChain = 0;
@@ -102,6 +103,12 @@ namespace constellations
         public bool dead
         {
             get { return currentHealth < 0; }
+        }
+
+        private float invulnerableTime;
+        public bool invulnerable
+        {
+            get { return invulnerableTime > 0; }
         }
 
         [Header("States")]
@@ -218,8 +225,6 @@ namespace constellations
                 StartCoroutine(CameraManager.instance.LerpYAction(false));
             }
             
-            if (machine.state.isComplete)
-            machine.state.Exit();
             SelectState();
             machine.state.Do();
         }
@@ -227,6 +232,9 @@ namespace constellations
         private void Update()
         {
             if (!attacking && timeSinceLastAttack < chainAttacksThreshold) TimeAttacks();
+
+            if (invulnerable)
+            invulnerableTime -= Time.deltaTime;
         }
 
         //when entering a 2d trigger, check if it's from an NPC or an interactable object
@@ -882,6 +890,9 @@ namespace constellations
         public void DamagePlayer(int _damage)
         {
             currentHealth -= _damage;
+            invulnerableTime = invulnerableDuration;
+            Debug.Log($"Player took {_damage} damage");
+            Debug.Log($"Player is dead: {dead}");
         }
 
         #endregion
