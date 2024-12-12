@@ -5,12 +5,13 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using Unity.VisualScripting;
+using TMPro;
 
 public class MenuManager : MonoBehaviour
 {
     [Header("Engine Variables")]
     [SerializeField] private InputReader input;
-    [SerializeField] private GameObject menuScreen;
+    [SerializeField] private GameObject pauseScreen;
     [SerializeField] private GameObject settingsScreen;
     [SerializeField] private GameObject menuHolder;
     [SerializeField] private GameObject settingsHolder;
@@ -19,13 +20,14 @@ public class MenuManager : MonoBehaviour
     [SerializeField] private Button closeSettingsButton;
 
 
+
     private bool gamePaused = false;
     // Start is called before the first frame update
     void Start()
     {
         //hide menus initially
-        menuScreen.SetActive(false);
-        settingsScreen.SetActive(false);
+        pauseScreen?.SetActive(false);
+        settingsScreen?.SetActive(false);
 
         input.PauseEvent += HandlePause;
 
@@ -50,30 +52,30 @@ public class MenuManager : MonoBehaviour
 
     private void OpenSettings()
     {
-        settingsScreen.SetActive(true);
+        settingsScreen?.SetActive(true);
         StartCoroutine(SelectFirstChoice(settingsHolder));
     }
 
     private void CloseSettings()
     {
         settingsScreen.SetActive(false);
-        StartCoroutine(SelectFirstChoice(menuHolder));
     }
 
     private void ResumeGame()
     {
-            input.SetGameplay();
-            menuScreen.SetActive(false);
-            gamePaused = false;
-            Time.timeScale = 1f;
+        input.SetGameplay();
+        pauseScreen?.SetActive(false);
+        gamePaused = false;
+        Time.timeScale = 1f;
     }
 
     private void PauseGame()
     {
-            input.SetUI();
-            menuScreen.SetActive(true);
-            gamePaused = true;
-            Time.timeScale = 0f;
+        input.SetUI();
+        pauseScreen?.SetActive(true);
+        gamePaused = true;
+        Time.timeScale = 0f;
+        StartCoroutine(SelectFirstChoice(menuHolder));
     }
 
     //highlight first option from list
