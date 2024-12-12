@@ -8,7 +8,6 @@ public class MenuButtonScript : MonoBehaviour, IPointerEnterHandler, IPointerExi
     [SerializeField] private GameObject leftDecal;
     [SerializeField] private GameObject rightDecal;
     [SerializeField] private TextMeshProUGUI text;
-    [SerializeField] private MainMenu menu;
 
     public void OnPointerEnter(PointerEventData eventData)
     {

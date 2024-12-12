@@ -142,6 +142,16 @@ namespace constellations
 
             //this populates all states' "core" variable as this object
             SetupInstances();
+        }
+
+        void Start()
+        {
+            //set YDampThreshold to value specified in CameraManager
+            fallYDampThreshold = CameraManager.instance.fallSpeedDampThreshold;
+            trueAllowedSpeed = maxSpeed;
+            realDamage = attackDamage + attackBuffs * attackBuffAmount;
+
+            machine.Set(idleState);
 
             //add methods to events in InputReader
             playerInput.MoveEvent += HandleMove;
@@ -158,16 +168,8 @@ namespace constellations
             playerInput.MeowEvent += HandleMeow;
             playerInput.InteractEvent += HandleInteract;
             playerInput.InteractCanceledEvent += HandleInteractCancel;
-        }
 
-        void Start()
-        {
-            //set YDampThreshold to value specified in CameraManager
-            fallYDampThreshold = CameraManager.instance.fallSpeedDampThreshold;
-            trueAllowedSpeed = maxSpeed;
-            realDamage = attackDamage + attackBuffs * attackBuffAmount;
-
-            machine.Set(idleState);
+            playerInput.SetGameplay();
         }
 
         //using FixedUpdate so framerate doesn't affect functionality
@@ -577,6 +579,24 @@ namespace constellations
         private void HandleInteractCancel()
         {
             didInteractObject = false;
+        }
+
+        public void UnsubscribePlayerInputs()
+        {
+            playerInput.MoveEvent -= HandleMove;
+            playerInput.JumpEvent -= HandleJump;
+            playerInput.JumpCanceledEvent -= HandleJumpCancel;
+            playerInput.DashEvent -= HandleDash;
+            playerInput.DashCanceledEvent -= HandleDashCancel;
+            playerInput.CrouchEvent -= HandleCrouch;
+            playerInput.CrouchCanceledEvent -= HandleCrouchCancel;
+            playerInput.AttackEvent -= HandleAttack;
+            playerInput.AttackCanceledEvent -= HandleAttackCancel;
+            playerInput.ScreamEvent -= HandleScream;
+            playerInput.ScreamCanceledEvent -= HandleScreamCancel;
+            playerInput.MeowEvent -= HandleMeow;
+            playerInput.InteractEvent -= HandleInteract;
+            playerInput.InteractCanceledEvent -= HandleInteractCancel;
         }
 
         #endregion

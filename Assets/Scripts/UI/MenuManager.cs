@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using Unity.VisualScripting;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class MenuManager : MonoBehaviour
 {
@@ -19,15 +20,18 @@ public class MenuManager : MonoBehaviour
     [SerializeField] private Button settingsButton;
     [SerializeField] private Button closeSettingsButton;
 
-
+    //player
+    [SerializeField] private PlayerController playerController;
 
     private bool gamePaused = false;
+
+
     // Start is called before the first frame update
     void Start()
     {
         //hide menus initially
-        pauseScreen?.SetActive(false);
-        settingsScreen?.SetActive(false);
+        pauseScreen.SetActive(false);
+        settingsScreen.SetActive(false);
 
         input.PauseEvent += HandlePause;
 
@@ -52,7 +56,7 @@ public class MenuManager : MonoBehaviour
 
     private void OpenSettings()
     {
-        settingsScreen?.SetActive(true);
+        settingsScreen.SetActive(true);
         StartCoroutine(SelectFirstChoice(settingsHolder));
     }
 
@@ -64,7 +68,7 @@ public class MenuManager : MonoBehaviour
     private void ResumeGame()
     {
         input.SetGameplay();
-        pauseScreen?.SetActive(false);
+        pauseScreen.SetActive(false);
         gamePaused = false;
         Time.timeScale = 1f;
     }
@@ -72,10 +76,17 @@ public class MenuManager : MonoBehaviour
     private void PauseGame()
     {
         input.SetUI();
-        pauseScreen?.SetActive(true);
+        pauseScreen.SetActive(true);
         gamePaused = true;
         Time.timeScale = 0f;
         StartCoroutine(SelectFirstChoice(menuHolder));
+    }
+
+    public void QuitToMainMenu()
+    {
+        input.PauseEvent -= HandlePause;
+        playerController.UnsubscribePlayerInputs();
+        SceneManager.LoadScene("MainMenu");
     }
 
     //highlight first option from list
