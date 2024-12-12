@@ -10,10 +10,14 @@ using UnityEngine.SceneManagement;
 
 public class MenuManager : MonoBehaviour
 {
+    //singleton
+    public static MenuManager instance;
+
     [Header("Engine Variables")]
     [SerializeField] private InputReader input;
     [SerializeField] private GameObject pauseScreen;
     [SerializeField] private GameObject settingsScreen;
+    [SerializeField] private GameObject faintedScreen;
     [SerializeField] private GameObject menuHolder;
     [SerializeField] private GameObject settingsHolder;
     [SerializeField] private Button resumeButton;
@@ -25,6 +29,17 @@ public class MenuManager : MonoBehaviour
 
     private bool gamePaused = false;
 
+    private void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+        }
+        else
+        {
+            Debug.LogError("Found more than one MenuManaged, fix this!!");
+        }
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -65,10 +80,11 @@ public class MenuManager : MonoBehaviour
         settingsScreen.SetActive(false);
     }
 
-    private void ResumeGame()
+    public void ResumeGame()
     {
         input.SetGameplay();
         pauseScreen.SetActive(false);
+        faintedScreen.SetActive(false);
         gamePaused = false;
         Time.timeScale = 1f;
     }
@@ -80,6 +96,12 @@ public class MenuManager : MonoBehaviour
         gamePaused = true;
         Time.timeScale = 0f;
         StartCoroutine(SelectFirstChoice(menuHolder));
+    }
+
+    public void Fainted()
+    {
+        Time.timeScale = 0f;
+        faintedScreen.SetActive(true);
     }
 
     public void QuitToMainMenu()

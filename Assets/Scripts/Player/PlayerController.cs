@@ -941,6 +941,11 @@ namespace constellations
         {
             currentHealth -= _damage;
             invulnerableTime = invulnerableDuration;
+
+            if (currentHealth < 0)
+            {
+                MenuManager.instance.Fainted();
+            }
         }
 
         #endregion
