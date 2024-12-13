@@ -170,6 +170,7 @@ namespace constellations
             playerInput.InteractCanceledEvent += HandleInteractCancel;
 
             playerInput.SetGameplay();
+
         }
 
         //using FixedUpdate so framerate doesn't affect functionality
