@@ -23,6 +23,19 @@ public class MenuManager : MonoBehaviour
     [SerializeField] private Button resumeButton;
     [SerializeField] private Button settingsButton;
     [SerializeField] private Button closeSettingsButton;
+    [SerializeField] private Slider healthSlider;
+    [SerializeField] private Image chargeKnob;
+    [SerializeField] private TextMeshProUGUI scoreText;
+    [SerializeField] private TextMeshProUGUI killCountText;
+
+    //killfeed stuff
+    [SerializeField] private Transform killfeedHolder;
+    [SerializeField] private GameObject killTextObject;
+    private const float killfeedPersistTime = 4f;
+    private const float killfeedFadeTime = 2f;
+    private int killCount = 0;
+    private int score = 0;
+
 
     //player
     [SerializeField] private PlayerController playerController;
@@ -78,6 +91,7 @@ public class MenuManager : MonoBehaviour
     private void CloseSettings()
     {
         settingsScreen.SetActive(false);
+        StartCoroutine(SelectFirstChoice(menuHolder));
     }
 
     public void ResumeGame()
@@ -86,6 +100,7 @@ public class MenuManager : MonoBehaviour
         pauseScreen.SetActive(false);
         faintedScreen.SetActive(false);
         gamePaused = false;
+        TimerController.instance.ToggleTimer(true);    //true to unpause timer
         Time.timeScale = 1f;
     }
 
@@ -94,6 +109,7 @@ public class MenuManager : MonoBehaviour
         input.SetUI();
         pauseScreen.SetActive(true);
         gamePaused = true;
+        TimerController.instance.ToggleTimer(false);    //false to pause timer
         Time.timeScale = 0f;
         StartCoroutine(SelectFirstChoice(menuHolder));
     }
@@ -102,6 +118,62 @@ public class MenuManager : MonoBehaviour
     {
         Time.timeScale = 0f;
         faintedScreen.SetActive(true);
+        //set faintedScreen score, killcount, slashcount(from playerController), and time here
+    }
+
+    //little knob above player to indicate heavy attack status
+    public void ChargeUI(float _normalizedCharge)
+    {
+        chargeKnob.fillAmount = _normalizedCharge;
+    }
+
+    public void HealthUI(float _currentHealth, float _maxHealth)
+    {
+        float maxSliderValue = healthSlider.maxValue;
+        float scaler = _maxHealth / maxSliderValue;
+        float sliderValue = _currentHealth / scaler;
+        healthSlider.value = sliderValue;
+    }
+
+    public void EnemyDied(string _killerName, string _victimName, int _increaseScoreBy)
+    {
+        TextMeshProUGUI killText = Instantiate(killTextObject, killfeedHolder).GetComponent<TextMeshProUGUI>();
+        killText.text = string.Concat("-[", _killerName, "]", " killed a ", _victimName);
+        score += _increaseScoreBy;
+        killCount++;
+        UpdateScores();
+        StartCoroutine(FadeKillfeedItem(killText));
+    }
+
+    public void GotMana(float _manaAmount)
+    {
+        TextMeshProUGUI manaText = Instantiate(killTextObject, killfeedHolder).GetComponent<TextMeshProUGUI>();
+        manaText.text = string.Concat("-[Player]", " recovered ", _manaAmount, " mana");
+        StartCoroutine(FadeKillfeedItem(manaText));
+    }
+
+    private void UpdateScores()
+    {
+        killCountText.text = killCount.ToString();
+        scoreText.text = string.Concat("SCORE: ", score);
+    }
+
+    private IEnumerator FadeKillfeedItem(TextMeshProUGUI _killText)
+    {
+        float timer = 0;
+        Color fadeColor = _killText.color;
+        float startingAlpha = fadeColor.a;
+
+        yield return new WaitForSeconds(killfeedPersistTime);
+
+        while (timer < killfeedFadeTime)
+        {
+            timer += Time.deltaTime;
+            fadeColor.a = Mathf.Lerp(startingAlpha, 0, timer / killfeedFadeTime);
+            _killText.color = fadeColor;
+            yield return null;
+        }
+        Destroy(_killText.gameObject);
     }
 
     public void QuitToMainMenu()

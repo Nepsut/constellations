@@ -100,7 +100,7 @@ namespace constellations
         {
             base.Update();
             
-            if (touchingPlayer && !playerController.invulnerable)
+            if (touchingPlayer && !playerController.invulnerable && !isDead)
             {
                 playerController.DamagePlayer(damage);
             }
@@ -197,7 +197,7 @@ namespace constellations
         //this is ran on death
         protected override IEnumerator Death()
         {
-            isDying = true;
+            base.Death();
             rb2d.drag = fastDeceleration;
             //play death animation
             //below is a placeholder

@@ -10,6 +10,8 @@ namespace constellations
         [Header("Enemy Base Variables")]
         [SerializeField] private SpriteRenderer enemySprite;
         [SerializeField] private float health = 100f;
+        [SerializeField] private string enemyName = "";
+        [SerializeField] private int scoreWorth = 5;
         public bool isDead { get; private set; } = false;
         protected bool isDying = false;
         protected bool doKnockback = false;
@@ -45,7 +47,12 @@ namespace constellations
             invulnerableDuration -= Time.deltaTime;
         }
 
-        protected abstract IEnumerator Death();
+        protected virtual IEnumerator Death()
+        {
+            MenuManager.instance.EnemyDied("Player", enemyName, scoreWorth);
+            isDying = true;
+            yield return null;
+        }
 
         protected abstract IEnumerator EndDamagedState();
 

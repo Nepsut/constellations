@@ -51,6 +51,9 @@ TagManager:
   - name: bg
     uniqueID: 3315446405
     locked: 0
+  - name: closebg
+    uniqueID: 3520367995
+    locked: 0
   - name: player
     uniqueID: 1893692259
     locked: 0

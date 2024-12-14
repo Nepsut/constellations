@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -18,16 +17,23 @@ public class TimerController : MonoBehaviour
 
     private void Awake()
     {
-        instance = this;
+        if (instance == null)
+        {
+            instance = this;
+        }
+        else
+        {
+            Debug.LogError("Found more than one TimerController, fix this immediately!!");
+        }
     }
 
     private void Start()
     {
         timerCounter.text = "GAME RUNNING TIME: 00:00.00";
         timerGoing = false;
+        BeginTimer();
     }
 
-    //TimeController.instance.BeginTimer();
     public void BeginTimer()
     {
         timerGoing = true;
@@ -36,15 +42,17 @@ public class TimerController : MonoBehaviour
         StartCoroutine(UpdateTimer());
     }
 
-    public void EndTimer()
+    public void ToggleTimer(bool _pause)    //true pauses timer, false unpauses
     {
-        timerGoing = false;
+        if (_pause) timerGoing = false;
+        else timerGoing = true;
     }
 
     private IEnumerator UpdateTimer()
     {
-        while (timerGoing)
+        while (true)
         {
+            if (!timerGoing) yield return null;
             elapsedTime += Time.deltaTime;
             timePlaying = TimeSpan.FromSeconds(elapsedTime);
             string timePlayingTxt = "GAME RUNNING TIME: " + timePlaying.ToString("mm':'ss'.'ff");

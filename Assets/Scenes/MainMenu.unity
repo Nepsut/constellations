@@ -652,7 +652,6 @@ MonoBehaviour:
   leftDecal: {fileID: 484365395}
   rightDecal: {fileID: 1734970338}
   text: {fileID: 1064727682}
-  menu: {fileID: 1535392644}
 --- !u!1 &223895395
 GameObject:
   m_ObjectHideFlags: 0
@@ -1378,7 +1377,6 @@ MonoBehaviour:
   leftDecal: {fileID: 393489930}
   rightDecal: {fileID: 1979778251}
   text: {fileID: 2081848238}
-  menu: {fileID: 1535392644}
 --- !u!1 &864212507
 GameObject:
   m_ObjectHideFlags: 0
@@ -1443,17 +1441,17 @@ MonoBehaviour:
   m_MoveRepeatDelay: 0.5
   m_MoveRepeatRate: 0.1
   m_XRTrackingOrigin: {fileID: 0}
-  m_ActionsAsset: {fileID: -944628639613478452, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
-  m_PointAction: {fileID: -1654692200621890270, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
-  m_MoveAction: {fileID: -8784545083839296357, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
-  m_SubmitAction: {fileID: 392368643174621059, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
-  m_CancelAction: {fileID: 7727032971491509709, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
-  m_LeftClickAction: {fileID: 3001919216989983466, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
-  m_MiddleClickAction: {fileID: -2185481485913320682, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
-  m_RightClickAction: {fileID: -4090225696740746782, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
-  m_ScrollWheelAction: {fileID: 6240969308177333660, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
-  m_TrackedDevicePositionAction: {fileID: 6564999863303420839, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
-  m_TrackedDeviceOrientationAction: {fileID: 7970375526676320489, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_ActionsAsset: {fileID: -944628639613478452, guid: 4e402da0d2dbb3640b7cd41dfa659d8f, type: 3}
+  m_PointAction: {fileID: 5099178575713932044, guid: 4e402da0d2dbb3640b7cd41dfa659d8f, type: 3}
+  m_MoveAction: {fileID: 880097769094351635, guid: 4e402da0d2dbb3640b7cd41dfa659d8f, type: 3}
+  m_SubmitAction: {fileID: -8908532914361268239, guid: 4e402da0d2dbb3640b7cd41dfa659d8f, type: 3}
+  m_CancelAction: {fileID: 0}
+  m_LeftClickAction: {fileID: 7040981029107299203, guid: 4e402da0d2dbb3640b7cd41dfa659d8f, type: 3}
+  m_MiddleClickAction: {fileID: 0}
+  m_RightClickAction: {fileID: 0}
+  m_ScrollWheelAction: {fileID: 1469406049580158310, guid: 4e402da0d2dbb3640b7cd41dfa659d8f, type: 3}
+  m_TrackedDevicePositionAction: {fileID: 0}
+  m_TrackedDeviceOrientationAction: {fileID: 0}
   m_DeselectOnBackgroundClick: 1
   m_PointerBehavior: 0
   m_CursorLockBehavior: 0
@@ -1767,7 +1765,6 @@ MonoBehaviour:
   leftDecal: {fileID: 575970970}
   rightDecal: {fileID: 24752881}
   text: {fileID: 2023887766}
-  menu: {fileID: 1535392644}
 --- !u!1 &1195617761
 GameObject:
   m_ObjectHideFlags: 0
@@ -2385,7 +2382,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   menuButtonHolder: {fileID: 1218706420}
-  menuButtons: []
 --- !u!1 &1734970338
 GameObject:
   m_ObjectHideFlags: 0
@@ -2893,7 +2889,6 @@ MonoBehaviour:
   leftDecal: {fileID: 1268585062}
   rightDecal: {fileID: 562771528}
   text: {fileID: 1195617763}
-  menu: {fileID: 1535392644}
 --- !u!1 &2081848236
 GameObject:
   m_ObjectHideFlags: 0

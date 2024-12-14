@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace constellations
 {
@@ -104,13 +105,15 @@ namespace constellations
         {
             get { return currentHealth < 0; }
         }
-
         private float invulnerableTime;
         public bool invulnerable
         {
             get { return invulnerableTime > 0; }
         }
         private float attackRemainingDuration = 0;
+        private float currentHeavyAttackCooldown = 0;
+        private float currentHeavyAttackCharge = 0;
+        private bool attackCharging = false;
 
         [Header("States")]
         [SerializeField] private State idleState;
@@ -249,6 +252,9 @@ namespace constellations
             {
                 attackRemainingDuration -= Time.deltaTime;
             }
+
+            UpdateChargeStatus();
+            UpdateHealthStatus();
         }
 
         //when entering a 2d trigger, check if it's from an NPC or an interactable object
@@ -279,6 +285,8 @@ namespace constellations
             }
             else if (collision.gameObject.CompareTag("Mana"))
             {
+                float realHealAmount = manaOrbHealAmount + currentHealth < maxHealth ? manaOrbHealAmount : maxHealth - currentHealth;
+                MenuManager.instance.GotMana(realHealAmount);
                 currentHealth += manaOrbHealAmount;
                 if (currentHealth > maxHealth) currentHealth = maxHealth;
                 Destroy(collision.gameObject);
@@ -317,6 +325,31 @@ namespace constellations
             {
                 collision.gameObject.GetComponent<SavePoint>().usedSavepoint = false;
             }
+        }
+
+        #endregion
+
+        #region hud handling
+
+        private void UpdateChargeStatus()
+        {
+            if (heavyAttackCoolingDown)
+            {
+                MenuManager.instance.ChargeUI(currentHeavyAttackCooldown / heavyAttackCooldown);
+            }
+            else if (attackCharging)
+            {
+                MenuManager.instance.ChargeUI(currentHeavyAttackCharge / attackChargeTime);
+            }
+            else
+            {
+                MenuManager.instance.ChargeUI(0);
+            }
+        }
+
+        private void UpdateHealthStatus()
+        {
+            MenuManager.instance.HealthUI(currentHealth, maxHealth);
         }
 
         #endregion
@@ -810,8 +843,16 @@ namespace constellations
 
         private IEnumerator AttackTypeCheck()
         {
-            //play animation for charge here
-            yield return new WaitForSeconds(attackChargeTime);
+            currentHeavyAttackCharge = 0;
+            attackCharging = true;
+
+            while (attackCharging)
+            {
+                currentHeavyAttackCharge += Time.deltaTime;
+                if (currentHeavyAttackCharge >= attackChargeTime) attackCharging = false;
+                yield return null;
+            }
+
             canHeavyAttack = true;
         }
 
@@ -819,8 +860,9 @@ namespace constellations
         {
             attackCooldown = true;
             attackStarted = true;
+            attackCharging = false;
+            if (attackTypeCheck != null)
             StopCoroutine(attackTypeCheck);
-            Debug.Log(attackStates[attackChain].anim.length);
 
             //attack styles do their own things
             if (canHeavyAttack && !heavyAttackCoolingDown)
@@ -869,7 +911,6 @@ namespace constellations
             {
                 if (hitEnemies[i].CompareTag("Skeleton"))
                 {
-                    Debug.Log("found skeleton");
                     enemyScript = hitEnemies[i].GetComponentInParent<SkeletonBehavior>() as EnemyBase;
                 }
                 else if (hitEnemies[i].CompareTag("Ghost"))
@@ -893,8 +934,14 @@ namespace constellations
 
         private IEnumerator HeavyAttackCooldown()
         {
-            yield return new WaitForSeconds(heavyAttackCooldown + slashAttackState.anim.length);
-            heavyAttackCoolingDown = false;
+            currentHeavyAttackCooldown = heavyAttackCooldown + slashAttackState.anim.length;
+
+            while (heavyAttackCoolingDown)
+            {
+                currentHeavyAttackCooldown -= Time.deltaTime;
+                if (currentHeavyAttackCooldown <= 0) heavyAttackCoolingDown = false;
+                yield return null;
+            }
         }
 
         private IEnumerator Scream()
