@@ -1,8 +1,11 @@
-Welcome to the 2D UI course level!  #Benny
-This NPC interaction is here to replace the weapon selection task #Benny
-Here one can choose things! #Benny
+Welcome to the 2D UI course level! #Benny
+This interaction was made to replace weapon selection task #Benny
+Here one can make choices #Benny
 
- * Like this #Player
- * Or this #Player
+*like this #Player
+*or this #Player
 
-- I hope this is good enough for you :) #Benny
+- I hope you have a nice day! #Benny
+    -> END
+
+
