@@ -82,6 +82,7 @@ namespace constellations
         public event Action ClickEvent;
         public event Action ClickCanceledEvent;
         public event Action<Vector2> ScrollEvent;
+        public event Action SelectEvent;
 
         public event Action PauseEvent;
         public event Action ResumeEvent;
@@ -131,7 +132,6 @@ namespace constellations
             if (context.phase == InputActionPhase.Performed)
             {
                 PauseEvent?.Invoke();
-                SetUI();
             }
         }
 
@@ -140,7 +140,6 @@ namespace constellations
             if (context.phase == InputActionPhase.Performed)
             {
                 ResumeEvent?.Invoke();
-                SetGameplay();
             }
         }
 
@@ -230,6 +229,14 @@ namespace constellations
         public void OnScroll(InputAction.CallbackContext context)
         {
             ScrollEvent?.Invoke(obj: context.ReadValue<Vector2>());
+        }
+
+        public void OnSelect(InputAction.CallbackContext context)
+        {
+            if (context.phase == InputActionPhase.Performed)
+            {
+                SelectEvent?.Invoke();
+            }
         }
     }
 }

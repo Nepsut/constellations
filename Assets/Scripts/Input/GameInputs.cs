@@ -382,7 +382,7 @@ namespace constellations
                 },
                 {
                     ""name"": ""Point"",
-                    ""type"": ""Value"",
+                    ""type"": ""PassThrough"",
                     ""id"": ""452692f1-f114-438b-a8cc-2422effdc679"",
                     ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
@@ -415,6 +415,24 @@ namespace constellations
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Select"",
+                    ""type"": ""Button"",
+                    ""id"": ""109eabd9-e964-403d-862f-756188e03237"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Pause"",
+                    ""type"": ""Button"",
+                    ""id"": ""8d4d3927-4018-42a3-9366-511b703a084d"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -549,6 +567,61 @@ namespace constellations
                     ""action"": ""Point"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""23f99aed-f60d-4cc6-8e0b-b0a427b2a56c"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Select"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""5ed63635-3981-46b8-ba3b-92cfa8894a27"",
+                    ""path"": ""<Keyboard>/enter"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Select"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""64e3e4bb-af53-41e7-a98b-71a04b485b98"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Select"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""41005732-b353-4e71-8a63-adcaae30bd02"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Pause"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e5084a97-ca7e-432e-a25f-2c99c5562dd0"",
+                    ""path"": ""<Gamepad>/start"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Pause"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -576,7 +649,7 @@ namespace constellations
                 },
                 {
                     ""name"": ""Point"",
-                    ""type"": ""Value"",
+                    ""type"": ""PassThrough"",
                     ""id"": ""6fa8bc51-5c7f-4e3d-91b6-5e27bb203cf1"",
                     ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
@@ -780,6 +853,8 @@ namespace constellations
             m_UI_Click = m_UI.FindAction("Click", throwIfNotFound: true);
             m_UI_Scroll = m_UI.FindAction("Scroll", throwIfNotFound: true);
             m_UI_MoveDialogue = m_UI.FindAction("MoveDialogue", throwIfNotFound: true);
+            m_UI_Select = m_UI.FindAction("Select", throwIfNotFound: true);
+            m_UI_Pause = m_UI.FindAction("Pause", throwIfNotFound: true);
             // Dialogue
             m_Dialogue = asset.FindActionMap("Dialogue", throwIfNotFound: true);
             m_Dialogue_Submit = m_Dialogue.FindAction("Submit", throwIfNotFound: true);
@@ -963,6 +1038,8 @@ namespace constellations
         private readonly InputAction m_UI_Click;
         private readonly InputAction m_UI_Scroll;
         private readonly InputAction m_UI_MoveDialogue;
+        private readonly InputAction m_UI_Select;
+        private readonly InputAction m_UI_Pause;
         public struct UIActions
         {
             private @GameInputs m_Wrapper;
@@ -972,6 +1049,8 @@ namespace constellations
             public InputAction @Click => m_Wrapper.m_UI_Click;
             public InputAction @Scroll => m_Wrapper.m_UI_Scroll;
             public InputAction @MoveDialogue => m_Wrapper.m_UI_MoveDialogue;
+            public InputAction @Select => m_Wrapper.m_UI_Select;
+            public InputAction @Pause => m_Wrapper.m_UI_Pause;
             public InputActionMap Get() { return m_Wrapper.m_UI; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -996,6 +1075,12 @@ namespace constellations
                 @MoveDialogue.started += instance.OnMoveDialogue;
                 @MoveDialogue.performed += instance.OnMoveDialogue;
                 @MoveDialogue.canceled += instance.OnMoveDialogue;
+                @Select.started += instance.OnSelect;
+                @Select.performed += instance.OnSelect;
+                @Select.canceled += instance.OnSelect;
+                @Pause.started += instance.OnPause;
+                @Pause.performed += instance.OnPause;
+                @Pause.canceled += instance.OnPause;
             }
 
             private void UnregisterCallbacks(IUIActions instance)
@@ -1015,6 +1100,12 @@ namespace constellations
                 @MoveDialogue.started -= instance.OnMoveDialogue;
                 @MoveDialogue.performed -= instance.OnMoveDialogue;
                 @MoveDialogue.canceled -= instance.OnMoveDialogue;
+                @Select.started -= instance.OnSelect;
+                @Select.performed -= instance.OnSelect;
+                @Select.canceled -= instance.OnSelect;
+                @Pause.started -= instance.OnPause;
+                @Pause.performed -= instance.OnPause;
+                @Pause.canceled -= instance.OnPause;
             }
 
             public void RemoveCallbacks(IUIActions instance)
@@ -1129,6 +1220,8 @@ namespace constellations
             void OnClick(InputAction.CallbackContext context);
             void OnScroll(InputAction.CallbackContext context);
             void OnMoveDialogue(InputAction.CallbackContext context);
+            void OnSelect(InputAction.CallbackContext context);
+            void OnPause(InputAction.CallbackContext context);
         }
         public interface IDialogueActions
         {

@@ -135,13 +135,13 @@ namespace constellations
         {
             base.Update();
             
-            if (touchingPlayer && !playerController.invulnerable)
+            if (touchingPlayer && !playerController.invulnerable && !isDead)
             {
                 playerController.DamagePlayer(damage);
             }
         }
 
-        private void OnCollisionEnter2D(Collision2D collider)
+        private void OnTriggerEnter2D(Collider2D collider)
         {
             if (collider == null) return;
 
@@ -152,7 +152,7 @@ namespace constellations
 
         }
 
-        private void OnCollisionExit2D(Collision2D collider)
+        private void OnTriggerExit2D(Collider2D collider)
         {
             if (collider != null)
             {
@@ -277,9 +277,8 @@ namespace constellations
         //this is ran on death
         protected override IEnumerator Death()
         {
-            isDying = true;
+            StartCoroutine(base.Death());
             rb2d.drag = deceleration;
-            //play death animation
             //below is a placeholder
             this.gameObject.GetComponentInChildren<SpriteRenderer>().color = Color.red;
 

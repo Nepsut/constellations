@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace constellations
 {
@@ -19,6 +20,7 @@ namespace constellations
         private const float colliderOffset = 0.4f;
         [SerializeField] private LayerMask ground;
         [SerializeField] private GameObject cameraFollowObject;
+        [SerializeField] private RectTransform chargeKnob;
 
         //reminder that constant variables can only be referenced via the class
         //and not via an object made from the class, so PlayerController.maxSpeed
@@ -104,13 +106,15 @@ namespace constellations
         {
             get { return currentHealth < 0; }
         }
-
         private float invulnerableTime;
         public bool invulnerable
         {
             get { return invulnerableTime > 0; }
         }
         private float attackRemainingDuration = 0;
+        private float currentHeavyAttackCooldown = 0;
+        private float currentHeavyAttackCharge = 0;
+        private bool attackCharging = false;
 
         [Header("States")]
         [SerializeField] private State idleState;
@@ -142,6 +146,16 @@ namespace constellations
 
             //this populates all states' "core" variable as this object
             SetupInstances();
+        }
+
+        void Start()
+        {
+            //set YDampThreshold to value specified in CameraManager
+            fallYDampThreshold = CameraManager.instance.fallSpeedDampThreshold;
+            trueAllowedSpeed = maxSpeed;
+            realDamage = attackDamage + attackBuffs * attackBuffAmount;
+
+            machine.Set(idleState);
 
             //add methods to events in InputReader
             playerInput.MoveEvent += HandleMove;
@@ -158,16 +172,9 @@ namespace constellations
             playerInput.MeowEvent += HandleMeow;
             playerInput.InteractEvent += HandleInteract;
             playerInput.InteractCanceledEvent += HandleInteractCancel;
-        }
 
-        void Start()
-        {
-            //set YDampThreshold to value specified in CameraManager
-            fallYDampThreshold = CameraManager.instance.fallSpeedDampThreshold;
-            trueAllowedSpeed = maxSpeed;
-            realDamage = attackDamage + attackBuffs * attackBuffAmount;
+            playerInput.SetGameplay();
 
-            machine.Set(idleState);
         }
 
         //using FixedUpdate so framerate doesn't affect functionality
@@ -246,6 +253,9 @@ namespace constellations
             {
                 attackRemainingDuration -= Time.deltaTime;
             }
+
+            UpdateChargeStatus();
+            UpdateHealthStatus();
         }
 
         //when entering a 2d trigger, check if it's from an NPC or an interactable object
@@ -276,6 +286,8 @@ namespace constellations
             }
             else if (collision.gameObject.CompareTag("Mana"))
             {
+                float realHealAmount = manaOrbHealAmount + currentHealth < maxHealth ? manaOrbHealAmount : maxHealth - currentHealth;
+                MenuManager.instance.GotMana(realHealAmount);
                 currentHealth += manaOrbHealAmount;
                 if (currentHealth > maxHealth) currentHealth = maxHealth;
                 Destroy(collision.gameObject);
@@ -314,6 +326,31 @@ namespace constellations
             {
                 collision.gameObject.GetComponent<SavePoint>().usedSavepoint = false;
             }
+        }
+
+        #endregion
+
+        #region hud handling
+
+        private void UpdateChargeStatus()
+        {
+            if (heavyAttackCoolingDown)
+            {
+                MenuManager.instance.ChargeUI(currentHeavyAttackCooldown / heavyAttackCooldown);
+            }
+            else if (attackCharging)
+            {
+                MenuManager.instance.ChargeUI(currentHeavyAttackCharge / attackChargeTime);
+            }
+            else
+            {
+                MenuManager.instance.ChargeUI(0);
+            }
+        }
+
+        private void UpdateHealthStatus()
+        {
+            MenuManager.instance.HealthUI(currentHealth, maxHealth);
         }
 
         #endregion
@@ -579,6 +616,24 @@ namespace constellations
             didInteractObject = false;
         }
 
+        public void UnsubscribePlayerInputs()
+        {
+            playerInput.MoveEvent -= HandleMove;
+            playerInput.JumpEvent -= HandleJump;
+            playerInput.JumpCanceledEvent -= HandleJumpCancel;
+            playerInput.DashEvent -= HandleDash;
+            playerInput.DashCanceledEvent -= HandleDashCancel;
+            playerInput.CrouchEvent -= HandleCrouch;
+            playerInput.CrouchCanceledEvent -= HandleCrouchCancel;
+            playerInput.AttackEvent -= HandleAttack;
+            playerInput.AttackCanceledEvent -= HandleAttackCancel;
+            playerInput.ScreamEvent -= HandleScream;
+            playerInput.ScreamCanceledEvent -= HandleScreamCancel;
+            playerInput.MeowEvent -= HandleMeow;
+            playerInput.InteractEvent -= HandleInteract;
+            playerInput.InteractCanceledEvent -= HandleInteractCancel;
+        }
+
         #endregion
 
         #region checks
@@ -676,7 +731,10 @@ namespace constellations
             if (facingRight)
             {
                 Vector3 newRotation = new Vector3(transform.rotation.x, 180f, transform.rotation.z);
+                float fixOffset = -chargeKnob.localPosition.x * 2;
                 transform.rotation = Quaternion.Euler(newRotation);
+                chargeKnob.localRotation = Quaternion.Euler(newRotation);
+                chargeKnob.localPosition = new Vector2(chargeKnob.localPosition.x + fixOffset, chargeKnob.localPosition.y);
                 facingRight = !facingRight;
 
                 //turn camera to follow object with small delay, handled in different script
@@ -685,7 +743,10 @@ namespace constellations
             else
             {
                 Vector3 newRotation = new Vector3(transform.rotation.x, 0f, transform.rotation.z);
+                float fixOffset = -chargeKnob.localPosition.x * 2;
                 transform.rotation = Quaternion.Euler(newRotation);
+                chargeKnob.localRotation = Quaternion.Euler(newRotation);
+                chargeKnob.localPosition = new Vector2(chargeKnob.localPosition.x + fixOffset, chargeKnob.localPosition.y);
                 facingRight = !facingRight;
 
                 //turn camera to follow object with small delay, handled in different script
@@ -789,8 +850,16 @@ namespace constellations
 
         private IEnumerator AttackTypeCheck()
         {
-            //play animation for charge here
-            yield return new WaitForSeconds(attackChargeTime);
+            currentHeavyAttackCharge = 0;
+            attackCharging = true;
+
+            while (attackCharging)
+            {
+                currentHeavyAttackCharge += Time.deltaTime;
+                if (currentHeavyAttackCharge >= attackChargeTime) attackCharging = false;
+                yield return null;
+            }
+
             canHeavyAttack = true;
         }
 
@@ -798,8 +867,9 @@ namespace constellations
         {
             attackCooldown = true;
             attackStarted = true;
+            attackCharging = false;
+            if (attackTypeCheck != null)
             StopCoroutine(attackTypeCheck);
-            Debug.Log(attackStates[attackChain].anim.length);
 
             //attack styles do their own things
             if (canHeavyAttack && !heavyAttackCoolingDown)
@@ -848,7 +918,6 @@ namespace constellations
             {
                 if (hitEnemies[i].CompareTag("Skeleton"))
                 {
-                    Debug.Log("found skeleton");
                     enemyScript = hitEnemies[i].GetComponentInParent<SkeletonBehavior>() as EnemyBase;
                 }
                 else if (hitEnemies[i].CompareTag("Ghost"))
@@ -872,8 +941,14 @@ namespace constellations
 
         private IEnumerator HeavyAttackCooldown()
         {
-            yield return new WaitForSeconds(heavyAttackCooldown + slashAttackState.anim.length);
-            heavyAttackCoolingDown = false;
+            currentHeavyAttackCooldown = heavyAttackCooldown + slashAttackState.anim.length;
+
+            while (heavyAttackCoolingDown)
+            {
+                currentHeavyAttackCooldown -= Time.deltaTime;
+                if (currentHeavyAttackCooldown <= 0) heavyAttackCoolingDown = false;
+                yield return null;
+            }
         }
 
         private IEnumerator Scream()
@@ -921,6 +996,11 @@ namespace constellations
         {
             currentHealth -= _damage;
             invulnerableTime = invulnerableDuration;
+
+            if (currentHealth < 0)
+            {
+                MenuManager.instance.Fainted();
+            }
         }
 
         #endregion
