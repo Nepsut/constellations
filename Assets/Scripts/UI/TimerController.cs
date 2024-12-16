@@ -10,7 +10,7 @@ public class TimerController : MonoBehaviour
 
     [SerializeField] private TextMeshProUGUI timerCounter;
 
-    private TimeSpan timePlaying;
+    public TimeSpan timePlaying { get; private set; }
     private bool timerGoing;
 
     private float elapsedTime;

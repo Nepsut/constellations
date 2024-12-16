@@ -132,7 +132,6 @@ namespace constellations
             if (context.phase == InputActionPhase.Performed)
             {
                 PauseEvent?.Invoke();
-                SetUI();
             }
         }
 
@@ -141,7 +140,6 @@ namespace constellations
             if (context.phase == InputActionPhase.Performed)
             {
                 ResumeEvent?.Invoke();
-                SetGameplay();
             }
         }
 

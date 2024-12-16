@@ -15,20 +15,32 @@ public class MenuManager : MonoBehaviour
 
     [Header("Engine Variables")]
     [SerializeField] private InputReader input;
+    [SerializeField] private GameObject miniMap;
+
+    [Header("HUD")]
+    [SerializeField] private Slider healthSlider;
+    [SerializeField] private Image chargeKnob;
+    [SerializeField] private TextMeshProUGUI scoreTextGame;
+    [SerializeField] private TextMeshProUGUI killCountTextGame;
+
+    [Header("Pause Menu")]
     [SerializeField] private GameObject pauseScreen;
     [SerializeField] private GameObject settingsScreen;
-    [SerializeField] private GameObject faintedScreen;
     [SerializeField] private GameObject menuHolder;
     [SerializeField] private GameObject settingsHolder;
     [SerializeField] private Button resumeButton;
     [SerializeField] private Button settingsButton;
     [SerializeField] private Button closeSettingsButton;
-    [SerializeField] private Slider healthSlider;
-    [SerializeField] private Image chargeKnob;
-    [SerializeField] private TextMeshProUGUI scoreText;
-    [SerializeField] private TextMeshProUGUI killCountText;
+    [SerializeField] private TextMeshProUGUI pauseScore;
 
-    //killfeed stuff
+    [Header("Faint Menu")]
+    [SerializeField] private GameObject faintedScreen; 
+    [SerializeField] private TextMeshProUGUI runtimeFainted;
+    [SerializeField] private TextMeshProUGUI killcountFainted;
+    [SerializeField] private TextMeshProUGUI scoreFainted;
+    [SerializeField] private TextMeshProUGUI slashCountFainted;
+
+    [Header("Killfeed Items")]
     [SerializeField] private Transform killfeedHolder;
     [SerializeField] private GameObject killTextObject;
     private const float killfeedPersistTime = 4f;
@@ -60,6 +72,7 @@ public class MenuManager : MonoBehaviour
         //hide menus initially
         pauseScreen.SetActive(false);
         settingsScreen.SetActive(false);
+        miniMap.SetActive(true);
 
         input.PauseEvent += HandlePause;
 
@@ -109,6 +122,7 @@ public class MenuManager : MonoBehaviour
         input.SetUI();
         pauseScreen.SetActive(true);
         gamePaused = true;
+        pauseScore.text = string.Concat("SCORE: ", score);
         TimerController.instance.ToggleTimer(false);    //false to pause timer
         Time.timeScale = 0f;
         StartCoroutine(SelectFirstChoice(menuHolder));
@@ -118,7 +132,12 @@ public class MenuManager : MonoBehaviour
     {
         Time.timeScale = 0f;
         faintedScreen.SetActive(true);
-        //set faintedScreen score, killcount, slashcount(from playerController), and time here
+        miniMap.SetActive(false);
+
+        runtimeFainted.text = string.Concat("GAME RUNNING TIME: ", TimerController.instance.timePlaying.ToString("mm':'ss'.'ff"));
+        killcountFainted.text = string.Concat("ELIMINATED ENEMIES: ", killCount);
+        scoreFainted.text = string.Concat("SCORE: ", score);
+        slashCountFainted.text = string.Concat("SLASHED: ", playerController.totalSlashAttacks);
     }
 
     //little knob above player to indicate heavy attack status
@@ -154,8 +173,8 @@ public class MenuManager : MonoBehaviour
 
     private void UpdateScores()
     {
-        killCountText.text = killCount.ToString();
-        scoreText.text = string.Concat("SCORE: ", score);
+        killCountTextGame.text = killCount.ToString();
+        scoreTextGame.text = string.Concat("SCORE: ", score);
     }
 
     private IEnumerator FadeKillfeedItem(TextMeshProUGUI _killText)
@@ -174,6 +193,14 @@ public class MenuManager : MonoBehaviour
             yield return null;
         }
         Destroy(_killText.gameObject);
+    }
+
+    public void ReloadLevel()
+    {
+        Time.timeScale = 1;
+        playerController.UnsubscribePlayerInputs();
+        input.PauseEvent -= HandlePause;
+        SceneManager.LoadScene(1);
     }
 
     public void QuitToMainMenu()

@@ -20,6 +20,7 @@ namespace constellations
         private const float colliderOffset = 0.4f;
         [SerializeField] private LayerMask ground;
         [SerializeField] private GameObject cameraFollowObject;
+        [SerializeField] private RectTransform chargeKnob;
 
         //reminder that constant variables can only be referenced via the class
         //and not via an object made from the class, so PlayerController.maxSpeed
@@ -730,7 +731,10 @@ namespace constellations
             if (facingRight)
             {
                 Vector3 newRotation = new Vector3(transform.rotation.x, 180f, transform.rotation.z);
+                float fixOffset = -chargeKnob.localPosition.x * 2;
                 transform.rotation = Quaternion.Euler(newRotation);
+                chargeKnob.localRotation = Quaternion.Euler(newRotation);
+                chargeKnob.localPosition = new Vector2(chargeKnob.localPosition.x + fixOffset, chargeKnob.localPosition.y);
                 facingRight = !facingRight;
 
                 //turn camera to follow object with small delay, handled in different script
@@ -739,7 +743,10 @@ namespace constellations
             else
             {
                 Vector3 newRotation = new Vector3(transform.rotation.x, 0f, transform.rotation.z);
+                float fixOffset = -chargeKnob.localPosition.x * 2;
                 transform.rotation = Quaternion.Euler(newRotation);
+                chargeKnob.localRotation = Quaternion.Euler(newRotation);
+                chargeKnob.localPosition = new Vector2(chargeKnob.localPosition.x + fixOffset, chargeKnob.localPosition.y);
                 facingRight = !facingRight;
 
                 //turn camera to follow object with small delay, handled in different script
