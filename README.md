@@ -2,7 +2,7 @@
 
 **A little tutorial:**
 
-  -click or use arrow keys to move in menus
+  -click or use 'W'&'S' keys to move in menus
   
   -pause works from 'esc'
 
