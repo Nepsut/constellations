@@ -70,44 +70,44 @@ public enum PanDirection
     Right
 }
 
-[CustomEditor(typeof(CameraControlTrigger))]
-public class MyScriptEditor : Editor
-{
-    CameraControlTrigger cameraControlTrigger;
+//[CustomEditor(typeof(CameraControlTrigger))]
+//public class MyScriptEditor : Editor
+//{
+//    CameraControlTrigger cameraControlTrigger;
 
-    private void OnEnable()
-    {
-        cameraControlTrigger = (CameraControlTrigger)target;
-    }
-    public override void OnInspectorGUI()
-    {
-        DrawDefaultInspector();
+//    private void OnEnable()
+//    {
+//        cameraControlTrigger = (CameraControlTrigger)target;
+//    }
+//    public override void OnInspectorGUI()
+//    {
+//        DrawDefaultInspector();
 
-        //this will enable certain fields in inspector based on bools checked in inspector
-        if (cameraControlTrigger.customInspectorObjects.swapCameras)
-        {
-            cameraControlTrigger.customInspectorObjects.cameraOnLeft = EditorGUILayout.ObjectField("Camera On Left",
-            cameraControlTrigger.customInspectorObjects.cameraOnLeft, typeof(CinemachineVirtualCamera), true) as CinemachineVirtualCamera;
+//        //this will enable certain fields in inspector based on bools checked in inspector
+//        if (cameraControlTrigger.customInspectorObjects.swapCameras)
+//        {
+//            cameraControlTrigger.customInspectorObjects.cameraOnLeft = EditorGUILayout.ObjectField("Camera On Left",
+//            cameraControlTrigger.customInspectorObjects.cameraOnLeft, typeof(CinemachineVirtualCamera), true) as CinemachineVirtualCamera;
 
-            cameraControlTrigger.customInspectorObjects.cameraOnRight = EditorGUILayout.ObjectField("Camera On Right",
-            cameraControlTrigger.customInspectorObjects.cameraOnRight, typeof(CinemachineVirtualCamera), true) as CinemachineVirtualCamera;
-        }
-        if (cameraControlTrigger.customInspectorObjects.panCamera)
-        {
-            cameraControlTrigger.customInspectorObjects.panDirection = (PanDirection)EditorGUILayout.EnumPopup("Camera Pan Direction",
-            cameraControlTrigger.customInspectorObjects.panDirection);
+//            cameraControlTrigger.customInspectorObjects.cameraOnRight = EditorGUILayout.ObjectField("Camera On Right",
+//            cameraControlTrigger.customInspectorObjects.cameraOnRight, typeof(CinemachineVirtualCamera), true) as CinemachineVirtualCamera;
+//        }
+//        if (cameraControlTrigger.customInspectorObjects.panCamera)
+//        {
+//            cameraControlTrigger.customInspectorObjects.panDirection = (PanDirection)EditorGUILayout.EnumPopup("Camera Pan Direction",
+//            cameraControlTrigger.customInspectorObjects.panDirection);
 
-            cameraControlTrigger.customInspectorObjects.panDistance = EditorGUILayout.FloatField("Pan Distance",
-            cameraControlTrigger.customInspectorObjects.panDistance);
+//            cameraControlTrigger.customInspectorObjects.panDistance = EditorGUILayout.FloatField("Pan Distance",
+//            cameraControlTrigger.customInspectorObjects.panDistance);
 
-            cameraControlTrigger.customInspectorObjects.panTime = EditorGUILayout.FloatField("Pan Time",
-            cameraControlTrigger.customInspectorObjects.panTime);
-        }
+//            cameraControlTrigger.customInspectorObjects.panTime = EditorGUILayout.FloatField("Pan Time",
+//            cameraControlTrigger.customInspectorObjects.panTime);
+//        }
 
-        //if gui is changed, set dirty flag on cameraControlTrigger or assigned objects will reset
-        if (GUI.changed)
-        {
-            EditorUtility.SetDirty(cameraControlTrigger);
-        }
-    }
-}
+//        //if gui is changed, set dirty flag on cameraControlTrigger or assigned objects will reset
+//        if (GUI.changed)
+//        {
+//            EditorUtility.SetDirty(cameraControlTrigger);
+//        }
+//    }
+//}
