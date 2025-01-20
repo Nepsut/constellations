@@ -15,7 +15,6 @@ public class MenuManager : MonoBehaviour
 
     [Header("Engine Variables")]
     [SerializeField] private InputReader input;
-    [SerializeField] private GameObject miniMap;
 
     [Header("HUD")]
     [SerializeField] private Slider healthSlider;
@@ -40,11 +39,6 @@ public class MenuManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI scoreFainted;
     [SerializeField] private TextMeshProUGUI slashCountFainted;
 
-    [Header("Killfeed Items")]
-    [SerializeField] private Transform killfeedHolder;
-    [SerializeField] private GameObject killTextObject;
-    private const float killfeedPersistTime = 4f;
-    private const float killfeedFadeTime = 2f;
     private int killCount = 0;
     private int score = 0;
 
@@ -72,7 +66,6 @@ public class MenuManager : MonoBehaviour
         //hide menus initially
         pauseScreen.SetActive(false);
         settingsScreen.SetActive(false);
-        miniMap.SetActive(true);
 
         input.PauseEvent += HandlePause;
 
@@ -132,7 +125,6 @@ public class MenuManager : MonoBehaviour
     {
         Time.timeScale = 0f;
         faintedScreen.SetActive(true);
-        miniMap.SetActive(false);
 
         runtimeFainted.text = string.Concat("GAME RUNNING TIME: ", TimerController.instance.timePlaying.ToString("mm':'ss'.'ff"));
         killcountFainted.text = string.Concat("ELIMINATED ENEMIES: ", killCount);
@@ -156,19 +148,9 @@ public class MenuManager : MonoBehaviour
 
     public void EnemyDied(string _killerName, string _victimName, int _increaseScoreBy)
     {
-        TextMeshProUGUI killText = Instantiate(killTextObject, killfeedHolder).GetComponent<TextMeshProUGUI>();
-        killText.text = string.Concat("-[", _killerName, "]", " killed a ", _victimName);
         score += _increaseScoreBy;
         killCount++;
         UpdateScores();
-        StartCoroutine(FadeKillfeedItem(killText));
-    }
-
-    public void GotMana(float _manaAmount)
-    {
-        TextMeshProUGUI manaText = Instantiate(killTextObject, killfeedHolder).GetComponent<TextMeshProUGUI>();
-        manaText.text = string.Concat("-[Player]", " recovered ", _manaAmount, " mana");
-        StartCoroutine(FadeKillfeedItem(manaText));
     }
 
     private void UpdateScores()
@@ -177,28 +159,11 @@ public class MenuManager : MonoBehaviour
         scoreTextGame.text = string.Concat("SCORE: ", score);
     }
 
-    private IEnumerator FadeKillfeedItem(TextMeshProUGUI _killText)
-    {
-        float timer = 0;
-        Color fadeColor = _killText.color;
-        float startingAlpha = fadeColor.a;
-
-        yield return new WaitForSeconds(killfeedPersistTime);
-
-        while (timer < killfeedFadeTime)
-        {
-            timer += Time.deltaTime;
-            fadeColor.a = Mathf.Lerp(startingAlpha, 0, timer / killfeedFadeTime);
-            _killText.color = fadeColor;
-            yield return null;
-        }
-        Destroy(_killText.gameObject);
-    }
-
     public void ReloadLevel()
     {
         Time.timeScale = 1;
         playerController.UnsubscribePlayerInputs();
+        DialogueManager.instance.UnsubscribeDialogueEvents();
         input.PauseEvent -= HandlePause;
         SceneManager.LoadScene(1);
     }
