@@ -1,20 +1,18 @@
 # constellations
-
 **A little tutorial:**
 
-  -click or use 'W'&'S' keys to move in menus
-  
-  -pause works from 'esc'
+-click or use 'W'&'S' keys to move in menus
 
-  -player moves from WASD
-  
-  -jump works pressing SPACE
-  
-  -interact with NPS's pressing 'F'
-  
-  -attack clicking left mousebutton
-  
-  -hold down left mousebutton for a long range attack
-  
-  -'SHIFT' stands for speed
-  
+-pause works from 'esc'
+
+-player moves from WASD
+
+-jump works pressing SPACE
+
+-interact with NPS's pressing 'F'
+
+-attack clicking left mousebutton
+
+-hold down left mousebutton for a long range attack
+
+-'SHIFT' stands for speed
