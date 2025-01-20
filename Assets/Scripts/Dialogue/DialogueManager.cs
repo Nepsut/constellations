@@ -204,6 +204,12 @@ public class DialogueManager : MonoBehaviour
 
     #region input handlers
 
+    public void UnsubscribeDialogueEvents()
+    {
+        input.SubmitEvent -= HandleSubmit;
+        input.ClickEvent -= HandleClick;
+    }
+
     private void HandleSubmit()
     {
         if (!input.dialogueActive) return;

@@ -16,7 +16,6 @@ namespace constellations
         [Header("Engine Variables")]
         [SerializeField] private InputReader playerInput;
         [SerializeField] private BoxCollider2D attackHitbox;
-        private CapsuleCollider2D capsuleCollider;
         private const float colliderOffset = 0.4f;
         [SerializeField] private LayerMask ground;
         [SerializeField] private GameObject cameraFollowObject;
@@ -141,7 +140,6 @@ namespace constellations
         {
             //fetch rigidbody and collider
             rb2d = GetComponent<Rigidbody2D>();
-            capsuleCollider = GetComponent<CapsuleCollider2D>();
             animator = GetComponent<Animator>();
 
             //this populates all states' "core" variable as this object
@@ -287,7 +285,6 @@ namespace constellations
             else if (collision.gameObject.CompareTag("Mana"))
             {
                 float realHealAmount = manaOrbHealAmount + currentHealth < maxHealth ? manaOrbHealAmount : maxHealth - currentHealth;
-                MenuManager.instance.GotMana(realHealAmount);
                 currentHealth += manaOrbHealAmount;
                 if (currentHealth > maxHealth) currentHealth = maxHealth;
                 Destroy(collision.gameObject);
@@ -481,7 +478,6 @@ namespace constellations
                 if (crouching)      //if crouching, stop crouching and return collider to normal size
                 {
                     crouching = false;
-                    capsuleCollider.size = new Vector2(capsuleCollider.size.x, baseColliderHeight);
                 }
             }
         }
@@ -508,7 +504,6 @@ namespace constellations
                 if (crouching)
                 {
                     crouching = false;
-                    capsuleCollider.size = new Vector2(capsuleCollider.size.x, baseColliderHeight);
                     StartCoroutine(CameraManager.instance.CrouchOffset(false));
                 }
                 dashing = true;
@@ -545,7 +540,7 @@ namespace constellations
                 crouching = true;
                 running = false;
                 runningHelper = false;
-                capsuleCollider.size = new Vector2(capsuleCollider.size.x, crouchColliderHeight);   //make collider smaller
+                //ADD COLLIDER ADJUSTMENTS HERE
                 StartCoroutine(CameraManager.instance.CrouchOffset(true));                          //pan cam down
             }
         }
@@ -553,7 +548,7 @@ namespace constellations
         private void HandleCrouchCancel()
         {
             crouching = false;
-            capsuleCollider.size = new Vector2(capsuleCollider.size.x, baseColliderHeight);         //make collider great again /j
+            //ADD COLLIDER ADJUSTMENTS HERE
             StartCoroutine(CameraManager.instance.CrouchOffset(false));                             //pan cam to normal
         }
 
