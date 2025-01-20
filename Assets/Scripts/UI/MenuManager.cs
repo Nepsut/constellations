@@ -34,14 +34,6 @@ public class MenuManager : MonoBehaviour
 
     [Header("Faint Menu")]
     [SerializeField] private GameObject faintedScreen; 
-    [SerializeField] private TextMeshProUGUI runtimeFainted;
-    [SerializeField] private TextMeshProUGUI killcountFainted;
-    [SerializeField] private TextMeshProUGUI scoreFainted;
-    [SerializeField] private TextMeshProUGUI slashCountFainted;
-
-    private int killCount = 0;
-    private int score = 0;
-
 
     //player
     [SerializeField] private PlayerController playerController;
@@ -106,7 +98,6 @@ public class MenuManager : MonoBehaviour
         pauseScreen.SetActive(false);
         faintedScreen.SetActive(false);
         gamePaused = false;
-        TimerController.instance.ToggleTimer(true);    //true to unpause timer
         Time.timeScale = 1f;
     }
 
@@ -115,8 +106,6 @@ public class MenuManager : MonoBehaviour
         input.SetUI();
         pauseScreen.SetActive(true);
         gamePaused = true;
-        pauseScore.text = string.Concat("SCORE: ", score);
-        TimerController.instance.ToggleTimer(false);    //false to pause timer
         Time.timeScale = 0f;
         StartCoroutine(SelectFirstChoice(menuHolder));
     }
@@ -125,11 +114,6 @@ public class MenuManager : MonoBehaviour
     {
         Time.timeScale = 0f;
         faintedScreen.SetActive(true);
-
-        runtimeFainted.text = string.Concat("GAME RUNNING TIME: ", TimerController.instance.timePlaying.ToString("mm':'ss'.'ff"));
-        killcountFainted.text = string.Concat("ELIMINATED ENEMIES: ", killCount);
-        scoreFainted.text = string.Concat("SCORE: ", score);
-        slashCountFainted.text = string.Concat("SLASHED: ", playerController.totalSlashAttacks);
     }
 
     //little knob above player to indicate heavy attack status
@@ -144,19 +128,6 @@ public class MenuManager : MonoBehaviour
         float scaler = _maxHealth / maxSliderValue;
         float sliderValue = _currentHealth / scaler;
         healthSlider.value = sliderValue;
-    }
-
-    public void EnemyDied(string _killerName, string _victimName, int _increaseScoreBy)
-    {
-        score += _increaseScoreBy;
-        killCount++;
-        UpdateScores();
-    }
-
-    private void UpdateScores()
-    {
-        killCountTextGame.text = killCount.ToString();
-        scoreTextGame.text = string.Concat("SCORE: ", score);
     }
 
     public void ReloadLevel()
