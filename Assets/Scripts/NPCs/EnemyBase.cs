@@ -17,7 +17,6 @@ namespace constellations
         private float invulnerableDuration = 0;
         protected Coroutine damagedStateTimer;
 
-
         public void TakeDamage(float _damage, float _invulDuration)
         {
             if (invulnerableDuration > 0) return;

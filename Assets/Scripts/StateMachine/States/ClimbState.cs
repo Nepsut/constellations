@@ -10,7 +10,7 @@ namespace constellations
         
         public override void Enter()
         {
-            // animator.Play(anim.name);
+            animator.Play(anim.name);
         }
 
         public override void Do()

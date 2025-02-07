@@ -50,7 +50,10 @@ namespace constellations
         [Header("States")]
         [SerializeField] private State walkingState;
         [SerializeField] private State idleState;
+        [SerializeField] private State airState;
+        [SerializeField] private State climbingState;
         [SerializeField] private DamagedState damagedState;
+        [SerializeField] private State deathState;
 
         #endregion
 
@@ -64,6 +67,7 @@ namespace constellations
             BoxCollider2D box = gameObject.GetComponentInChildren<BoxCollider2D>();
 
             SetupInstances();   //setup state machine
+            deathState.SetCore(this);
 
             //set raycast sizes based on collider sizes to ensure enemy is scaleable
             jumpRaycastBox = new(box.size.x, box.size.y + 0.1f);
@@ -81,6 +85,10 @@ namespace constellations
         void FixedUpdate()
         {
             if (!awake) return;
+
+            SelectState();
+            machine.state.Do();
+            
             //if dead, return early
             if (isDead)
             {
@@ -126,9 +134,6 @@ namespace constellations
 
             //self-explanatory
             if (doKnockback) Knockback();
-
-            SelectState();
-            machine.state.Do();
         }
 
         protected override void Update()
@@ -265,15 +270,6 @@ namespace constellations
             }
         }
 
-        //same simple climb raycast tech as player exceot on a boolean as walljumps are not necessary
-        private bool CanJump()
-        {
-            if (damaged) return false;
-            RaycastHit2D hit = Physics2D.BoxCast(transform.position, jumpRaycastBox, 0f, Vector2.down, 0.1f, ground);
-            if (hit) return true;
-            else return false;
-        }
-
         //this is ran on death
         protected override IEnumerator Death()
         {
@@ -294,17 +290,29 @@ namespace constellations
 
         private void SelectState()
         {
-            if ((rb2d.velocity.x > -0.1f && rb2d.velocity.x < 0.1f) && !damaged)
+            if (isDead)
             {
-                machine.Set(idleState);
+                machine.Set(deathState);
             }
             else if (damaged)
             {
-                machine.Set(damagedState as State);
+                machine.Set(damagedState);
+            }
+            else if (climbing)
+            {
+                machine.Set(climbingState);
+            }
+            else if (!groundSensor.grounded)
+            {
+                machine.Set(airState);
+            }
+            else if (Mathf.Abs(rb2d.velocity.x) > 0.1f)
+            {
+                machine.Set(walkingState);
             }
             else
             {
-                machine.Set(walkingState);
+                machine.Set(idleState);
             }
         }
 

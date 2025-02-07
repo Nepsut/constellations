@@ -60,19 +60,17 @@ namespace constellations
         private bool changingYDirection => (rb2d.velocity.y > 0f && vertical < 0f) || (rb2d.velocity.y < 0f && vertical > 0f);
 
         [Header("Constant Action Variables")]
-        private const int attackDamage = 20;
+        private const int attackDamage = 10;
+        private const float heavyAttackMult = 4f;
         private const int attackBuffAmount = 5;
         private const float attackChargeTime = 1f;
         public const int knockbackbBuffAmount = 5;
-        private const float screamMinDuration = 1.5f;
         private const float screamBufferTime = 0.1f;
-        private const float meowTime = 0.2f;
 
         [Header("Dynamic Action Variables")]
         private int attackBuffs = 0;                //add 1 every time player's attack gets buffed
         public int knockbackBuffs { get; private set; } = 0;      //add 1 on knockback buff
         private int realDamage = 20;
-        private float heavyAttackMult = 1.5f;
         private bool attackCooldown = false;
         private bool didAttack = false;
         private bool attackStarted = false;     //this one helps with chaining attacks
@@ -80,10 +78,7 @@ namespace constellations
         private bool heavyAttackCoolingDown = false;
         public int totalSlashAttacks { get; private set; } = 0;
         private bool screaming = false;
-        private bool screamKeyHeld = false;
-        private bool meow = false;
         private Coroutine attackTypeCheck;
-        private Coroutine scream;
 
         [Header("Interaction Variables")]
         private bool canInteractNPC = false;
@@ -128,6 +123,7 @@ namespace constellations
         [SerializeField] private State swimIdleState;
         [SerializeField] private State airState;
         [SerializeField] private State wallJumpState;
+        [SerializeField] private ScreamState screamState;
         [SerializeField] private AttackState[] attackStates;
         [SerializeField] private AttackSlashState slashAttackState;
 
@@ -167,7 +163,6 @@ namespace constellations
             playerInput.AttackCanceledEvent += HandleAttackCancel;
             playerInput.ScreamEvent += HandleScream;
             playerInput.ScreamCanceledEvent += HandleScreamCancel;
-            playerInput.MeowEvent += HandleMeow;
             playerInput.InteractEvent += HandleInteract;
             playerInput.InteractCanceledEvent += HandleInteractCancel;
 
@@ -575,19 +570,12 @@ namespace constellations
         private void HandleScream()
         {
             if (!screamEnabled) return;
-            scream = StartCoroutine(Scream());
-            screamKeyHeld = true;
+            StartCoroutine(Scream());
         }
 
         private void HandleScreamCancel()
         {
             if (!screamEnabled) return;
-            screamKeyHeld = false;
-        }
-
-        private void HandleMeow()
-        {
-            if (!meow) StartCoroutine(Meow());
         }
 
         //handles interaction based on data retrieved when entering trigger
@@ -624,7 +612,6 @@ namespace constellations
             playerInput.AttackCanceledEvent -= HandleAttackCancel;
             playerInput.ScreamEvent -= HandleScream;
             playerInput.ScreamCanceledEvent -= HandleScreamCancel;
-            playerInput.MeowEvent -= HandleMeow;
             playerInput.InteractEvent -= HandleInteract;
             playerInput.InteractCanceledEvent -= HandleInteractCancel;
         }
@@ -689,6 +676,10 @@ namespace constellations
             else if (bigAttacking)
             {
                 machine.Set(slashAttackState as State);
+            }
+            else if (screaming)
+            {
+                machine.Set(screamState as State);
             }
             else if (crouching && horizontal == 0)
             {
@@ -949,31 +940,13 @@ namespace constellations
         private IEnumerator Scream()
         {
             screaming = true;
-            Debug.Log("screaming");
-            //set screaming animation and sound here
-            yield return new WaitForSeconds(screamMinDuration);
-            while (screamKeyHeld)
-            {
-                yield return new WaitForSeconds(screamBufferTime);
-            }
-            Debug.Log("stopped screaming");
-            //end screaming animation and sound here
+            yield return new WaitForSeconds(screamState.anim.length);
             screaming = false;
-        }
-
-        private IEnumerator Meow()
-        {
-            meow = true;
-            //meow sound go here
-            yield return new WaitForSeconds(meowTime);
-            Debug.Log("meow");
-            //and they end here
-            meow = false;
         }
 
         private void OverrideNonAttackStates()
         {
-            if (attacking || bigAttacking)
+            if (attacking || bigAttacking || screaming)
             {
                 disableMovement = true;
             }

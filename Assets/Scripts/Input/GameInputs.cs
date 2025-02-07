@@ -93,15 +93,6 @@ namespace constellations
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Meow"",
-                    ""type"": ""Button"",
-                    ""id"": ""791ae944-fac9-4b08-85d2-1eb12cf5772e"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
                     ""name"": ""Interact"",
                     ""type"": ""Button"",
                     ""id"": ""35c98a72-f49d-46bc-9d1a-24b7f0d3152d"",
@@ -340,28 +331,6 @@ namespace constellations
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Interact"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""6e9da177-2edc-46e4-9735-be7b97435ae9"",
-                    ""path"": ""<Keyboard>/e"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Meow"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""7e880248-75b5-4d20-95f2-ecf7da062b39"",
-                    ""path"": ""<Gamepad>/rightTrigger"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Meow"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -844,7 +813,6 @@ namespace constellations
             m_Gameplay_Pause = m_Gameplay.FindAction("Pause", throwIfNotFound: true);
             m_Gameplay_Attack = m_Gameplay.FindAction("Attack", throwIfNotFound: true);
             m_Gameplay_Scream = m_Gameplay.FindAction("Scream", throwIfNotFound: true);
-            m_Gameplay_Meow = m_Gameplay.FindAction("Meow", throwIfNotFound: true);
             m_Gameplay_Interact = m_Gameplay.FindAction("Interact", throwIfNotFound: true);
             // UI
             m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
@@ -930,7 +898,6 @@ namespace constellations
         private readonly InputAction m_Gameplay_Pause;
         private readonly InputAction m_Gameplay_Attack;
         private readonly InputAction m_Gameplay_Scream;
-        private readonly InputAction m_Gameplay_Meow;
         private readonly InputAction m_Gameplay_Interact;
         public struct GameplayActions
         {
@@ -943,7 +910,6 @@ namespace constellations
             public InputAction @Pause => m_Wrapper.m_Gameplay_Pause;
             public InputAction @Attack => m_Wrapper.m_Gameplay_Attack;
             public InputAction @Scream => m_Wrapper.m_Gameplay_Scream;
-            public InputAction @Meow => m_Wrapper.m_Gameplay_Meow;
             public InputAction @Interact => m_Wrapper.m_Gameplay_Interact;
             public InputActionMap Get() { return m_Wrapper.m_Gameplay; }
             public void Enable() { Get().Enable(); }
@@ -975,9 +941,6 @@ namespace constellations
                 @Scream.started += instance.OnScream;
                 @Scream.performed += instance.OnScream;
                 @Scream.canceled += instance.OnScream;
-                @Meow.started += instance.OnMeow;
-                @Meow.performed += instance.OnMeow;
-                @Meow.canceled += instance.OnMeow;
                 @Interact.started += instance.OnInteract;
                 @Interact.performed += instance.OnInteract;
                 @Interact.canceled += instance.OnInteract;
@@ -1006,9 +969,6 @@ namespace constellations
                 @Scream.started -= instance.OnScream;
                 @Scream.performed -= instance.OnScream;
                 @Scream.canceled -= instance.OnScream;
-                @Meow.started -= instance.OnMeow;
-                @Meow.performed -= instance.OnMeow;
-                @Meow.canceled -= instance.OnMeow;
                 @Interact.started -= instance.OnInteract;
                 @Interact.performed -= instance.OnInteract;
                 @Interact.canceled -= instance.OnInteract;
@@ -1210,7 +1170,6 @@ namespace constellations
             void OnPause(InputAction.CallbackContext context);
             void OnAttack(InputAction.CallbackContext context);
             void OnScream(InputAction.CallbackContext context);
-            void OnMeow(InputAction.CallbackContext context);
             void OnInteract(InputAction.CallbackContext context);
         }
         public interface IUIActions
