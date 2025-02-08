@@ -1,8 +1,5 @@
 using Cinemachine;
 using constellations;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 
 public class CameraControlTrigger : MonoBehaviour
@@ -17,32 +14,28 @@ public class CameraControlTrigger : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (coll != null)
+        if (coll == null) return;
+        if (collision.CompareTag("Player"))
         {
-            if (collision.CompareTag("Player"))
+            if (customInspectorObjects.panCamera)
             {
-                if (customInspectorObjects.panCamera)
-                {
-                    //calling pan coroutine from cameramanager.cs
-                    StartCoroutine(CameraManager.instance.PanCam(customInspectorObjects.panDistance, customInspectorObjects.panTime,
-                    customInspectorObjects.panDirection, false));
-                }
+                //calling pan coroutine from cameramanager.cs
+                StartCoroutine(CameraManager.instance.PanCam(customInspectorObjects.panDistance, customInspectorObjects.panTime,
+                customInspectorObjects.panDirection, false));
             }
         }
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (coll != null)
+        if (coll == null) return;
+        if (collision.CompareTag("Player"))
         {
-            if (collision.CompareTag("Player"))
+            if (customInspectorObjects.panCamera)
             {
-                if (customInspectorObjects.panCamera)
-                {
-                    //calling pan coroutine from cameramanager.cs
-                    StartCoroutine(CameraManager.instance.PanCam(customInspectorObjects.panDistance, customInspectorObjects.panTime,
-                    customInspectorObjects.panDirection, true));
-                }
+                //calling pan coroutine from cameramanager.cs
+                StartCoroutine(CameraManager.instance.PanCam(customInspectorObjects.panDistance, customInspectorObjects.panTime,
+                customInspectorObjects.panDirection, true));
             }
         }
     }
@@ -57,9 +50,9 @@ public class CustomInspectorObjects
     [HideInInspector] public CinemachineVirtualCamera cameraOnLeft;
     [HideInInspector] public CinemachineVirtualCamera cameraOnRight;
 
-    [HideInInspector] public PanDirection panDirection;
-    [HideInInspector] public float panDistance = 3f;
-    [HideInInspector] public float panTime = 0.35f;
+    public PanDirection panDirection;
+    public float panDistance = 3f;
+    public float panTime = 0.35f;
 }
 
 public enum PanDirection

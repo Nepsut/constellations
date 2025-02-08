@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.IO.LowLevel.Unsafe;
 using UnityEngine;
 
 namespace constellations
@@ -7,7 +8,7 @@ namespace constellations
     public abstract class InteractBase : MonoBehaviour, IInteractable
     {
         private bool checkingInteractions = false;
-        private PlayerController playerController;
+        [SerializeField] protected PlayerController playerController;
 
         private void Update()
         {
@@ -23,25 +24,19 @@ namespace constellations
 
         private void OnTriggerEnter2D(Collider2D collider)
         {
-            if (collider != null )
+            if (collider == null) return;
+            if (collider.gameObject.CompareTag("Player"))
             {
-                if (collider.gameObject.CompareTag("Player"))
-                {
-                    checkingInteractions = true;
-                    playerController = collider.gameObject.GetComponent<PlayerController>();
-                }
+                checkingInteractions = true;
             }
         }
 
-        private void OnTriggerExit2D(Collider2D collider)
+        protected virtual void OnTriggerExit2D(Collider2D collider)
         {
-            if (collider != null)
+            if (collider == null) return;
+            if (collider.gameObject.CompareTag("Player"))
             {
-                if (collider.gameObject.CompareTag("Player"))
-                {
-                    checkingInteractions = false;
-                    playerController = null;
-                }
+                checkingInteractions = false;
             }
         }
 
