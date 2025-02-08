@@ -41,6 +41,7 @@ namespace constellations
         [Header("States")]
         [SerializeField] private State idleState;
         [SerializeField] private DamagedState damagedState;
+        [SerializeField] private State deathState;
 
 
         #endregion
@@ -66,6 +67,10 @@ namespace constellations
         void FixedUpdate()
         {
             if (!awake) return;
+
+            SelectState();
+            machine.state.Do();
+            
             //if dead, return early
             if (isDead)
             {
@@ -91,9 +96,6 @@ namespace constellations
 
             //self-explanatory
             if (doKnockback) Knockback();
-
-            SelectState();
-            machine.state.Do();
         }
 
         protected override void Update()
@@ -215,7 +217,11 @@ namespace constellations
 
         private void SelectState()
         {
-            if (!damaged)
+            if (isDead)
+            {
+                machine.Set(deathState);
+            }
+            else if (!damaged)
             {
                 machine.Set(idleState);
             }

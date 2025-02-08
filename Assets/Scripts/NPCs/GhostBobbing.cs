@@ -38,7 +38,7 @@ namespace constellations
                 if (deathHelper)
                 {
                     LeanTween.cancel(gameObject);
-                    LeanTween.moveLocalY(gameObject, transform.localPosition.y - deathFloatDown, GhostBehavior.deathDuration).setEaseOutSine();
+                    // LeanTween.moveLocalY(gameObject, transform.localPosition.y - deathFloatDown, GhostBehavior.deathDuration).setEaseOutSine();
                     deathHelper = false;
                 }
             }
