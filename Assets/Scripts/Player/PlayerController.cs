@@ -36,8 +36,6 @@ namespace constellations
         private const float lowJumpMult = 1.8f;
         private const float airLinearDrag = 2.5f;
         public const float runSpeedMult = 1.8f;
-        private const float baseColliderHeight = 1.5f;
-        private const float crouchColliderHeight = 1f;
 
         [Header("Dynamic Movement Variables")]
         private bool disableMovement = false;
@@ -109,6 +107,7 @@ namespace constellations
         private float currentHeavyAttackCooldown = 0;
         private float currentHeavyAttackCharge = 0;
         private bool attackCharging = false;
+        public int playerStars { get; private set; } = 5;
 
         [Header("States")]
         [SerializeField] private State idleState;
@@ -267,7 +266,7 @@ namespace constellations
                     interactingNPC.transform.GetChild(0).gameObject.SetActive(true);
                 }
             }
-            else if (collision.gameObject.CompareTag("Interactable"))
+            else if (collision.gameObject.GetComponent<IInteractable>() != null)
             {
                 canInteractObject = true;
                 //save interactable object so we can easily call the Interact() method from it
@@ -304,7 +303,7 @@ namespace constellations
                 }
                 interactingNPC = null;
             }
-            else if (collision.gameObject.CompareTag("Interactable"))
+            else if (collision.gameObject.GetComponent<IInteractable>() != null)
             {
                 canInteractObject = false;
                 if (interactingObject == null) return;
