@@ -33,6 +33,7 @@ public class MenuButtonScript : MonoBehaviour, IPointerEnterHandler, IPointerExi
     public void ActivateDecal()
     {
         text.color = Color.white;
+        if (leftDecal == null || rightDecal == null) return;
         leftDecal.SetActive(true);
         rightDecal.SetActive(true);
     }
@@ -40,6 +41,7 @@ public class MenuButtonScript : MonoBehaviour, IPointerEnterHandler, IPointerExi
     public void DeactivateDecal()
     {
         text.color = inactiveColor;
+        if (leftDecal == null || rightDecal == null) return;
         leftDecal.SetActive(false);
         rightDecal.SetActive(false);
     }

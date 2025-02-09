@@ -1282,6 +1282,7 @@ MonoBehaviour:
     m_Bits: 8
   cameraFollowObject: {fileID: 0}
   chargeKnob: {fileID: 6621353353191369022}
+  screamSound: {fileID: 8300000, guid: 96e705bfcaded9a4aae699fd33251e14, type: 3}
   didInteractObject: 0
   idleState: {fileID: 9184466616680123914}
   walkState: {fileID: 8807104708035124978}
