@@ -20,6 +20,8 @@ namespace constellations
         [SerializeField] private LayerMask ground;
         [SerializeField] private GameObject cameraFollowObject;
         [SerializeField] private RectTransform chargeKnob;
+        private AudioSource audioSource;
+        [SerializeField] private AudioClip screamSound;
 
         //reminder that constant variables can only be referenced via the class
         //and not via an object made from the class, so PlayerController.maxSpeed
@@ -136,6 +138,7 @@ namespace constellations
             //fetch rigidbody and collider
             rb2d = GetComponent<Rigidbody2D>();
             animator = GetComponent<Animator>();
+            audioSource = GetComponent<AudioSource>();
 
             //this populates all states' "core" variable as this object
             SetupInstances();
@@ -568,7 +571,7 @@ namespace constellations
 
         private void HandleScream()
         {
-            if (!screamEnabled) return;
+            if (!screamEnabled || !groundSensor.grounded) return;
             StartCoroutine(Scream());
         }
 
@@ -939,7 +942,9 @@ namespace constellations
         private IEnumerator Scream()
         {
             screaming = true;
-            yield return new WaitForSeconds(screamState.anim.length);
+            yield return new WaitForSeconds(0.35f);
+            audioSource.PlayOneShot(screamSound);
+            yield return new WaitForSeconds(screamState.anim.length - 0.35f);
             screaming = false;
         }
 

@@ -14,6 +14,9 @@ namespace constellations
         [SerializeField] private GameObject player;
         private PlayerController playerController;
         [SerializeField] private LayerMask ground;
+        [SerializeField] private Color damagedColor;
+        [SerializeField] private AudioClip damageSound;
+        [SerializeField] private AudioClip deathSound;
 
         [Header("Constant Variables")]
         private const float awakeCheckFrequency = 0.5f;
@@ -46,6 +49,7 @@ namespace constellations
         private Vector2 direction = Vector2.zero;
         private bool jumpOnCD = false;
         private Coroutine lerpSpeed;
+        private bool playedDamageSound = false;
 
         [Header("States")]
         [SerializeField] private State walkingState;
@@ -59,8 +63,10 @@ namespace constellations
 
         #region standard methods
 
-        void Awake()
+        protected override void Awake()
         {
+            base.Awake();
+
             //grab some references necessary later
             playerController = player.GetComponent<PlayerController>();
 
@@ -222,6 +228,19 @@ namespace constellations
             jumpOnCD = false;
         }
 
+        public override void TakeDamage(float _damage, float _invulDuration)
+        {
+            base.TakeDamage(_damage, _invulDuration);
+
+            if (!isDead)
+            {
+                if (!playedDamageSound)
+                audioSource.PlayOneShot(damageSound);
+                playedDamageSound = true;
+                enemySprite.color = damagedColor;
+            }
+        }
+
         private void Knockback()
         {
             doKnockback = false;
@@ -274,9 +293,10 @@ namespace constellations
         protected override IEnumerator Death()
         {
             StartCoroutine(base.Death());
+            audioSource.PlayOneShot(deathSound);
             rb2d.drag = deceleration;
             //below is a placeholder
-            this.gameObject.GetComponentInChildren<SpriteRenderer>().color = Color.red;
+            enemySprite.color = Color.red;
 
             yield return new WaitForSeconds(deathDuration);
             Destroy(this.gameObject);
@@ -286,6 +306,8 @@ namespace constellations
         {
             yield return new WaitForSeconds(damagedState.animLength);
             damaged = false;
+            enemySprite.color = Color.white;
+            playedDamageSound = false;
         }
 
         private void SelectState()

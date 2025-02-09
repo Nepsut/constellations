@@ -8,7 +8,7 @@ namespace constellations
     public abstract class EnemyBase : StateMachineCore, IDamageable
     {
         [Header("Enemy Base Variables")]
-        [SerializeField] private SpriteRenderer enemySprite;
+        [SerializeField] protected SpriteRenderer enemySprite;
         [SerializeField] private float health = 100f;
         public bool isDead { get; private set; } = false;
         protected bool isDying = false;
@@ -16,8 +16,14 @@ namespace constellations
         public bool wasHeavyHit { get; set; } = false;
         private float invulnerableDuration = 0;
         protected Coroutine damagedStateTimer;
+        protected AudioSource audioSource;
 
-        public void TakeDamage(float _damage, float _invulDuration)
+        protected virtual void Awake()
+        {
+            audioSource = GetComponent<AudioSource>();
+        }
+
+        public virtual void TakeDamage(float _damage, float _invulDuration)
         {
             if (invulnerableDuration > 0) return;
             invulnerableDuration = _invulDuration;
