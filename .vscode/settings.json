@@ -59,6 +59,6 @@
     "dotnet.defaultSolution": "constellations.sln",
     "editor.fontFamily": "Monaspace Xenon, monospace",
     "editor.fontLigatures": "'calt', 'liga', 'ss01', 'ss02', 'ss03', 'ss04', 'ss05', 'ss06', 'ss07', 'ss08', 'ss09'",
-    "editor.fontSize": 14,
+    "editor.fontSize": 16,
     "dotnet.preferCSharpExtension": true,
 }

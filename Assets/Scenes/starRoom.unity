@@ -618,6 +618,10 @@ PrefabInstance:
       propertyPath: player
       value: 
       objectReference: {fileID: 395196204}
+    - target: {fileID: 5727464384627285171, guid: d27c3f76f11156f4ab54dc4f3d1e107d, type: 3}
+      propertyPath: damagedColor.a
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7111954779426098534, guid: d27c3f76f11156f4ab54dc4f3d1e107d, type: 3}
       propertyPath: m_Name
       value: TestSkeleton

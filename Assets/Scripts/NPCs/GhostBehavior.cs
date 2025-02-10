@@ -105,7 +105,7 @@ namespace constellations
         {
             base.Update();
             
-            if (touchingPlayer && !playerController.invulnerable && !isDead)
+            if (touchingPlayer && !playerController.invulnerable && !playerController.invulnerableOverride && !isDead)
             {
                 playerController.DamagePlayer(damage);
             }

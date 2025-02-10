@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace constellations
@@ -14,6 +12,8 @@ namespace constellations
         public int attackBuffs;
         public int knockbackBuffs;
         public Vector3 savedPosition;
+        public bool[] playedLevels;
+        public int playerStars;
 
         [Header("Dialogue Variables")]
         public int kindness;
@@ -28,6 +28,13 @@ namespace constellations
             this.attackEnabled = true;
             this.screamEnabled = true;
             this.savedPosition = Vector3.zero;
+            this.playerStars = 9;
+            this.playedLevels = new bool[9];
+            for (int i = 0; i < playedLevels.Length; i++)
+            {
+                playedLevels[i] = false;
+            }
+
 
             //dialogue variables
             this.kindness = 0;

@@ -134,7 +134,7 @@ MonoBehaviour:
   player: {fileID: 0}
   damageSound: {fileID: 8300000, guid: 3c797c35924492242a3d71cde10e7185, type: 3}
   deathSound: {fileID: 8300000, guid: e670a144e906ff741bf59c0d530cae79, type: 3}
-  damagedColor: {r: 1, g: 0.5424528, b: 0.5424528, a: 0}
+  damagedColor: {r: 1, g: 0.5424528, b: 0.5424528, a: 1}
   idleState: {fileID: 8165294204895690612}
   damagedState: {fileID: 7578362379153864497}
   deathState: {fileID: 5165779939031350522}

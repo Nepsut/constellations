@@ -16,7 +16,6 @@ namespace constellations
         [Header("Engine Variables")]
         [SerializeField] private InputReader playerInput;
         [SerializeField] private BoxCollider2D attackHitbox;
-        private const float colliderOffset = 0.4f;
         [SerializeField] private LayerMask ground;
         [SerializeField] private GameObject cameraFollowObject;
         [SerializeField] private RectTransform chargeKnob;
@@ -65,7 +64,6 @@ namespace constellations
         private const int attackBuffAmount = 5;
         private const float attackChargeTime = 1f;
         public const int knockbackbBuffAmount = 5;
-        private const float screamBufferTime = 0.1f;
 
         [Header("Dynamic Action Variables")]
         private int attackBuffs = 0;                //add 1 every time player's attack gets buffed
@@ -86,7 +84,6 @@ namespace constellations
         [HideInInspector] public bool didInteractObject = false;
         private GameObject interactingNPC;
         private GameObject interactingObject;
-        private GameObject saveObject;
 
         [Header("Other Const Variables")]
         private const int maxHealth = 100;
@@ -105,11 +102,14 @@ namespace constellations
         {
             get { return invulnerableTime > 0; }
         }
+        public bool invulnerableOverride = false;
+        public bool forceStationary = false;
         private float attackRemainingDuration = 0;
         private float currentHeavyAttackCooldown = 0;
         private float currentHeavyAttackCharge = 0;
         private bool attackCharging = false;
         public int playerStars { get; private set; } = 5;
+        public bool[] playedLevels = new bool[9];
 
         [Header("States")]
         [SerializeField] private State idleState;
@@ -139,6 +139,10 @@ namespace constellations
             rb2d = GetComponent<Rigidbody2D>();
             animator = GetComponent<Animator>();
             audioSource = GetComponent<AudioSource>();
+            for (int i = 0; i < playedLevels.Length; i++)
+            {
+                playedLevels[i] = false;
+            }
 
             //this populates all states' "core" variable as this object
             SetupInstances();
@@ -235,6 +239,11 @@ namespace constellations
             
             SelectState();
             machine.state.Do();
+
+            if (forceStationary)
+            {
+                rb2d.velocity = Vector2.zero;
+            }
         }
 
         private void Update()
@@ -330,21 +339,21 @@ namespace constellations
         {
             if (heavyAttackCoolingDown)
             {
-                MenuManager.instance.ChargeUI(currentHeavyAttackCooldown / heavyAttackCooldown);
+                UIManager.instance.ChargeUI(currentHeavyAttackCooldown / heavyAttackCooldown);
             }
             else if (attackCharging)
             {
-                MenuManager.instance.ChargeUI(currentHeavyAttackCharge / attackChargeTime);
+                UIManager.instance.ChargeUI(currentHeavyAttackCharge / attackChargeTime);
             }
             else
             {
-                MenuManager.instance.ChargeUI(0);
+                UIManager.instance.ChargeUI(0);
             }
         }
 
         private void UpdateHealthStatus()
         {
-            MenuManager.instance.HealthUI(currentHealth, maxHealth);
+            UIManager.instance.HealthUI(currentHealth, maxHealth);
         }
 
         #endregion
@@ -971,7 +980,7 @@ namespace constellations
 
             if (currentHealth < 0)
             {
-                MenuManager.instance.Fainted();
+                UIManager.instance.Fainted();
             }
         }
 
@@ -986,6 +995,8 @@ namespace constellations
             this.screamEnabled = data.screamEnabled;
             this.attackBuffs = data.attackBuffs;
             this.knockbackBuffs = data.knockbackBuffs;
+            this.playerStars = data.playerStars;
+            this.playedLevels = data.playedLevels;
         }
 
         public void SaveData(ref GameData data)
@@ -995,6 +1006,8 @@ namespace constellations
             data.screamEnabled = this.screamEnabled;
             data.attackBuffs = this.attackBuffs;
             data.knockbackBuffs = this.knockbackBuffs;
+            data.playerStars = this.playerStars;
+            data.playedLevels = this.playedLevels;
         }
 
         #endregion
