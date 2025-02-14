@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 namespace constellations
@@ -24,7 +25,9 @@ namespace constellations
             {
                 if (leavingLevel > 0)
                 player.playedLevels[leavingLevel-1] = true;
-                StartCoroutine(UIManager.instance.HandleLevelChange(levelToEnter.sceneID));
+                bool loadDone = false;
+                StartCoroutine(UIManager.instance.HandleLevelChange(levelToEnter.sceneID, gameObject));
+
             }
         }
     }
