@@ -13,13 +13,18 @@ public class DialogueManager : MonoBehaviour
     #region variables
 
     [Header("Engine Variables")]
+    [SerializeField] private PlayerController playerController;
     [SerializeField] private InputReader input;
+    private AudioSource bibidiSource;
+    [SerializeField] private AudioClip catVoice;
+    private AudioClip npcVoice;
 
     [Header("Dialogue UI")]
     [SerializeField] private string playerName;
     [SerializeField] private Sprite playerPortrait;
     private Sprite NPCPortrait;
     private string NPCName;
+    [SerializeField] private GameObject portraitBG;
     [SerializeField] private Image dialogueImage;
     [SerializeField] private TextMeshProUGUI dialogueSpeaker;
     [SerializeField] private GameObject dialoguePanel;
@@ -60,6 +65,12 @@ public class DialogueManager : MonoBehaviour
     private void Start()
     {
         dialoguePanel.SetActive(false);
+        bibidiSource = GetComponent<AudioSource>();
+    }
+
+    private void Update()
+    {
+        transform.position = playerController.transform.position;
     }
 
     #endregion
@@ -67,15 +78,16 @@ public class DialogueManager : MonoBehaviour
     #region dialogue methods
 
     //this enters dialogue with the inkJSON file assigned to the npc
-    public void EnterDialogue(TextAsset inkJSON, Sprite t_portrait, string t_name, Vector3? position = null)
+    public void EnterDialogue(TextAsset inkJSON, AudioClip _npcVoice, string _name, Sprite _portrait = null, Vector3? position = null)
     {
         if (position == null) position = Vector3.zero;
         //first this sets the ink story as the active dialogue and activates dialogue panel
         currentStory = new Story(inkJSON.text);
-        NPCPortrait = t_portrait;
-        NPCName = t_name;
+        NPCPortrait = _portrait;
+        NPCName = _name;
         saveSpot = (Vector3)position;
         dialoguePanel.SetActive(true);
+        npcVoice = _npcVoice;
 
         //continuestory prints dialogue so it's called here
         ContinueStory();
@@ -163,22 +175,31 @@ public class DialogueManager : MonoBehaviour
         int alphaIndex = 0;
 
         //grab tags from current line and show either player portrait or NPC portrait based on last tag in list
-        if (currentStory.currentTags != null)
+        if (currentStory.currentTags.Any())
         {
+            portraitBG.SetActive(true);
             if (currentStory.currentTags.Last() == "Player")
             {
                 dialogueSpeaker.text = playerName;
                 dialogueImage.sprite = playerPortrait;
+                bibidiSource.clip = catVoice;
             }
             else
             {
                 dialogueSpeaker.text = NPCName;
                 dialogueImage.sprite = NPCPortrait;
+                bibidiSource.clip = npcVoice;
             }
             if (currentStory.currentTags[0] == "save")
             {
                 DataPersistenceManager.instance.SaveGame();
             }
+            bibidiSource.Play();
+        }
+        else
+        {
+            portraitBG.SetActive(false);
+            dialogueSpeaker.text = "";
         }
 
         foreach (char c in originalText.ToCharArray())
@@ -194,9 +215,10 @@ public class DialogueManager : MonoBehaviour
         if (stopTyping) dialogueText.text = originalText;
         stopTyping = false;
         isTyping = false;
-        //this is called on advance in case there are choices, does nothing if there are none
         disableInput = true;
+        bibidiSource.Stop();
         yield return new WaitForSeconds(timeBeforeChoices);
+        //this is called on advance in case there are choices, does nothing if there are none
         DisplayChoices();
     }
 

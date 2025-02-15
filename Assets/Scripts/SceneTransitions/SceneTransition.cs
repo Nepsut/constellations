@@ -25,9 +25,7 @@ namespace constellations
             {
                 if (leavingLevel > 0)
                 player.playedLevels[leavingLevel-1] = true;
-                bool loadDone = false;
-                StartCoroutine(UIManager.instance.HandleLevelChange(levelToEnter.sceneID, gameObject));
-
+                UIManager.instance.StartLevelChange(levelToEnter.sceneID);
             }
         }
     }

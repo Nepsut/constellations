@@ -12,5 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2752c6817322f184782eb36dc145df12, type: 3}
   m_Name: 1_Confusion
   m_EditorClassIdentifier: 
-  sceneMusic: {fileID: 8300000, guid: 4a7a879c128441640a3089bf69d58e07, type: 3}
+  <sceneMusic>k__BackingField: {fileID: 0}
   <sceneID>k__BackingField: 1
+  <startPosition>k__BackingField: {x: -2.3, y: 5.6, z: 0}

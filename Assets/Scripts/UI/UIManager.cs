@@ -146,7 +146,12 @@ namespace constellations
             SceneManager.LoadScene(1);
         }
 
-        public IEnumerator HandleLevelChange(int _levelToLoad, GameObject source)
+        public void StartLevelChange(int _levelToLoad)
+        {
+            StartCoroutine(HandleLevelChange(_levelToLoad));
+        }
+
+        private IEnumerator HandleLevelChange(int _levelToLoad)
         {
             TransitionFadeRect.gameObject.SetActive(true);
             playerController.invulnerableOverride = true;
@@ -162,7 +167,6 @@ namespace constellations
             playerController.invulnerableOverride = false;
             playerController.forceStationary = false;
             TransitionFadeRect.gameObject.SetActive(false);
-            Destroy(source);
         }
 
         public void QuitToMainMenu()

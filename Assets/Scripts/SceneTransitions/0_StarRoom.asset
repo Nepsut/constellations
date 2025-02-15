@@ -12,5 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2752c6817322f184782eb36dc145df12, type: 3}
   m_Name: 0_StarRoom
   m_EditorClassIdentifier: 
-  sceneMusic: {fileID: 8300000, guid: a2a87ed007ed47d44ab1a18a7e573035, type: 3}
+  <sceneMusic>k__BackingField: {fileID: 8300000, guid: a2a87ed007ed47d44ab1a18a7e573035, type: 3}
   <sceneID>k__BackingField: 0
+  <startPosition>k__BackingField: {x: -33.42, y: -4.8, z: 0}
