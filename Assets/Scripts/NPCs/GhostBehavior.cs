@@ -111,7 +111,7 @@ namespace constellations
             }
         }
 
-        private void OnCollisionEnter2D(Collision2D collider)
+        private void OnTriggerEnter2D(Collider2D collider)
         {
             if (collider == null) return;
 
@@ -119,7 +119,7 @@ namespace constellations
 
         }
 
-        private void OnCollisionExit2D(Collision2D collider)
+        private void OnTriggerExit2D(Collider2D collider)
         {
             if (collider != null)
             {

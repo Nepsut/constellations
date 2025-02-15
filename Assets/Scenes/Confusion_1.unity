@@ -1631,6 +1631,7 @@ GameObject:
   - component: {fileID: 360761575}
   - component: {fileID: 360761574}
   - component: {fileID: 360761576}
+  - component: {fileID: 360761577}
   m_Layer: 0
   m_Name: DialogueManager
   m_TagString: Untagged
@@ -1650,12 +1651,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87e29a3fe2cc66d4f847d1cf52c7935e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerController: {fileID: 0}
+  playerController: {fileID: 1942157507}
   input: {fileID: 11400000, guid: ca9e00dcc54345f4f9f6261400cd6146, type: 2}
-  catVoice: {fileID: 0}
+  catVoice: {fileID: 8300000, guid: dcf33c9ba9bf8d34bb3bf2bd01819ff9, type: 3}
   playerName: Car
   playerPortrait: {fileID: 21300000, guid: 87440e3b57668d344b21e97b3b815ff0, type: 3}
-  portraitBG: {fileID: 0}
+  portraitBG: {fileID: 735579036}
   dialogueImage: {fileID: 1109725580}
   dialogueSpeaker: {fileID: 2096004555}
   dialoguePanel: {fileID: 1789142798}
@@ -1690,6 +1691,102 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ffae93fd6a4e07b45ac31dcac2de6cba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!82 &360761577
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 360761573}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 1
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &362120347
 GameObject:
   m_ObjectHideFlags: 0
@@ -6338,6 +6435,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   input: {fileID: 11400000, guid: ca9e00dcc54345f4f9f6261400cd6146, type: 2}
   playerController: {fileID: 1942157507}
+  musicSource: {fileID: 1064712498}
   healthSlider: {fileID: 376788150}
   chargeKnob: {fileID: 1920532027}
   heartHolder: {fileID: 1951368620}
@@ -8620,7 +8718,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1789142799
 RectTransform:
   m_ObjectHideFlags: 0

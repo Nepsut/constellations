@@ -25,7 +25,7 @@ namespace constellations
             {
                 if (leavingLevel > 0)
                 player.playedLevels[leavingLevel-1] = true;
-                UIManager.instance.StartLevelChange(levelToEnter.sceneID);
+                UIManager.instance.StartLevelChange(levelToEnter);
             }
         }
     }

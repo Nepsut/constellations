@@ -14,6 +14,7 @@ namespace constellations
         [Header("Engine Variables")]
         [SerializeField] private InputReader input;
         [SerializeField] private PlayerController playerController;
+        [SerializeField] private AudioSource musicSource;
 
         [Header("HUD")]
         [SerializeField] private Slider healthSlider;
@@ -146,12 +147,12 @@ namespace constellations
             SceneManager.LoadScene(1);
         }
 
-        public void StartLevelChange(int _levelToLoad)
+        public void StartLevelChange(SceneData _sceneData)
         {
-            StartCoroutine(HandleLevelChange(_levelToLoad));
+            StartCoroutine(HandleLevelChange(_sceneData));
         }
 
-        private IEnumerator HandleLevelChange(int _levelToLoad)
+        private IEnumerator HandleLevelChange(SceneData _sceneData)
         {
             TransitionFadeRect.gameObject.SetActive(true);
             playerController.invulnerableOverride = true;
@@ -159,9 +160,12 @@ namespace constellations
             LeanTween.color(TransitionFadeRect, Color.black, transitionTime).setEaseInSine();
             yield return new WaitForSeconds(transitionTime);
 
-            AsyncOperation asyncLoadScene = SceneManager.LoadSceneAsync(_levelToLoad);
+            AsyncOperation asyncLoadScene = SceneManager.LoadSceneAsync(_sceneData.sceneID);
             while(!asyncLoadScene.isDone) yield return null;
 
+            playerController.transform.position = _sceneData.startPosition;
+            musicSource.clip = _sceneData.sceneMusic;
+            musicSource.Play();
             LeanTween.color(TransitionFadeRect, Color.clear, transitionTime).setEaseOutSine();
             yield return new WaitForSeconds(transitionTime);
             playerController.invulnerableOverride = false;
