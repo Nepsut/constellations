@@ -506,7 +506,7 @@ MonoBehaviour:
   ground:
     serializedVersion: 2
     m_Bits: 8
-  damagedColor: {r: 1, g: 0.54509807, b: 0.54509807, a: 0}
+  damagedColor: {r: 1, g: 0.54509807, b: 0.54509807, a: 1}
   damageSound: {fileID: 8300000, guid: 7dbeb1281b35ab6478251ea746eb8ec0, type: 3}
   deathSound: {fileID: 8300000, guid: 0856a7b73eb8f724c8e760b3a88ad8c0, type: 3}
   walkingState: {fileID: 2049492083045246236}

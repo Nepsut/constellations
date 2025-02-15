@@ -105,13 +105,13 @@ namespace constellations
         {
             base.Update();
             
-            if (touchingPlayer && !playerController.invulnerable && !isDead)
+            if (touchingPlayer && !playerController.invulnerable && !playerController.invulnerableOverride && !isDead)
             {
                 playerController.DamagePlayer(damage);
             }
         }
 
-        private void OnCollisionEnter2D(Collision2D collider)
+        private void OnTriggerEnter2D(Collider2D collider)
         {
             if (collider == null) return;
 
@@ -119,7 +119,7 @@ namespace constellations
 
         }
 
-        private void OnCollisionExit2D(Collision2D collider)
+        private void OnTriggerExit2D(Collider2D collider)
         {
             if (collider != null)
             {

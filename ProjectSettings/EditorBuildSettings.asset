@@ -9,9 +9,15 @@ EditorBuildSettings:
     path: Assets/Scenes/SampleScene.unity
     guid: 2cda990e2423bbf4892e6590ba056729
   - enabled: 1
-    path: Assets/Scenes/MainMenu.unity
-    guid: 5b75251996d30e04a96eaeec4e158994
+    path: Assets/Scenes/starRoom.unity
+    guid: 07789363e11e855468c74110c21f39f1
   - enabled: 1
     path: Assets/Scenes/Confusion_1.unity
     guid: 044940b05c00e8941934b42210f950eb
+  - enabled: 1
+    path: Assets/Scenes/Denial_2.unity
+    guid: b538ec2cdcfe0624f9d7a47f155134ab
+  - enabled: 1
+    path: Assets/Scenes/MainMenu.unity
+    guid: 5b75251996d30e04a96eaeec4e158994
   m_configObjects: {}

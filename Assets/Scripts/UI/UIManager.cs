@@ -6,14 +6,15 @@ using UnityEngine.SceneManagement;
 
 namespace constellations
 {
-    public class MenuManager : MonoBehaviour
+    public class UIManager : MonoBehaviour
     {
         //singleton
-        public static MenuManager instance;
+        public static UIManager instance;
 
         [Header("Engine Variables")]
         [SerializeField] private InputReader input;
         [SerializeField] private PlayerController playerController;
+        [SerializeField] private AudioSource musicSource;
 
         [Header("HUD")]
         [SerializeField] private Slider healthSlider;
@@ -32,6 +33,11 @@ namespace constellations
 
         [Header("Faint Menu")]
         [SerializeField] private GameObject faintedScreen;
+
+        [Header("SceneManagement")]
+        [SerializeField] private RectTransform TransitionFadeRect;
+        [SerializeField] private Image TransitionFadeImg;
+        private const float transitionTime = 2f;
 
         private bool gamePaused = false;
 
@@ -139,6 +145,32 @@ namespace constellations
             DialogueManager.instance.UnsubscribeDialogueEvents();
             input.PauseEvent -= HandlePause;
             SceneManager.LoadScene(1);
+        }
+
+        public void StartLevelChange(SceneData _sceneData)
+        {
+            StartCoroutine(HandleLevelChange(_sceneData));
+        }
+
+        private IEnumerator HandleLevelChange(SceneData _sceneData)
+        {
+            TransitionFadeRect.gameObject.SetActive(true);
+            playerController.invulnerableOverride = true;
+            playerController.forceStationary = true;
+            LeanTween.color(TransitionFadeRect, Color.black, transitionTime).setEaseInSine();
+            yield return new WaitForSeconds(transitionTime);
+
+            AsyncOperation asyncLoadScene = SceneManager.LoadSceneAsync(_sceneData.sceneID);
+            while(!asyncLoadScene.isDone) yield return null;
+
+            playerController.transform.position = _sceneData.startPosition;
+            musicSource.clip = _sceneData.sceneMusic;
+            musicSource.Play();
+            LeanTween.color(TransitionFadeRect, Color.clear, transitionTime).setEaseOutSine();
+            yield return new WaitForSeconds(transitionTime);
+            playerController.invulnerableOverride = false;
+            playerController.forceStationary = false;
+            TransitionFadeRect.gameObject.SetActive(false);
         }
 
         public void QuitToMainMenu()

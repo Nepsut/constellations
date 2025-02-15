@@ -8,7 +8,12 @@ namespace constellations
     public abstract class InteractBase : MonoBehaviour, IInteractable
     {
         private bool checkingInteractions = false;
-        [SerializeField] protected PlayerController playerController;
+        protected PlayerController playerController;
+
+        private void Start()
+        {
+            playerController = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
+        }
 
         private void Update()
         {
