@@ -9,13 +9,7 @@ namespace constellations
         [SerializeField] private SceneData levelToEnter;
         [Header("0 for Star Room, others in order!!!!")]
         [SerializeField] private int leavingLevel;
-        private PlayerController player;
-
-        private void Start()
-        {
-            if (player == null)
-            player = GameObject.FindWithTag("Player").GetComponent<PlayerController>();
-        }
+        [SerializeField] private bool levelGaveStar;
 
         private void OnTriggerEnter2D(Collider2D collider)
         {
@@ -23,9 +17,7 @@ namespace constellations
 
             if (collider.gameObject.CompareTag("Player"))
             {
-                if (leavingLevel > 0)
-                player.playedLevels[leavingLevel-1] = true;
-                UIManager.instance.StartLevelChange(levelToEnter);
+                UIManager.instance.StartLevelChange(levelToEnter, leavingLevel, levelGaveStar);
             }
         }
     }

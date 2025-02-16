@@ -66,7 +66,11 @@ namespace constellations
             resumeButton.onClick.AddListener(() => ResumeGame());
             settingsButton.onClick.AddListener(() => OpenSettings());
             closeSettingsButton.onClick.AddListener(() => CloseSettings());
+            RefreshStars();
+        }
 
+        private void RefreshStars()
+        {
             for (int i = 0; i < heartHolder.childCount; i++)
             {
                 stars[i] = heartHolder.GetChild(i).gameObject;
@@ -147,18 +151,25 @@ namespace constellations
             SceneManager.LoadScene(1);
         }
 
-        public void StartLevelChange(SceneData _sceneData)
+        public void StartLevelChange(SceneData _sceneData, int _leavingLevel, bool _levelGaveStar)
         {
-            StartCoroutine(HandleLevelChange(_sceneData));
+            StartCoroutine(HandleLevelChange(_sceneData, _leavingLevel, _levelGaveStar));
         }
 
-        private IEnumerator HandleLevelChange(SceneData _sceneData)
+        private IEnumerator HandleLevelChange(SceneData _sceneData, int _leavingLevel, bool _levelGaveStar)
         {
             TransitionFadeRect.gameObject.SetActive(true);
             playerController.invulnerableOverride = true;
             playerController.forceStationary = true;
             LeanTween.color(TransitionFadeRect, Color.black, transitionTime).setEaseInSine();
             yield return new WaitForSeconds(transitionTime);
+
+            if (_levelGaveStar && !playerController.playedLevels[_leavingLevel-1])
+            {
+                playerController.playedLevels[_leavingLevel-1] = true;
+                playerController.playerStars--;
+            }
+            RefreshStars();
 
             AsyncOperation asyncLoadScene = SceneManager.LoadSceneAsync(_sceneData.sceneID);
             while(!asyncLoadScene.isDone) yield return null;
@@ -167,9 +178,13 @@ namespace constellations
             musicSource.clip = _sceneData.sceneMusic;
             musicSource.Play();
             LeanTween.color(TransitionFadeRect, Color.clear, transitionTime).setEaseOutSine();
-            yield return new WaitForSeconds(transitionTime);
             playerController.invulnerableOverride = false;
             playerController.forceStationary = false;
+            if ((playerController.facingRight && !_sceneData.faceRightOnStart) || (!playerController.facingRight && _sceneData.faceRightOnStart))
+            {
+                playerController.CatFlip();
+            }
+            yield return new WaitForSeconds(transitionTime);
             TransitionFadeRect.gameObject.SetActive(false);
         }
 

@@ -223,7 +223,7 @@ namespace constellations
             //below is a placeholder
             enemySprite.color = Color.red;
 
-            yield return new WaitForSeconds(deathDuration);
+            yield return new WaitForSeconds(deathSound.length);
             Destroy(this.gameObject);
         }
 
