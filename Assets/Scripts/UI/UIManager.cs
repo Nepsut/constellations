@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
+using Cinemachine;
 
 namespace constellations
 {
@@ -15,6 +16,7 @@ namespace constellations
         [SerializeField] private InputReader input;
         [SerializeField] private PlayerController playerController;
         [SerializeField] private AudioSource musicSource;
+        [SerializeField] private CinemachineVirtualCamera cam;
 
         [Header("HUD")]
         [SerializeField] private Slider healthSlider;
@@ -184,6 +186,9 @@ namespace constellations
             {
                 playerController.CatFlip();
             }
+            cam.m_Lens.OrthographicSize = _sceneData.lensOrtho;
+            cam.GetCinemachineComponent<CinemachineFramingTransposer>().m_ScreenY = _sceneData.screenY;
+
             yield return new WaitForSeconds(transitionTime);
             TransitionFadeRect.gameObject.SetActive(false);
         }

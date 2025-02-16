@@ -15,6 +15,10 @@ namespace constellations
 
         [Header("Engine Variables")]
         [SerializeField] private InputReader playerInput;
+        [SerializeField] private BoxCollider2D playerColliderBot;
+        [SerializeField] private BoxCollider2D playerColliderTop;
+        [SerializeField] private PolygonCollider2D playerColliderR;
+        [SerializeField] private PolygonCollider2D playerColliderL;
         [SerializeField] private BoxCollider2D attackHitbox;
         [SerializeField] private LayerMask ground;
         [SerializeField] private GameObject cameraFollowObject;
@@ -37,6 +41,14 @@ namespace constellations
         private const float lowJumpMult = 1.8f;
         private const float airLinearDrag = 2.5f;
         public const float runSpeedMult = 1.8f;
+        private const float topColliderOffsetNormal = 1.072832f;
+        private const float topColliderOffsetSneak = 0.55f;
+        private const float botColliderOffsetNormal = 0.5f;
+        private const float botColliderOffsetSneak = 0.35f;
+        private const float botColliderYNormal = 1.0f;
+        private const float botColliderYSneak = 0.7f;
+        private const float sidesColliderYNormal = 0.0f;
+        private const float sidesColliderYSneak = -0.52f;
 
         [Header("Dynamic Movement Variables")]
         private bool disableMovement = false;
@@ -547,7 +559,20 @@ namespace constellations
                 running = false;
                 runningHelper = false;
                 //ADD COLLIDER ADJUSTMENTS HERE
-                StartCoroutine(CameraManager.instance.CrouchOffset(true));                          //pan cam down
+                Vector2 temp = playerColliderTop.offset;
+                temp.y = topColliderOffsetSneak;
+                playerColliderTop.offset = temp;
+                temp = playerColliderBot.size;
+                temp.y = botColliderYSneak;
+                playerColliderBot.size = temp;
+                temp = playerColliderBot.offset;
+                temp.y = botColliderOffsetSneak;
+                playerColliderBot.offset = temp;
+                temp = playerColliderR.offset;
+                temp.y = sidesColliderYSneak;
+                playerColliderR.offset = temp;
+                playerColliderL.offset = temp;
+                //StartCoroutine(CameraManager.instance.CrouchOffset(true));                          //pan cam down
             }
         }
 
@@ -555,7 +580,21 @@ namespace constellations
         {
             crouching = false;
             //ADD COLLIDER ADJUSTMENTS HERE
-            StartCoroutine(CameraManager.instance.CrouchOffset(false));                             //pan cam to normal
+            Vector2 temp = playerColliderTop.offset;
+            temp.y = topColliderOffsetNormal;
+            playerColliderTop.offset = temp;
+            temp = playerColliderBot.size;
+            temp.y = botColliderYNormal;
+            playerColliderBot.size = temp;
+            temp = playerColliderBot.offset;
+            temp.y = botColliderOffsetNormal;
+            playerColliderBot.offset = temp;
+            temp = playerColliderR.offset;
+            temp.y = sidesColliderYNormal;
+            playerColliderR.offset = temp;
+            playerColliderL.offset = temp;
+            //StartCoroutine(CameraManager.ins
+            //StartCoroutine(CameraManager.instance.CrouchOffset(false));                             //pan cam to normal
         }
 
         private void HandleAttack()

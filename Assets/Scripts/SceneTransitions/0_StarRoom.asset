@@ -16,4 +16,5 @@ MonoBehaviour:
   <sceneID>k__BackingField: 0
   <startPosition>k__BackingField: {x: -33.42, y: -5, z: 0}
   <faceRightOnStart>k__BackingField: 1
-  <givesStar>k__BackingField: 0
+  <lensOrtho>k__BackingField: 4.5
+  <screenY>k__BackingField: 0.65
