@@ -1,18 +1,23 @@
 # constellations
+
 **A little tutorial:**
 
--click or use 'W'&'S' keys to move in menus
+-click or use 'W'&'S' keys to move in menus ('Enter' to select)
 
--pause works from 'esc'
+-NPC dialogue works with 'Space' or clicking
 
--player moves from WASD
+-pause works from 'Esc'
 
--jump works pressing SPACE
+-player moves with WASD
 
--interact with NPS's pressing 'F'
+-jump works by pressing 'Space'
 
--attack clicking left mousebutton
+-interact with NPC's & objects by pressing 'F'
 
--hold down left mousebutton for a long range attack
+-attack by clicking left mousebutton
+
+-hold down left mousebutton for a stronger attack
 
 -'SHIFT' stands for speed
+
+-'CTRL' to crouch
