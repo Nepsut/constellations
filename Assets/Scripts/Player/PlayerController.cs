@@ -108,7 +108,7 @@ namespace constellations
         private float currentHeavyAttackCooldown = 0;
         private float currentHeavyAttackCharge = 0;
         private bool attackCharging = false;
-        public int playerStars { get; private set; } = 5;
+        public int playerStars = 9;
         public bool[] playedLevels = new bool[9];
 
         [Header("States")]
@@ -723,7 +723,7 @@ namespace constellations
         #region movement actions
 
         //THIS THING FLIPS CAT, LITERALLY INSANE
-        private void CatFlip()
+        public void CatFlip()
         {
             if (facingRight)
             {

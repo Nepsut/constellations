@@ -85437,6 +85437,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SceneTransition
       objectReference: {fileID: 0}
+    - target: {fileID: 6096678398166694322, guid: edc16c684b21050458756014bd29afba, type: 3}
+      propertyPath: levelGaveStar
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

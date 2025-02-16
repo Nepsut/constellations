@@ -8,11 +8,12 @@ namespace constellations
     {
         [SerializeField] private Transform starHolder;
         private GameObject[] stars = new GameObject[9];
-        [SerializeField] private PlayerController playerController;
+        private PlayerController playerController;
 
         // Start is called before the first frame update
         void Start()
         {
+            playerController = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
             for (int i = 0; i < starHolder.childCount; i++)
             {
                 stars[i] = starHolder.GetChild(i).gameObject;
