@@ -9,7 +9,7 @@ namespace constellations
         #region variables
 
         [Header("Engine Variables")]
-        [SerializeField] private GameObject player;
+        private GameObject player;
         private PlayerController playerController;
         [SerializeField] private AudioClip damageSound;
         [SerializeField] private AudioClip deathSound;
@@ -53,17 +53,17 @@ namespace constellations
         {
             base.Awake();
 
-            //grab some references necessary later
-            playerController = player.GetComponent<PlayerController>();
-
             SetupInstances();   //setup state machine
         }
 
         // Start is called before the first frame update
         void Start()
         {
-            //set allowespeed to max speed for now
+            //set allowedspeed to max speed for now
             allowedSpeed = maxSpeed;
+            //grab some references necessary later
+            player = GameObject.FindGameObjectWithTag("Player");
+            playerController = player.GetComponent<PlayerController>();
             StartCoroutine(AwakeCheck());
         }
 

@@ -20,9 +20,11 @@ namespace constellations
         {
             if (instance != null)
             {
-                Debug.Log("Found more than one DataPersistenceManager");
+                Debug.Log("Found more than one DataPersistenceManager, fixing");
+                Destroy(gameObject);
             }
-            else instance = this;
+            instance = this;
+            DontDestroyOnLoad(gameObject);
         }
 
         private void Start()

@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
+using Cinemachine;
 
 namespace constellations
 {
@@ -15,6 +16,7 @@ namespace constellations
         [SerializeField] private InputReader input;
         [SerializeField] private PlayerController playerController;
         [SerializeField] private AudioSource musicSource;
+        [SerializeField] private CinemachineVirtualCamera cam;
 
         [Header("HUD")]
         [SerializeField] private Slider healthSlider;
@@ -43,14 +45,14 @@ namespace constellations
 
         private void Awake()
         {
-            if (instance == null)
+            if (instance != null)
             {
-                instance = this;
+                Debug.Log("Found more than one MenuManager, fixing.");
+                Destroy(gameObject);
+                return;
             }
-            else
-            {
-                Debug.LogError("Found more than one MenuManager, fix this!!");
-            }
+            instance = this;
+            DontDestroyOnLoad(gameObject);
         }
 
         // Start is called before the first frame update
@@ -145,10 +147,13 @@ namespace constellations
         public void ReloadLevel()
         {
             Time.timeScale = 1;
-            playerController.UnsubscribePlayerInputs();
-            DialogueManager.instance.UnsubscribeDialogueEvents();
-            input.PauseEvent -= HandlePause;
-            SceneManager.LoadScene(1);
+            //playerController.UnsubscribePlayerInputs();
+            //DialogueManager.instance.UnsubscribeDialogueEvents();
+            //input.PauseEvent -= HandlePause;
+            playerController.ResetHealth();
+            SceneManager.LoadScene(GameManager.instance.currentScene.sceneID);
+            faintedScreen.SetActive(false);
+            playerController.transform.position = GameManager.instance.currentScene.startPosition;
         }
 
         public void StartLevelChange(SceneData _sceneData, int _leavingLevel, bool _levelGaveStar)
@@ -174,6 +179,9 @@ namespace constellations
             AsyncOperation asyncLoadScene = SceneManager.LoadSceneAsync(_sceneData.sceneID);
             while(!asyncLoadScene.isDone) yield return null;
 
+            if (_sceneData.sceneID == 1) GameManager.instance.inStarRoom = true;
+            else GameManager.instance.inStarRoom = false;
+            GameManager.instance.currentScene = _sceneData;
             playerController.transform.position = _sceneData.startPosition;
             musicSource.clip = _sceneData.sceneMusic;
             musicSource.Play();
@@ -184,6 +192,9 @@ namespace constellations
             {
                 playerController.CatFlip();
             }
+            cam.m_Lens.OrthographicSize = _sceneData.lensOrtho;
+            cam.GetCinemachineComponent<CinemachineFramingTransposer>().m_ScreenY = _sceneData.screenY;
+
             yield return new WaitForSeconds(transitionTime);
             TransitionFadeRect.gameObject.SetActive(false);
         }
@@ -192,6 +203,7 @@ namespace constellations
         {
             input.PauseEvent -= HandlePause;
             playerController.UnsubscribePlayerInputs();
+            DialogueManager.instance.UnsubscribeDialogueEvents();
             SceneManager.LoadScene("MainMenu");
         }
 

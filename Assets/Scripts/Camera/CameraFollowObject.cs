@@ -8,6 +8,7 @@ namespace constellations
         //init engine variables
         [SerializeField] private GameObject player;
         [SerializeField] private float distance;
+        public static CameraFollowObject instance;
 
         //init const variables
         private const float flipDuration = 0.5f;
@@ -15,6 +16,16 @@ namespace constellations
 
         //init other variables
         private bool facingRight;
+
+        private void Awake()
+        {
+            if (instance != null)
+            {
+                Destroy(gameObject);
+            }
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
 
         // Start is called before the first frame update
         void Start()

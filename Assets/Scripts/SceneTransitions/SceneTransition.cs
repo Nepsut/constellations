@@ -7,7 +7,7 @@ namespace constellations
     {
         [Header("Drag a ScriptableObject below")]
         [SerializeField] private SceneData levelToEnter;
-        [Header("0 for Star Room, others in order!!!!")]
+        [Header("1 for Star Room, level number +1 for others!")]
         [SerializeField] private int leavingLevel;
         [SerializeField] private bool levelGaveStar;
 
