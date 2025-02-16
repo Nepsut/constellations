@@ -30,10 +30,14 @@ namespace constellations
 
         void Awake()
         {
-            if (instance == null)
+            if (instance != null)
             {
-                instance = this;
+                Debug.Log("Found more than one CameraManager, fixing.");
+                Destroy(gameObject);
+                return;
             }
+            instance = this;
+            DontDestroyOnLoad(gameObject);
 
             for (int i = 0; i < allCameras.Length; i++)
             {

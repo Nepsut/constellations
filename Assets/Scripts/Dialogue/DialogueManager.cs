@@ -56,7 +56,13 @@ public class DialogueManager : MonoBehaviour
 
     private void Awake()
     {
-        if (instance == null) instance = this;
+        if (instance != null)
+        {
+            Debug.Log("Found more than one DialogueManaged, fixing.");
+            Destroy(gameObject);
+        }
+        instance = this;
+        DontDestroyOnLoad(gameObject);
         if (playerName == null || playerName == "") playerName = "Car";
         input.SubmitEvent += HandleSubmit;
         input.ClickEvent += HandleClick;

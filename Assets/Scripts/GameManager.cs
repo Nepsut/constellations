@@ -1,28 +1,24 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace constellations
 {
     public class GameManager : MonoBehaviour
     {
         public static GameManager instance;
-        public bool inStarRoom = true;
+        public bool inStarRoom = false;
+        public SceneData currentScene;
 
         private void Awake()
         {
-            if (instance == null)
+            if (instance != null)
             {
-                instance = this;
+                Debug.Log("Found more than one GameManager, fixing.");
+                Destroy(gameObject);
+                return;
             }
-            else
-            {
-                Debug.LogError("Found more than one GameManager, fix this immediately!!");
-            }
-        }
-
-        // Start is called before the first frame update
-        void Start()
-        {
-            
+            instance = this;
+            DontDestroyOnLoad(gameObject);
         }
 
         // Update is called once per frame

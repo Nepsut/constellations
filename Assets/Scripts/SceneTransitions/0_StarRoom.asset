@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: 0_StarRoom
   m_EditorClassIdentifier: 
   <sceneMusic>k__BackingField: {fileID: 8300000, guid: a2a87ed007ed47d44ab1a18a7e573035, type: 3}
-  <sceneID>k__BackingField: 0
+  <sceneID>k__BackingField: 1
   <startPosition>k__BackingField: {x: -33.42, y: -5, z: 0}
   <faceRightOnStart>k__BackingField: 1
   <lensOrtho>k__BackingField: 4.5

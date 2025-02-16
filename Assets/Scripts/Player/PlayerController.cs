@@ -12,6 +12,7 @@ namespace constellations
         [Header("Management Variables")]
         private bool attackEnabled = true;
         private bool screamEnabled = true;
+        public static PlayerController instance;
 
         [Header("Engine Variables")]
         [SerializeField] private InputReader playerInput;
@@ -147,6 +148,14 @@ namespace constellations
 
         private void Awake()
         {
+            if (instance != null)
+            {
+                Debug.Log("Found more than one Player, fixing.");
+                Destroy(gameObject);
+            }
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+
             //fetch rigidbody and collider
             rb2d = GetComponent<Rigidbody2D>();
             animator = GetComponent<Animator>();
@@ -1021,6 +1030,11 @@ namespace constellations
             {
                 UIManager.instance.Fainted();
             }
+        }
+
+        public void ResetHealth()
+        {
+            currentHealth = maxHealth;
         }
 
         #endregion
