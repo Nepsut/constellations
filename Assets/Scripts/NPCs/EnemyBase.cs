@@ -8,6 +8,8 @@ namespace constellations
     public abstract class EnemyBase : StateMachineCore, IDamageable
     {
         [Header("Enemy Base Variables")]
+        protected GameObject player;
+        protected PlayerController playerController;
         [SerializeField] protected SpriteRenderer enemySprite;
         [SerializeField] private float health = 100f;
         public bool isDead { get; private set; } = false;
@@ -21,6 +23,9 @@ namespace constellations
         protected virtual void Awake()
         {
             audioSource = GetComponent<AudioSource>();
+            //grab some references necessary later
+            player = GameObject.FindGameObjectWithTag("Player");
+            playerController = player.GetComponent<PlayerController>();
         }
 
         public virtual void TakeDamage(float _damage, float _invulDuration)

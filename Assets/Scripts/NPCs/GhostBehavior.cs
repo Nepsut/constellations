@@ -9,8 +9,6 @@ namespace constellations
         #region variables
 
         [Header("Engine Variables")]
-        private GameObject player;
-        private PlayerController playerController;
         [SerializeField] private AudioClip damageSound;
         [SerializeField] private AudioClip deathSound;
         [SerializeField] private Color damagedColor;
@@ -61,9 +59,6 @@ namespace constellations
         {
             //set allowedspeed to max speed for now
             allowedSpeed = maxSpeed;
-            //grab some references necessary later
-            player = GameObject.FindGameObjectWithTag("Player");
-            playerController = player.GetComponent<PlayerController>();
             StartCoroutine(AwakeCheck());
         }
 
@@ -82,8 +77,8 @@ namespace constellations
             }
 
             //grab distance between player and this ghost, then also grab normalized direction for movement
-            distance = Vector2.Distance(transform.position, player.transform.position);
-            direction = (player.transform.position - transform.position).normalized;
+            distance = Vector2.Distance(transform.position, playerController.centerPosition);
+            direction = (playerController.centerPosition - transform.position).normalized;
 
             //if in movement range, move without drag, if outside, decelerate slowly, if too close, decelerate fast
             if (stopMovingDistance < distance && distance < seeDistance)
@@ -131,7 +126,7 @@ namespace constellations
 
         private IEnumerator AwakeCheck()
         {
-            while (Vector2.Distance(transform.position, player.transform.position) > seeDistance)
+            while (Vector2.Distance(transform.position, playerController.centerPosition) > seeDistance)
             {
                 yield return new WaitForSeconds(awakeCheckFrequency);
             }
