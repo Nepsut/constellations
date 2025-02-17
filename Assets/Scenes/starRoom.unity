@@ -12636,6 +12636,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1048893093668670027, guid: 878e414cf860dfe4a9a67d216d1cc0ba, type: 3}
+      propertyPath: m_text
+      value: Benny
+      objectReference: {fileID: 0}
     - target: {fileID: 2167379005249250538, guid: 878e414cf860dfe4a9a67d216d1cc0ba, type: 3}
       propertyPath: m_Sprite
       value: 
