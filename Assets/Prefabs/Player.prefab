@@ -1378,7 +1378,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   anim: {fileID: 7400000, guid: b340ff3a101971547add67eabf435ffa, type: 2}
-  maxSpeed: 0
+  maxSpeed: 1
 --- !u!1 &7078474274480389832
 GameObject:
   m_ObjectHideFlags: 0

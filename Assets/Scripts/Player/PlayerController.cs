@@ -70,6 +70,13 @@ namespace constellations
         //if input differs from movement direction, changingDirection = true
         private bool changingXDirection => (rb2d.velocity.x > 0f && horizontal < 0f) || (rb2d.velocity.x < 0f && horizontal > 0f);
         private bool changingYDirection => (rb2d.velocity.y > 0f && vertical < 0f) || (rb2d.velocity.y < 0f && vertical > 0f);
+        public Vector3 centerPosition
+        {
+            get
+            {
+                return (Vector2)transform.position + new Vector2(0, offset.y);
+            }
+        }
 
         [Header("Constant Action Variables")]
         private const int attackDamage = 10;

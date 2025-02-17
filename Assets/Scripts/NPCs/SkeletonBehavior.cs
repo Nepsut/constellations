@@ -11,8 +11,6 @@ namespace constellations
         #region variables
 
         [Header("Engine Variables")]
-        [SerializeField] private GameObject player;
-        private PlayerController playerController;
         [SerializeField] private LayerMask ground;
         [SerializeField] private Color damagedColor;
         [SerializeField] private AudioClip damageSound;
@@ -67,9 +65,6 @@ namespace constellations
         {
             base.Awake();
 
-            //grab some references necessary later
-            playerController = player.GetComponent<PlayerController>();
-
             BoxCollider2D box = gameObject.GetComponentInChildren<BoxCollider2D>();
 
             SetupInstances();   //setup state machine
@@ -106,8 +101,8 @@ namespace constellations
             CheckWall(transform.position + (Vector3)offset, size);
 
             //grab distance between player and this skeleton, then also grab normalized direction for movement
-            distance = Vector2.Distance(transform.position, player.transform.position);
-            direction = (player.transform.position - transform.position).normalized;
+            distance = Vector2.Distance(transform.position, playerController.centerPosition);
+            direction = (playerController.centerPosition - transform.position).normalized;
 
             //if in movement range, move without drag, if outside, decelerate slowly, if too close, decelerate fast
             if (stopMovingDistance < distance && distance < seeDistance)
@@ -177,7 +172,7 @@ namespace constellations
 
         private IEnumerator AwakeCheck()
         {
-            while (Vector2.Distance(transform.position, player.transform.position) > seeDistance)
+            while (Vector2.Distance(transform.position, playerController.centerPosition) > seeDistance)
             {
                 yield return new WaitForSeconds(awakeCheckFrequency);
             }
