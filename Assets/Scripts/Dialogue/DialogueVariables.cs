@@ -16,9 +16,9 @@ namespace constellations
             this.kindness = 3;
         }
 
-        public void SaveData(ref GameData data)
+        public void SaveData()
         {
-            data.kindness = this.kindness;
+            VariableManager.instance.tempData.kindness = this.kindness;
         }
     }
 }

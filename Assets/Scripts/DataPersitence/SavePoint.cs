@@ -21,10 +21,10 @@ namespace constellations
             GameObject.FindGameObjectWithTag("Player").transform.position = data.savedPosition;
         }
 
-        public void SaveData(ref GameData data)
+        public void SaveData()
         {
             if (usedSavepoint)
-            data.savedPosition = position;
+            VariableManager.instance.tempData.savedPosition = position;
         }
     }
 }

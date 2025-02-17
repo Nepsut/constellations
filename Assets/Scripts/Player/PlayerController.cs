@@ -1059,15 +1059,15 @@ namespace constellations
             this.playedLevels = data.playedLevels;
         }
 
-        public void SaveData(ref GameData data)
+        public void SaveData()
         {
-            data.savedPosition = gameObject.transform.position;
-            data.attackEnabled = this.attackEnabled;
-            data.screamEnabled = this.screamEnabled;
-            data.attackBuffs = this.attackBuffs;
-            data.knockbackBuffs = this.knockbackBuffs;
-            data.playerStars = this.playerStars;
-            data.playedLevels = this.playedLevels;
+            VariableManager.instance.tempData.savedPosition = gameObject.transform.position;
+            VariableManager.instance.tempData.attackEnabled = this.attackEnabled;
+            VariableManager.instance.tempData.screamEnabled = this.screamEnabled;
+            VariableManager.instance.tempData.attackBuffs = this.attackBuffs;
+            VariableManager.instance.tempData.knockbackBuffs = this.knockbackBuffs;
+            VariableManager.instance.tempData.playerStars = this.playerStars;
+            VariableManager.instance.tempData.playedLevels = this.playedLevels;
         }
 
         #endregion

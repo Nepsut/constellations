@@ -60,8 +60,9 @@ namespace constellations
             //pass data to other scripts so it can be updated
             foreach(IDataPersistence dataPersistence in dataPersistences)
             {
-                dataPersistence.SaveData(ref gameData);
+                dataPersistence.SaveData();
             }
+            gameData = VariableManager.instance.tempData;
             //save data to file using datahandler
             dataHandler.Save(gameData);
         }
