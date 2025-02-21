@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace constellations
@@ -14,6 +15,7 @@ namespace constellations
         public Vector3 savedPosition;
         public bool[] playedLevels;
         public int playerStars;
+        public Dictionary<string, bool> openedGates;
 
         [Header("Dialogue Variables")]
         public int kindness;
@@ -35,6 +37,7 @@ namespace constellations
                 playedLevels[i] = false;
             }
 
+            openedGates = new();
 
             //dialogue variables
             this.kindness = 0;

@@ -11,6 +11,7 @@ TagManager:
   - Ghost
   - Skeleton
   - Mana
+  - Key
   layers:
   - Default
   - TransparentFX

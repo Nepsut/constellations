@@ -17,10 +17,9 @@ namespace constellations
             pannedUp = true;
         }
 
-        protected override void OnTriggerExit2D(Collider2D collider)
+        private void OnTriggerExit2D(Collider2D collider)
         {
             if (collider == null && !pannedUp) return;
-            base.OnTriggerExit2D(collider);
             //calling pan coroutine from cameramanager.cs
             StartCoroutine(CameraManager.instance.PanCam(customInspectorObjects.panDistance, customInspectorObjects.panTime,
             customInspectorObjects.panDirection, true));
