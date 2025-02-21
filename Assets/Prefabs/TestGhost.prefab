@@ -131,7 +131,6 @@ MonoBehaviour:
   <facingRight>k__BackingField: 1
   enemySprite: {fileID: 6221865361144082191}
   health: 100
-  player: {fileID: 0}
   damageSound: {fileID: 8300000, guid: 3c797c35924492242a3d71cde10e7185, type: 3}
   deathSound: {fileID: 8300000, guid: e670a144e906ff741bf59c0d530cae79, type: 3}
   damagedColor: {r: 1, g: 0.5424528, b: 0.5424528, a: 1}
@@ -150,7 +149,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.6
   m_Pitch: 1
   Loop: 0
   Mute: 0

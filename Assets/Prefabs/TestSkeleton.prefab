@@ -502,7 +502,6 @@ MonoBehaviour:
   <facingRight>k__BackingField: 0
   enemySprite: {fileID: 2290929284540958595}
   health: 100
-  player: {fileID: 0}
   ground:
     serializedVersion: 2
     m_Bits: 8
@@ -543,7 +542,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.8
   m_Pitch: 1
   Loop: 0
   Mute: 0

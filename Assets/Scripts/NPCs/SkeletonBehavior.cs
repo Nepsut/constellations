@@ -288,6 +288,7 @@ namespace constellations
         protected override IEnumerator Death()
         {
             StartCoroutine(base.Death());
+            audioSource.volume = 0.5f;
             audioSource.PlayOneShot(deathSound);
             rb2d.drag = deceleration;
             //below is a placeholder
