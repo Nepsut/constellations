@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -104,6 +105,7 @@ namespace constellations
         [HideInInspector] public bool didInteractObject = false;
         private GameObject interactingNPC;
         private GameObject interactingObject;
+        public List<string> inventory { get; private set; } = new();
 
         [Header("Other Const Variables")]
         private const int maxHealth = 100;
@@ -201,7 +203,6 @@ namespace constellations
             playerInput.InteractCanceledEvent += HandleInteractCancel;
 
             playerInput.SetGameplay();
-
         }
 
         //using FixedUpdate so framerate doesn't affect functionality
@@ -323,7 +324,12 @@ namespace constellations
                 if (currentHealth > maxHealth) currentHealth = maxHealth;
                 Destroy(collision.gameObject);
             }
-            if (collision.gameObject.CompareTag("SavePoint"))
+            else if (collision.gameObject.CompareTag("Key"))
+            {
+                inventory.Add(collision.gameObject.GetComponent<KeyPickup>().KeyName());
+                Destroy(collision.gameObject);
+            }
+            else if (collision.gameObject.CompareTag("SavePoint"))
             {
                 collision.gameObject.GetComponent<SavePoint>().usedSavepoint = true;
             }
@@ -656,7 +662,7 @@ namespace constellations
             }
             else if (canInteractObject && interactingObject != null)
             {
-                didInteractObject = true;
+                interactingObject.GetComponent<IInteractable>().Interact();
             }
         }
 
