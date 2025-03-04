@@ -1,6 +1,5 @@
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace constellations
 {
@@ -11,6 +10,12 @@ namespace constellations
         [SerializeField] private Sprite portrait;
         [SerializeField] private AudioClip npcVoice;
         [SerializeField] private string speakerName;
+        [SerializeField] Canvas canvasObject;
+
+        private void Awake()
+        {
+            canvasObject.worldCamera = Camera.main;
+        }
 
         private void Start()
         {
