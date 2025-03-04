@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 
 namespace constellations
 {
@@ -13,6 +14,7 @@ namespace constellations
         [Header("Management Variables")]
         private bool attackEnabled = true;
         private bool screamEnabled = true;
+        private bool crouchEnabled = true;
         public static PlayerController instance;
 
         [Header("Engine Variables")]
@@ -54,6 +56,7 @@ namespace constellations
 
         [Header("Dynamic Movement Variables")]
         private bool disableMovement = false;
+        private bool queuedCrouching = false;
         private bool jump = false;
         private bool longJump = false;
         public float horizontal { get; private set; } = 0f;
@@ -619,6 +622,19 @@ namespace constellations
             //StartCoroutine(CameraManager.instance.CrouchOffset(false));                             //pan cam to normal
         }
 
+        private void HandleQueuedCrouch()
+        {
+            if (groundSensor.grounded)
+            {
+                queuedCrouching = true;
+            }
+        }
+
+        private void HandleQueuedCrouchCancel()
+        {
+            queuedCrouching = false;
+        }
+
         private void HandleAttack()
         {
             if (!attackEnabled || !groundSensor.grounded) return;
@@ -686,6 +702,47 @@ namespace constellations
             playerInput.ScreamCanceledEvent -= HandleScreamCancel;
             playerInput.InteractEvent -= HandleInteract;
             playerInput.InteractCanceledEvent -= HandleInteractCancel;
+        }
+
+        public void EnterCrouchZone()
+        {
+            if (!crouchEnabled) return;
+            crouchEnabled = false;
+            playerInput.CrouchEvent += HandleQueuedCrouch;
+            playerInput.CrouchCanceledEvent += HandleQueuedCrouchCancel;
+            playerInput.JumpEvent -= HandleJump;
+            playerInput.JumpCanceledEvent -= HandleJumpCancel;
+            playerInput.CrouchEvent -= HandleCrouch;
+            playerInput.CrouchCanceledEvent -= HandleCrouchCancel;
+            playerInput.AttackEvent -= HandleAttack;
+            playerInput.AttackCanceledEvent -= HandleAttackCancel;
+            playerInput.DashEvent -= HandleDash;
+            playerInput.DashCanceledEvent -= HandleDashCancel;
+            playerInput.ScreamEvent -= HandleScream;
+            playerInput.ScreamCanceledEvent -= HandleScreamCancel;
+        }
+
+        public void ExitCrouchZone()
+        {
+            if (crouchEnabled) return;
+            crouchEnabled = true;
+            playerInput.CrouchEvent -= HandleQueuedCrouch;
+            playerInput.CrouchCanceledEvent -= HandleQueuedCrouchCancel;
+            playerInput.JumpEvent += HandleJump;
+            playerInput.JumpCanceledEvent += HandleJumpCancel;
+            playerInput.CrouchEvent += HandleCrouch;
+            playerInput.CrouchCanceledEvent += HandleCrouchCancel;
+            playerInput.AttackEvent += HandleAttack;
+            playerInput.AttackCanceledEvent += HandleAttackCancel;
+            playerInput.DashEvent += HandleDash;
+            playerInput.DashCanceledEvent += HandleDashCancel;
+            playerInput.ScreamEvent += HandleScream;
+            playerInput.ScreamCanceledEvent += HandleScreamCancel;
+
+            if (!queuedCrouching)
+            {
+                HandleCrouchCancel();
+            }
         }
 
         #endregion
