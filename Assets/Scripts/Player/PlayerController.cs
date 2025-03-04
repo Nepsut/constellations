@@ -291,7 +291,6 @@ namespace constellations
             }
 
             UpdateChargeStatus();
-            UpdateHealthStatus();
         }
 
         //when entering a 2d trigger, check if it's from an NPC or an interactable object
@@ -325,6 +324,7 @@ namespace constellations
                 float realHealAmount = manaOrbHealAmount + currentHealth < maxHealth ? manaOrbHealAmount : maxHealth - currentHealth;
                 currentHealth += manaOrbHealAmount;
                 if (currentHealth > maxHealth) currentHealth = maxHealth;
+                UpdateHealthStatus();
                 Destroy(collision.gameObject);
             }
             else if (collision.gameObject.CompareTag("Key"))
@@ -1095,6 +1095,7 @@ namespace constellations
         {
             currentHealth -= _damage;
             invulnerableTime = invulnerableDuration;
+            UpdateHealthStatus();
 
             if (currentHealth < 0)
             {
@@ -1105,6 +1106,7 @@ namespace constellations
         public void ResetHealth()
         {
             currentHealth = maxHealth;
+            UpdateHealthStatus();
         }
 
         #endregion
