@@ -20,6 +20,7 @@ namespace constellations
 
         [Header("HUD")]
         [SerializeField] private Slider healthSlider;
+        private const float healthLerpTime = 0.4f;
         [SerializeField] private Image chargeKnob;
         [SerializeField] private RectTransform heartHolder;
         private GameObject[] stars = new GameObject[9];
@@ -53,6 +54,8 @@ namespace constellations
             }
             instance = this;
             DontDestroyOnLoad(gameObject);
+
+            LeanTween.init(1600);
         }
 
         // Start is called before the first frame update
@@ -138,10 +141,28 @@ namespace constellations
 
         public void HealthUI(float _currentHealth, float _maxHealth)
         {
+            Debug.Log("healthchange called");
             float maxSliderValue = healthSlider.maxValue;
             float scaler = _maxHealth / maxSliderValue;
             float sliderValue = _currentHealth / scaler;
-            healthSlider.value = sliderValue;
+            LerpHealthChange(sliderValue);
+        }
+
+        private void LerpHealthChange(float _newHealth)
+        {
+            LeanTween.value(healthSlider.gameObject, SetHealthBar, healthSlider.value, _newHealth, healthLerpTime).setEaseOutQuad();
+            StartCoroutine(TweenCancelDelay());
+        }
+
+        private IEnumerator TweenCancelDelay()
+        {
+            yield return new WaitForSeconds(healthLerpTime);
+            healthSlider.gameObject.LeanCancel();
+        }
+
+        private void SetHealthBar(float _newHealth)
+        {
+            healthSlider.value = _newHealth;
         }
 
         public void ReloadLevel()
