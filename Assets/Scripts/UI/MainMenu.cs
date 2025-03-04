@@ -1,10 +1,7 @@
 using System.Collections;
-using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.EventSystems;
-using System.Net;
 
 
 public class MainMenu : MonoBehaviour
@@ -22,6 +19,18 @@ public class MainMenu : MonoBehaviour
         Debug.Log("Quit works");
 
     }
+
+    public void ClearTutorialsSeen()
+    {
+        PlayerPrefs.SetInt("movementTutorial", 0);
+        PlayerPrefs.SetInt("dashTutorial", 0);
+        PlayerPrefs.SetInt("manaTutorial", 0);
+        PlayerPrefs.SetInt("jumpTutorial", 0);
+        PlayerPrefs.SetInt("combatTutorial", 0);
+        PlayerPrefs.SetInt("crouchTutorial", 0);
+        PlayerPrefs.SetInt("climbTutorial", 0);
+    }
+
     // Start is called before the first frame update
     void Start()
     {
