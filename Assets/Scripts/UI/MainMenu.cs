@@ -28,6 +28,8 @@ public class MainMenu : MonoBehaviour
         PlayerPrefs.SetInt("combatTutorial", 0);
         PlayerPrefs.SetInt("crouchTutorial", 0);
         PlayerPrefs.SetInt("climbTutorial", 0);
+        PlayerPrefs.SetInt("interactTutorial", 0);
+        PlayerPrefs.SetInt("gateTutorial", 0);
     }
 
     // Start is called before the first frame update

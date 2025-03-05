@@ -1,5 +1,6 @@
 using constellations;
 using Ink.Runtime;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -49,6 +50,7 @@ public class DialogueManager : MonoBehaviour
 
     [Header("Other Variables")]
     [SerializeField] private DialogueVariables variables;
+    private Action doAfterDialogue;
 
     #endregion
 
@@ -70,12 +72,14 @@ public class DialogueManager : MonoBehaviour
 
     private void Start()
     {
+        if (playerController == null) playerController = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
         dialoguePanel.SetActive(false);
         bibidiSource = GetComponent<AudioSource>();
     }
 
     private void Update()
     {
+        if (playerController == null) playerController = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
         transform.position = playerController.transform.position;
     }
 
@@ -84,7 +88,7 @@ public class DialogueManager : MonoBehaviour
     #region dialogue methods
 
     //this enters dialogue with the inkJSON file assigned to the npc
-    public void EnterDialogue(TextAsset inkJSON, AudioClip _npcVoice, string _name, Sprite _portrait = null, Vector3? position = null)
+    public void EnterDialogue(TextAsset inkJSON, AudioClip _npcVoice, string _name, Action _doAfterDialogue = null, Sprite _portrait = null, Vector3? position = null)
     {
         if (position == null) position = Vector3.zero;
         //first this sets the ink story as the active dialogue and activates dialogue panel
@@ -94,6 +98,7 @@ public class DialogueManager : MonoBehaviour
         saveSpot = (Vector3)position;
         dialoguePanel.SetActive(true);
         npcVoice = _npcVoice;
+        doAfterDialogue = _doAfterDialogue;
 
         //continuestory prints dialogue so it's called here
         ContinueStory();
@@ -116,6 +121,7 @@ public class DialogueManager : MonoBehaviour
     //this sets dialogue panel inactive, empties dialogue text and sets input scheme back to gameplay
     private void ExitDialogue()
     {
+        doAfterDialogue?.Invoke();
         dialoguePanel.SetActive(false);
         dialogueText.text = "";
         input.SetGameplay();

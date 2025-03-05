@@ -30,12 +30,14 @@ namespace constellations
         // Start is called before the first frame update
         void Start()
         {
+            if (player == null) player = GameObject.FindGameObjectWithTag("Player");
             facingRight = player.GetComponent<PlayerController>().facingRight;
         }
 
         // Update is called once per frame
         void Update()
         {
+            if (player == null) player = GameObject.FindGameObjectWithTag("Player");
             transform.position = new Vector2(player.transform.position.x, player.transform.position.y + heightOffset);
         }
 

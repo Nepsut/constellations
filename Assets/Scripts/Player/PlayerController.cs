@@ -160,13 +160,16 @@ namespace constellations
 
         private void Awake()
         {
-            if (instance != null)
+            if (instance != null && instance != this)
             {
                 Debug.Log("Found more than one Player, fixing.");
                 Destroy(gameObject);
             }
-            instance = this;
-            DontDestroyOnLoad(gameObject);
+            else
+            {
+                instance = this;
+                DontDestroyOnLoad(gameObject);
+            }
 
             //fetch rigidbody and collider
             rb2d = GetComponent<Rigidbody2D>();
@@ -183,6 +186,12 @@ namespace constellations
 
         void Start()
         {
+            if (instance != null && instance != this)
+            {
+                Debug.Log("Found more than one Player, fixing.");
+                Destroy(gameObject);
+            }
+
             //set YDampThreshold to value specified in CameraManager
             fallYDampThreshold = CameraManager.instance.fallSpeedDampThreshold;
             trueAllowedSpeed = maxSpeed;
