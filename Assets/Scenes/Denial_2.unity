@@ -278,7 +278,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 383604181187454990, guid: 878e414cf860dfe4a9a67d216d1cc0ba, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1031366399950003718, guid: 878e414cf860dfe4a9a67d216d1cc0ba, type: 3}
       propertyPath: m_SortingLayer
@@ -370,7 +370,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3009351510131461678, guid: 878e414cf860dfe4a9a67d216d1cc0ba, type: 3}
       propertyPath: m_Name
-      value: NPCTemplate
+      value: Froggy
       objectReference: {fileID: 0}
     - target: {fileID: 3111328133333943991, guid: 878e414cf860dfe4a9a67d216d1cc0ba, type: 3}
       propertyPath: m_Materials.Array.data[0]
