@@ -26,7 +26,9 @@ namespace constellations
         //this then enters dialogue mode with specific ink story, handling dialogue and disabling other inputs
         public void Talk()
         {
-            DialogueManager.instance.EnterDialogue(inkJSON, npcVoice, speakerName, portrait);
+            DialogueManager.instance.EnterDialogue(inkJSON, npcVoice, speakerName, DoAfterDialogue, portrait);
         }
+
+        protected virtual void DoAfterDialogue() { }
     }
 }
