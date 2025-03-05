@@ -7,6 +7,12 @@ namespace constellations
     {
         public CustomInspectorObjects customInspectorObjects;
         private bool pannedUp = false;
+        [SerializeField] private Canvas interfaceCanvas;
+
+        private void Awake()
+        {
+            interfaceCanvas.worldCamera = Camera.main;
+        }
 
         public override void Interact()
         {

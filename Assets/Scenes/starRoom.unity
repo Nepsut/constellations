@@ -12129,6 +12129,12 @@ MonoBehaviour:
     panDirection: 0
     panDistance: 5
     panTime: 0.35
+  interfaceCanvas: {fileID: 1579334439}
+--- !u!223 &1579334439 stripped
+Canvas:
+  m_CorrespondingSourceObject: {fileID: 1216254277924527975, guid: 914f6474abb477b4eb7770195c2a4ae4, type: 3}
+  m_PrefabInstance: {fileID: 1579334436}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1638740551
 GameObject:
   m_ObjectHideFlags: 0
@@ -12646,7 +12652,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 383604181187454990, guid: 878e414cf860dfe4a9a67d216d1cc0ba, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1048893093668670027, guid: 878e414cf860dfe4a9a67d216d1cc0ba, type: 3}
       propertyPath: m_text
@@ -12731,10 +12737,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 9027312035139612407, guid: 878e414cf860dfe4a9a67d216d1cc0ba, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 0}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 878e414cf860dfe4a9a67d216d1cc0ba, type: 3}
 --- !u!1 &1841232616
 GameObject:
