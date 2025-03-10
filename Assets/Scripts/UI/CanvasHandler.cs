@@ -8,13 +8,15 @@ namespace constellations
 
         private void Awake()
         {
-            if (instance != null)
+            if (instance != null && instance != this)
             {
                 Destroy(gameObject);
                 return;
             }
-            instance = this;
-            DontDestroyOnLoad(gameObject);
+            {
+                instance = this;
+                DontDestroyOnLoad(gameObject);
+            }
         }
     }
 }

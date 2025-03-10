@@ -680,10 +680,10 @@ namespace constellations
         {
             if (canInteractNPC && interactingNPC != null)
             {
-                //change input mode so player movement is disabled during dialogue
-                playerInput.SetDialogue();
                 //this calls the NPC's dialogue based in its INK story
                 interactingNPC.GetComponent<NPCDialogue>().Talk();
+                //change input mode so player movement is disabled during dialogue
+                playerInput.SetDialogue();
             }
             else if (canInteractObject && interactingObject != null)
             {
