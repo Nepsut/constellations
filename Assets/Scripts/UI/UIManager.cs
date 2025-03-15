@@ -184,12 +184,17 @@ namespace constellations
 
         private IEnumerator HandleLevelChange(SceneData _sceneData, int _leavingLevel, bool _levelGaveStar)
         {
+            //fade-out object enabled
             TransitionFadeRect.gameObject.SetActive(true);
+            //set player invulnerable and immobile
             playerController.invulnerableOverride = true;
             playerController.forceStationary = true;
+            //start fade-out
             LeanTween.color(TransitionFadeRect, Color.black, transitionTime).setEaseInSine();
+            //wait for fade-out to finish
             yield return new WaitForSeconds(transitionTime);
 
+            //if player leaves a "state of grief" level for the first time, deduct star
             if (_levelGaveStar && !playerController.playedLevels[_leavingLevel-1])
             {
                 playerController.playedLevels[_leavingLevel-1] = true;
@@ -197,26 +202,35 @@ namespace constellations
             }
             RefreshStars();
 
+            //start scene loading asynchronously, wait until finished
             AsyncOperation asyncLoadScene = SceneManager.LoadSceneAsync(_sceneData.sceneID);
             while(!asyncLoadScene.isDone) yield return null;
 
+            //checks to see if player is in "star room"
             if (_sceneData.sceneID == 1) GameManager.instance.inStarRoom = true;
             else GameManager.instance.inStarRoom = false;
+            //set variables from _sceneData
             GameManager.instance.currentScene = _sceneData;
             playerController.transform.position = _sceneData.startPosition;
+            //play level music
             musicSource.clip = _sceneData.sceneMusic;
             musicSource.Play();
-            LeanTween.color(TransitionFadeRect, Color.clear, transitionTime).setEaseOutSine();
+            //set player vulnerable and able to move
             playerController.invulnerableOverride = false;
             playerController.forceStationary = false;
+            //flip player if facing wrong way
             if ((playerController.facingRight && !_sceneData.faceRightOnStart) || (!playerController.facingRight && _sceneData.faceRightOnStart))
             {
                 playerController.CatFlip();
             }
+            //set cam size and offset from _sceneData
             cam.m_Lens.OrthographicSize = _sceneData.lensOrtho;
             cam.GetCinemachineComponent<CinemachineFramingTransposer>().m_ScreenY = _sceneData.screenY;
-
+            //start fade-in
+            LeanTween.color(TransitionFadeRect, Color.clear, transitionTime).setEaseOutSine();
+            //wait for fade-in to finish
             yield return new WaitForSeconds(transitionTime);
+            //set fade-in object inactive
             TransitionFadeRect.gameObject.SetActive(false);
         }
 
