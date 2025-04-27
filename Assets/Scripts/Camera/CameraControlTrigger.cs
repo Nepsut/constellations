@@ -67,6 +67,7 @@ public class CameraControlTrigger : MonoBehaviour
     }
 }
 
+#if UNITY_EDITOR
 [CustomEditor(typeof(CameraControlTrigger))]
 public class CameraTriggerScriptEditor : Editor
 {
@@ -111,3 +112,5 @@ public class CameraTriggerScriptEditor : Editor
         }
     }
 }
+
+#endif

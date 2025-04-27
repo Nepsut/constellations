@@ -1,9 +1,6 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.InputSystem;
 
 namespace constellations
 {
@@ -228,7 +225,7 @@ namespace constellations
 
             if (facingRight)
             {
-                CheckWall(transform.position + new Vector3(offset.x, offset.y, 0), size);
+                CheckWall(transform.position + (Vector3)offset, size);
             }
             else
             {
