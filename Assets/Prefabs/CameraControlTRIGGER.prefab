@@ -90,11 +90,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4426797d0761d64bbaa7add1af14d11, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  customInspectorObjects:
-    swapCameras: 0
-    panCamera: 1
-    cameraOnLeft: {fileID: 0}
-    cameraOnRight: {fileID: 0}
-    panDirection: 1
-    panDistance: 2
-    panTime: 0.35
+  swapCameras: 0
+  panCamera: 1
+  cameraOnLeft: {fileID: 0}
+  cameraOnRight: {fileID: 0}
+  panDirection: 0
+  panDistance: 3
+  panTime: 0.35
